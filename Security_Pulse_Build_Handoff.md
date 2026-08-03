@@ -2,7 +2,7 @@
 ## Build and Handoff Specification
 
 **Working name:** Security Pulse  
-**Document version:** 1.0  
+**Document version:** 1.1 (2026-08-03)  
 **Purpose:** Give any developer or AI coding agent enough information to understand, build, test, and maintain the product.
 
 ---
@@ -90,6 +90,7 @@ Do not place these in Version 1:
 - **Swift + SwiftUI + WidgetKit**
 - Shared App Group storage for limited widget-safe data.
 - Deep link into the Flutter application.
+- The widget extension lives inside the Flutter app's iOS runner project (`apps/mobile/ios/`); it is native code but not a separate app.
 
 ### Android widget
 - **Kotlin + Jetpack Glance**
@@ -260,6 +261,8 @@ The app must explicitly state: “Never enter your password or MFA code in this 
 - explanation_override: optional
 - display_order
 
+`is_correct` and `explanation_override` must be stripped from any scenario response served to an employee before submission. Correctness is only revealed by the result endpoint after a recorded response.
+
 ### Assignment
 - id
 - scenario_id
@@ -277,6 +280,8 @@ The app must explicitly state: “Never enter your password or MFA code in this 
 - submitted_at
 - response_time_ms: optional
 - source: app/widget/deep_link
+
+Unique constraint on (user_id, scenario_id) to enforce single-submission idempotency at the database level.
 
 ### IncidentReport
 - id
@@ -337,7 +342,8 @@ Use `/api/v1`.
 
 ### Widget
 - `GET /widget/daily-card`
-- `POST /widget/refresh-token` only if a safe design requires it; avoid long-lived secrets.
+
+Widgets never hold authentication tokens or long-lived secrets. The daily-card model is fetched by the app and written to shared storage; the widget itself makes no authenticated calls.
 
 ### Incident reports
 - `POST /incident-reports`
@@ -528,7 +534,7 @@ security-pulse/
 
 ## 12. Division of Work Between Claude Code and Codex
 
-The separation below is a workflow recommendation, not a technical limitation. Both agents should review each other’s work.
+The separation below is a workflow recommendation, not a technical limitation. Both agents should review each other’s work. If only one agent is used, it takes on both roles, but the cross-review checklists in this section must still be executed as an explicit self-review step before merge.
 
 ### Claude Code: primary responsibility
 - Flutter mobile interface.
