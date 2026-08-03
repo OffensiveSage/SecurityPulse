@@ -1,0 +1,89 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-08-03",
+  
+  "appName": "Security Pulse",
+  "@appName": {
+    "description": "The application name displayed in the UI"
+  },
+
+  "loadingDefault": "Loading…",
+  "@loadingDefault": {
+    "description": "Default loading indicator message"
+  },
+
+  "errorGenericTitle": "Something went wrong",
+  "@errorGenericTitle": {
+    "description": "Generic error title shown when an unhandled error occurs"
+  },
+
+  "errorGenericMessage": "An unexpected error occurred. Please try again.",
+  "@errorGenericMessage": {
+    "description": "Generic error message shown when an unhandled error occurs"
+  },
+
+  "errorNetworkTitle": "No connection",
+  "@errorNetworkTitle": {
+    "description": "Error title shown when network is unavailable"
+  },
+
+  "errorNetworkMessage": "Check your network connection and try again.",
+  "@errorNetworkMessage": {
+    "description": "Error message shown when network is unavailable"
+  },
+
+  "errorUnauthorizedTitle": "Access denied",
+  "@errorUnauthorizedTitle": {
+    "description": "Error title shown when user lacks permission"
+  },
+
+  "errorUnauthorizedMessage": "You do not have permission to view this content.",
+  "@errorUnauthorizedMessage": {
+    "description": "Error message shown when user lacks permission. Does not reveal why access was denied."
+  },
+
+  "buttonRetry": "Try again",
+  "@buttonRetry": {
+    "description": "Label for retry buttons"
+  },
+
+  "buttonSignIn": "Sign in with your company account",
+  "@buttonSignIn": {
+    "description": "Sign in button label. References company account to clarify SSO is used."
+  },
+
+  "buttonSignOut": "Sign out",
+  "@buttonSignOut": {
+    "description": "Sign out button label"
+  },
+
+  "emptyScenarioTitle": "No question today",
+  "@emptyScenarioTitle": {
+    "description": "Shown when no scenario is assigned to the employee today"
+  },
+
+  "emptyScenarioMessage": "Check back later for your next security question.",
+  "@emptyScenarioMessage": {
+    "description": "Shown when no scenario is assigned to the employee today"
+  },
+
+  "emptyHistoryTitle": "No activity yet",
+  "@emptyHistoryTitle": {
+    "description": "Shown when the employee has no response history"
+  },
+
+  "emptyHistoryMessage": "Your completed questions will appear here.",
+  "@emptyHistoryMessage": {
+    "description": "Shown when the employee has no response history"
+  },
+
+  "incidentReportWarningCredentials": "Never enter your password or MFA code in this form.",
+  "@incidentReportWarningCredentials": {
+    "description": "REQUIRED security warning displayed in the incident report form. Must appear on every step of the wizard."
+  },
+
+  "scenarioAnswerSubmit": "Submit answer",
+  "@scenarioAnswerSubmit": {
+    "description": "Submit button label in the scenario answer screen"
+  }
+}

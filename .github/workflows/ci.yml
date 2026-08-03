@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      flutter: ${{ steps.filter.outputs.flutter }}
+      backend: ${{ steps.filter.outputs.backend }}
+      admin: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            flutter:
+              - 'apps/mobile/**'
+              - 'packages/design-tokens/**'
+            backend:
+              - 'services/api/**'
+              - 'services/worker/**'
+              - 'packages/api-contract/**'
+            admin:
+              - 'apps/admin-web/**'
+
+  flutter:
+    name: Flutter checks
+    needs: changes
+    if: ${{ needs.changes.outputs.flutter == 'true' || github.event_name == 'push' }}
+    uses: ./.github/workflows/flutter.yml
+
+  backend:
+    name: Backend checks
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' || github.event_name == 'push' }}
+    uses: ./.github/workflows/backend.yml
+
+  admin:
+    name: Admin portal checks
+    needs: changes
+    if: ${{ needs.changes.outputs.admin == 'true' || github.event_name == 'push' }}
+    uses: ./.github/workflows/admin-web.yml
+
+  all-checks:
+    name: All checks passed
+    needs: [flutter, backend, admin]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all checks passed
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then
+            echo "One or more checks failed"
+            exit 1
+          fi
+          echo "All checks passed"

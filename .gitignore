@@ -1,0 +1,115 @@
+# --- Dart / Flutter ---
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/ios/Flutter/
+**/android/app/build/
+**/android/.gradle/
+**/.dart_tool/
+**/pubspec.lock
+
+# --- iOS ---
+*.mode1v3
+*.mode2v3
+*.moved-to-trash
+*.pbxuser
+*.perspectivev3
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+ios/.generated/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+Pods/
+.symlinks/
+
+# --- Android ---
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+/local.properties
+GeneratedPluginRegistrant.java
+*.keystore
+!debug.keystore
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+*.log
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+dist/
+.pnpm-store/
+.eslintcache
+*.tsbuildinfo
+.npm/
+
+# --- Docker ---
+*.env.local
+*.env.*.local
+
+# --- Secrets and credentials ---
+.env
+*.pem
+*.key
+*.p12
+*.cer
+*.mobileprovision
+GoogleService-Info.plist
+google-services.json
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Generated files ---
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+# (keep generated files if committed — comment out above lines if your team commits generated code)
+
+# --- Test artifacts ---
+coverage/
+test-results/
+*.lcov

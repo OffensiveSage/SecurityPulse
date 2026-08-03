@@ -1,0 +1,1551 @@
+openapi: "3.1.0"
+
+info:
+  title: Security Pulse API
+  description: |
+    Corporate cybersecurity awareness platform REST API.
+
+    ## Authentication
+    All endpoints except `/health` and `/health/ready` require a valid OIDC
+    bearer token in the `Authorization` header.
+
+    ## Idempotency
+    Mutating operations that must be idempotent (response submission, incident
+    creation) require an `Idempotency-Key` header with a client-generated UUID.
+
+    ## Correlation IDs
+    Every request should include `X-Correlation-Id`. The server echoes it in
+    the response. If omitted, the server generates one.
+
+    ## Error envelope
+    All error responses use the standard `ErrorResponse` schema.
+
+    ## Widget data
+    The `/api/v1/widget/daily-card` endpoint returns only a minimal,
+    non-sensitive model. The Flutter app writes this to platform shared storage.
+    The native widget extension reads it. No auth tokens are ever stored
+    in widget storage.
+  version: "1.0.0"
+  contact:
+    name: Security Pulse Platform Team
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.securitypulse.internal
+    description: Production (URL subject to governance decision #3)
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OIDC access token from the corporate identity provider.
+
+  parameters:
+    CorrelationId:
+      name: X-Correlation-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+      description: Client-generated correlation ID for distributed tracing.
+
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: |
+        Client-generated UUID for idempotent operations. Submitting the same
+        key twice returns the original response without creating a duplicate.
+
+    PageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    PageSizeParam:
+      name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+    ScenarioId:
+      name: scenario_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    ReportId:
+      name: report_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    CampaignId:
+      name: campaign_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    # -------------------------------------------------------------------------
+    # Common
+    # -------------------------------------------------------------------------
+    ErrorResponse:
+      type: object
+      required: [code, message, correlation_id]
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: scenario_not_found
+        message:
+          type: string
+          description: Human-readable error message. Do not include sensitive data.
+          example: The requested scenario was not found.
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional structured error context.
+        correlation_id:
+          type: string
+          format: uuid
+
+    PaginationMeta:
+      type: object
+      required: [page, page_size, total, total_pages]
+      properties:
+        page:
+          type: integer
+        page_size:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+
+    # -------------------------------------------------------------------------
+    # User / Profile
+    # -------------------------------------------------------------------------
+    UserRoleProfile:
+      type: string
+      enum: [employee, author, reviewer, approver, soc_analyst, platform_admin]
+
+    UserStatus:
+      type: string
+      enum: [active, inactive]
+
+    UserProfile:
+      type: object
+      required: [id, role_profile, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        role_profile:
+          $ref: "#/components/schemas/UserRoleProfile"
+        status:
+          $ref: "#/components/schemas/UserStatus"
+
+    UserPreferences:
+      type: object
+      properties:
+        notifications_enabled:
+          type: boolean
+          default: true
+        preferred_locale:
+          type: string
+          description: BCP 47 language tag, e.g. "en", "fr", "de".
+          example: en
+
+    UserProgress:
+      type: object
+      required: [scenarios_assigned, scenarios_completed, current_streak_days]
+      properties:
+        scenarios_assigned:
+          type: integer
+        scenarios_completed:
+          type: integer
+        current_streak_days:
+          type: integer
+        campaign_eligible:
+          type: boolean
+          nullable: true
+          description: |
+            Whether the user is eligible for the current active campaign drawing.
+            Null when no campaign is active.
+
+    # -------------------------------------------------------------------------
+    # Scenario
+    # -------------------------------------------------------------------------
+    ScenarioStatus:
+      type: string
+      enum: [draft, review, approved, published, retired]
+
+    ScenarioDifficulty:
+      type: string
+      enum: [beginner, intermediate, advanced]
+
+    AnswerOptionForEmployee:
+      type: object
+      description: |
+        Answer option as served to an employee BEFORE submission.
+        is_correct and explanation_override are NEVER included here.
+        They are only available after a response has been recorded.
+      required: [id, text, display_order]
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 500
+        display_order:
+          type: integer
+
+    AnswerOptionWithResult:
+      type: object
+      description: Answer option as returned AFTER submission via the result endpoint.
+      required: [id, text, is_correct, display_order]
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        is_correct:
+          type: boolean
+        explanation_override:
+          type: string
+          nullable: true
+          description: Option-specific explanation, if provided.
+        display_order:
+          type: integer
+
+    ScenarioForEmployee:
+      type: object
+      description: |
+        Scenario as served to an employee BEFORE answer submission.
+        is_correct is NOT present on any answer option here.
+      required: [id, title, prompt, category, difficulty, answer_options]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        prompt:
+          type: string
+          maxLength: 2000
+        category:
+          type: string
+        difficulty:
+          $ref: "#/components/schemas/ScenarioDifficulty"
+        policy_reference:
+          type: string
+          nullable: true
+        answer_options:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerOptionForEmployee"
+          minItems: 2
+          maxItems: 4
+
+    ScenarioResult:
+      type: object
+      description: |
+        Result returned AFTER a response has been recorded.
+        Includes the correct answer and explanation.
+      required: [scenario_id, is_correct, explanation, answer_options]
+      properties:
+        scenario_id:
+          type: string
+          format: uuid
+        selected_option_id:
+          type: string
+          format: uuid
+        is_correct:
+          type: boolean
+        explanation:
+          type: string
+          description: 40-100 word explanation of the correct answer.
+        policy_reference:
+          type: string
+          nullable: true
+        answer_options:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerOptionWithResult"
+
+    ResponseSubmission:
+      type: object
+      required: [selected_option_id]
+      properties:
+        selected_option_id:
+          type: string
+          format: uuid
+        response_time_ms:
+          type: integer
+          nullable: true
+          description: Time in milliseconds from scenario display to submission.
+        source:
+          type: string
+          enum: [app, widget, deep_link]
+          default: app
+
+    ResponseRecord:
+      type: object
+      required: [id, scenario_id, submitted_at, is_correct]
+      properties:
+        id:
+          type: string
+          format: uuid
+        scenario_id:
+          type: string
+          format: uuid
+        scenario_title:
+          type: string
+        submitted_at:
+          type: string
+          format: date-time
+        is_correct:
+          type: boolean
+
+    # -------------------------------------------------------------------------
+    # Widget
+    # -------------------------------------------------------------------------
+    DailyCardModel:
+      type: object
+      description: |
+        Minimal, non-sensitive model written to platform shared storage by the
+        Flutter app. Read by native widget extensions.
+
+        PROHIBITED fields (must never appear here):
+        - Authentication tokens
+        - is_correct or explanation
+        - Employee PII beyond display
+        - Incident report data
+        - Full confidential message content
+      required: [completion_state]
+      properties:
+        scenario_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: UUID of the assigned scenario, if any.
+        title:
+          type: string
+          maxLength: 80
+          nullable: true
+          description: Short scenario title for widget display.
+        completion_state:
+          type: string
+          enum: [available, completed, no_assignment, offline, signed_out]
+        deep_link_route:
+          type: string
+          nullable: true
+          description: |
+            Route path for the deep link, e.g. /scenarios/{scenarioId}.
+            The widget prefixes with securitypulse:// to form the URI.
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When this cache entry expires. Widget shows offline state after this.
+
+    # -------------------------------------------------------------------------
+    # Incident report
+    # -------------------------------------------------------------------------
+    IncidentEventType:
+      type: string
+      enum: [email, teams_chat, sms, call, login, qr_code, lost_device, other]
+
+    IncidentReportStatus:
+      type: string
+      enum: [received, under_review, resolved, closed]
+
+    IncidentReportCreate:
+      type: object
+      required: [event_type, occurred_at, short_description]
+      description: |
+        Incident report submission.
+        IMPORTANT: This schema must never include credential fields.
+        The backend rejects any submission containing password or MFA code patterns.
+      properties:
+        event_type:
+          $ref: "#/components/schemas/IncidentEventType"
+        occurred_at:
+          type: string
+          format: date-time
+        clicked:
+          type: boolean
+          default: false
+        credentials_entered:
+          type: boolean
+          default: false
+          description: Whether the user entered credentials (NOT the credentials themselves).
+        file_opened:
+          type: boolean
+          default: false
+        short_description:
+          type: string
+          maxLength: 1000
+          description: |
+            Brief description of the incident.
+            Must not contain passwords, MFA codes, or full message content.
+
+    IncidentReceipt:
+      type: object
+      required: [report_id, reference_number, status, created_at]
+      properties:
+        report_id:
+          type: string
+          format: uuid
+        reference_number:
+          type: string
+          description: Human-readable reference for follow-up (e.g. INC-2025-0042).
+        status:
+          $ref: "#/components/schemas/IncidentReportStatus"
+        created_at:
+          type: string
+          format: date-time
+        emergency_guidance:
+          type: string
+          nullable: true
+          description: |
+            Server-managed emergency instruction text shown when credentials
+            were entered or a device was reported lost.
+            Content is governed policy text, not free-form.
+
+    # -------------------------------------------------------------------------
+    # Admin - Scenarios
+    # -------------------------------------------------------------------------
+    ScenarioForAdmin:
+      type: object
+      required: [id, title, status, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/ScenarioStatus"
+        category:
+          type: string
+          nullable: true
+        difficulty:
+          $ref: "#/components/schemas/ScenarioDifficulty"
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+        approved_by:
+          type: string
+          format: uuid
+          nullable: true
+        publish_at:
+          type: string
+          format: date-time
+          nullable: true
+        expire_at:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          type: integer
+          default: 1
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ScenarioCreate:
+      type: object
+      required: [title, prompt, category, difficulty, explanation, answer_options]
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        prompt:
+          type: string
+          maxLength: 2000
+        category:
+          type: string
+        difficulty:
+          $ref: "#/components/schemas/ScenarioDifficulty"
+        explanation:
+          type: string
+          minLength: 40
+          maxLength: 500
+          description: Explanation shown after submission. 40-100 words recommended.
+        policy_reference:
+          type: string
+          nullable: true
+        role_profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserRoleProfile"
+        regions:
+          type: array
+          items:
+            type: string
+        answer_options:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerOptionCreate"
+          minItems: 2
+          maxItems: 4
+        publish_at:
+          type: string
+          format: date-time
+          nullable: true
+        expire_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    AnswerOptionCreate:
+      type: object
+      required: [text, is_correct, display_order]
+      properties:
+        text:
+          type: string
+          maxLength: 500
+        is_correct:
+          type: boolean
+        explanation_override:
+          type: string
+          nullable: true
+        display_order:
+          type: integer
+
+    # -------------------------------------------------------------------------
+    # Admin - Analytics
+    # -------------------------------------------------------------------------
+    AnalyticsSummary:
+      type: object
+      description: |
+        Aggregated analytics. Individual-level data is never returned.
+        Small groups (below minimum group size threshold) are suppressed.
+      required: [total_employees_active, total_responses, overall_accuracy_rate]
+      properties:
+        total_employees_active:
+          type: integer
+        total_responses:
+          type: integer
+        overall_accuracy_rate:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        participation_rate:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        by_category:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryAccuracy"
+          nullable: true
+        suppression_applied:
+          type: boolean
+          description: True when some groups were suppressed due to minimum group size.
+
+    CategoryAccuracy:
+      type: object
+      required: [category, response_count, accuracy_rate]
+      properties:
+        category:
+          type: string
+        response_count:
+          type: integer
+        accuracy_rate:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        suppressed:
+          type: boolean
+          description: True if this category was partially suppressed.
+
+    # -------------------------------------------------------------------------
+    # Admin - Campaigns
+    # -------------------------------------------------------------------------
+    CampaignStatus:
+      type: string
+      enum: [draft, active, completed, cancelled]
+
+    Campaign:
+      type: object
+      required: [id, name, status, start_at, end_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          $ref: "#/components/schemas/CampaignStatus"
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        eligibility_rule:
+          type: string
+          description: Human-readable description of the eligibility rule.
+        reward_description:
+          type: string
+          nullable: true
+        governance_disclaimer:
+          type: string
+          description: |
+            Mandatory disclaimer reminding admins that final winner approval
+            is an external governed step (HR, Legal, Tax, Ethics).
+
+    CampaignCreate:
+      type: object
+      required: [name, start_at, end_at, eligibility_rule]
+      properties:
+        name:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        eligibility_rule:
+          type: string
+        reward_description:
+          type: string
+          nullable: true
+
+    EligibilityResult:
+      type: object
+      required: [eligible_count, calculated_at]
+      properties:
+        eligible_count:
+          type: integer
+          description: Number of eligible participants. Individual identities are not returned.
+        calculated_at:
+          type: string
+          format: date-time
+        suppressed:
+          type: boolean
+          description: True if count is below minimum group size and suppressed.
+
+    # -------------------------------------------------------------------------
+    # Admin - Audit
+    # -------------------------------------------------------------------------
+    AuditEvent:
+      type: object
+      required: [id, actor_id, action, timestamp]
+      properties:
+        id:
+          type: string
+          format: uuid
+        actor_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+          description: |
+            Machine-readable action code, e.g. scenario.published,
+            campaign.rule_changed, analytics.export_downloaded.
+        target_type:
+          type: string
+          nullable: true
+        target_id:
+          type: string
+          format: uuid
+          nullable: true
+        before_summary:
+          type: string
+          nullable: true
+          description: Brief summary of state before the action. Never includes raw PII or credentials.
+        after_summary:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+        correlation_id:
+          type: string
+          format: uuid
+
+    # -------------------------------------------------------------------------
+    # Health
+    # -------------------------------------------------------------------------
+    HealthResponse:
+      type: object
+      required: [status, version, env]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        version:
+          type: string
+        env:
+          type: string
+
+    ReadinessResponse:
+      type: object
+      required: [status, version, env, checks]
+      properties:
+        status:
+          type: string
+          enum: [ready, unavailable]
+        version:
+          type: string
+        env:
+          type: string
+        checks:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [ok, error]
+            redis:
+              type: string
+              enum: [ok, error]
+
+paths:
+  # ---------------------------------------------------------------------------
+  # Health (unauthenticated)
+  # ---------------------------------------------------------------------------
+  /health:
+    get:
+      operationId: health_liveness
+      summary: Liveness check
+      description: Returns 200 if the service process is running. No authentication required.
+      security: []
+      tags: [health]
+      responses:
+        "200":
+          description: Service is running.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /health/ready:
+    get:
+      operationId: health_readiness
+      summary: Readiness check
+      description: Returns 200 if the service can accept traffic. Checks database and Redis.
+      security: []
+      tags: [health]
+      responses:
+        "200":
+          description: Service is ready.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadinessResponse"
+        "503":
+          description: One or more dependencies unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadinessResponse"
+
+  # ---------------------------------------------------------------------------
+  # Authentication
+  # ---------------------------------------------------------------------------
+  /api/v1/auth/me:
+    get:
+      operationId: auth_me
+      summary: Get authenticated user
+      description: Returns the authenticated user's identity from the validated OIDC token.
+      tags: [auth]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Authenticated user identity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/auth/logout:
+    post:
+      operationId: auth_logout
+      summary: Sign out
+      description: Revokes the session and clears server-side state. Client must clear stored tokens.
+      tags: [auth]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "204":
+          description: Session ended successfully.
+        "401":
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Employee - Profile and progress
+  # ---------------------------------------------------------------------------
+  /api/v1/me/profile:
+    get:
+      operationId: get_my_profile
+      summary: Get my profile
+      tags: [employee]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+          description: Employee profile.
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/me/preferences:
+    patch:
+      operationId: update_my_preferences
+      summary: Update my preferences
+      tags: [employee]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPreferences"
+      responses:
+        "200":
+          description: Preferences updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/me/progress:
+    get:
+      operationId: get_my_progress
+      summary: Get my progress
+      tags: [employee]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Employee progress.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProgress"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/me/history:
+    get:
+      operationId: get_my_history
+      summary: Get my response history
+      tags: [employee]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/PageSizeParam"
+      responses:
+        "200":
+          description: Paginated response history.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ResponseRecord"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Scenarios (employee)
+  # ---------------------------------------------------------------------------
+  /api/v1/scenarios/today:
+    get:
+      operationId: get_today_scenario
+      summary: Get today's assigned scenario
+      description: |
+        Returns the scenario assigned to the authenticated employee for today.
+        Answer options do NOT include is_correct. That field is only available
+        from GET /api/v1/scenarios/{scenario_id}/result after submission.
+      tags: [scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Today's scenario.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForEmployee"
+        "204":
+          description: No scenario assigned for today.
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/scenarios/{scenario_id}:
+    get:
+      operationId: get_scenario
+      summary: Get a specific scenario
+      description: |
+        Returns a scenario by ID. Only returns scenarios assigned to the
+        authenticated employee. Answer options do NOT include is_correct.
+      tags: [scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      responses:
+        "200":
+          description: Scenario details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForEmployee"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Scenario not assigned to this employee.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Scenario not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/scenarios/{scenario_id}/responses:
+    post:
+      operationId: submit_scenario_response
+      summary: Submit an answer
+      description: |
+        Records the employee's answer. Idempotent: submitting the same
+        Idempotency-Key twice returns the original response.
+        A unique constraint on (user_id, scenario_id) is enforced at the
+        database level. Returns 409 on duplicate submission without the key.
+      tags: [scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/ScenarioId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResponseSubmission"
+      responses:
+        "201":
+          description: Response recorded. Fetch /result to get the explanation.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [response_id]
+                properties:
+                  response_id:
+                    type: string
+                    format: uuid
+        "200":
+          description: Idempotent replay - response was already recorded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [response_id]
+                properties:
+                  response_id:
+                    type: string
+                    format: uuid
+        "409":
+          description: Duplicate submission without idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Scenario not assigned to this employee.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/scenarios/{scenario_id}/result:
+    get:
+      operationId: get_scenario_result
+      summary: Get scenario result and explanation
+      description: |
+        Returns the correct answer and explanation. Only available after
+        the employee has submitted a response via POST /responses.
+        Returns 403 if called before submission.
+      tags: [scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      responses:
+        "200":
+          description: Scenario result with correct answer and explanation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioResult"
+        "403":
+          description: No response recorded for this employee and scenario.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Widget
+  # ---------------------------------------------------------------------------
+  /api/v1/widget/daily-card:
+    get:
+      operationId: get_widget_daily_card
+      summary: Get daily card for widget
+      description: |
+        Returns the minimal DailyCardModel for the widget bridge.
+        The Flutter app calls this after authentication and writes the result
+        to platform shared storage. The native widget reads from storage.
+        This endpoint never returns auth tokens or sensitive fields.
+      tags: [widget]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Daily card model.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyCardModel"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Incident reports
+  # ---------------------------------------------------------------------------
+  /api/v1/incident-reports:
+    post:
+      operationId: create_incident_report
+      summary: Submit an incident report
+      description: |
+        Creates a structured incident report. Idempotent via Idempotency-Key.
+        This endpoint must never accept credential fields (passwords, MFA codes).
+        The backend validates and rejects submissions containing credential patterns.
+      tags: [incident-reports]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncidentReportCreate"
+      responses:
+        "201":
+          description: Incident report created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncidentReceipt"
+        "200":
+          description: Idempotent replay - report already created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncidentReceipt"
+        "401":
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/incident-reports/{report_id}/receipt:
+    get:
+      operationId: get_incident_receipt
+      summary: Get incident report receipt
+      description: Returns the receipt for an incident report submitted by the authenticated employee.
+      tags: [incident-reports]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ReportId"
+      responses:
+        "200":
+          description: Incident report receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncidentReceipt"
+        "403":
+          description: Report does not belong to this employee.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Report not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Admin - Scenarios
+  # ---------------------------------------------------------------------------
+  /api/v1/admin/scenarios:
+    get:
+      operationId: admin_list_scenarios
+      summary: List all scenarios
+      description: Requires author, reviewer, approver, or platform_admin role.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/PageSizeParam"
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/ScenarioStatus"
+      responses:
+        "200":
+          description: Paginated scenario list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ScenarioForAdmin"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      operationId: admin_create_scenario
+      summary: Create a draft scenario
+      description: Requires author role or higher.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScenarioCreate"
+      responses:
+        "201":
+          description: Draft scenario created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForAdmin"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/admin/scenarios/{scenario_id}:
+    patch:
+      operationId: admin_update_scenario
+      summary: Update a draft or review scenario
+      description: Only draft or review scenarios may be updated. Requires author role.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScenarioCreate"
+      responses:
+        "200":
+          description: Scenario updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForAdmin"
+        "409":
+          description: Scenario is not in a state that allows editing.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/admin/scenarios/{scenario_id}/submit-review:
+    post:
+      operationId: admin_submit_scenario_for_review
+      summary: Submit scenario for review
+      description: Transitions draft to review. Requires author role.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      responses:
+        "200":
+          description: Scenario is now in review.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForAdmin"
+        "409":
+          description: Scenario is not in draft status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/admin/scenarios/{scenario_id}/approve:
+    post:
+      operationId: admin_approve_scenario
+      summary: Approve a scenario
+      description: Transitions review to approved. Requires approver role. Author cannot approve own scenario.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      responses:
+        "200":
+          description: Scenario is approved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForAdmin"
+        "403":
+          description: Insufficient role or self-approval attempted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Scenario is not in review status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/admin/scenarios/{scenario_id}/publish:
+    post:
+      operationId: admin_publish_scenario
+      summary: Publish an approved scenario
+      description: Transitions approved to published. Requires approver role.
+      tags: [admin-scenarios]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/ScenarioId"
+      responses:
+        "200":
+          description: Scenario is published.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioForAdmin"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Scenario is not in approved status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Admin - Analytics
+  # ---------------------------------------------------------------------------
+  /api/v1/admin/analytics/summary:
+    get:
+      operationId: admin_analytics_summary
+      summary: Get aggregated analytics summary
+      description: |
+        Returns aggregate analytics. Individual responses are never returned.
+        Groups below the minimum group size are suppressed.
+        Requires approver or platform_admin role. Every access is audit-logged.
+      tags: [admin-analytics]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Analytics summary.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Admin - Campaigns
+  # ---------------------------------------------------------------------------
+  /api/v1/admin/campaigns:
+    get:
+      operationId: admin_list_campaigns
+      summary: List campaigns
+      tags: [admin-campaigns]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/PageSizeParam"
+      responses:
+        "200":
+          description: Campaign list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Campaign"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+    post:
+      operationId: admin_create_campaign
+      summary: Create a campaign
+      description: Requires approver or platform_admin role.
+      tags: [admin-campaigns]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignCreate"
+      responses:
+        "201":
+          description: Campaign created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /api/v1/admin/campaigns/{campaign_id}/calculate-eligibility:
+    post:
+      operationId: admin_calculate_campaign_eligibility
+      summary: Calculate campaign eligibility
+      description: |
+        Calculates the count of eligible participants. Individual identities
+        are not returned. Below minimum group size, the count is suppressed.
+        This action is audit-logged.
+      tags: [admin-campaigns]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/CampaignId"
+      responses:
+        "200":
+          description: Eligibility count calculated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EligibilityResult"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------------
+  # Admin - Audit log
+  # ---------------------------------------------------------------------------
+  /api/v1/admin/audit-events:
+    get:
+      operationId: admin_list_audit_events
+      summary: List audit events
+      description: |
+        Returns the audit log. Requires platform_admin role.
+        Every access to this endpoint is itself audit-logged.
+      tags: [admin-audit]
+      parameters:
+        - $ref: "#/components/parameters/CorrelationId"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/PageSizeParam"
+        - name: action
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated audit events.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AuditEvent"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "403":
+          description: Insufficient role.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+tags:
+  - name: health
+    description: Liveness and readiness probes (unauthenticated)
+  - name: auth
+    description: Authentication and session management
+  - name: employee
+    description: Employee profile and progress
+  - name: scenarios
+    description: Daily scenario flow (employee-facing)
+  - name: widget
+    description: Widget bridge endpoint
+  - name: incident-reports
+    description: Incident reporting
+  - name: admin-scenarios
+    description: Scenario authoring and approval (admin)
+  - name: admin-analytics
+    description: Aggregated analytics (admin)
+  - name: admin-campaigns
+    description: Campaign and reward management (admin)
+  - name: admin-audit
+    description: Audit log (platform admin)
