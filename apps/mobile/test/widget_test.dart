@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:security_pulse/main.dart';
 
 void main() {
   testWidgets('App smoke test — renders without crashing', (tester) async {
@@ -14,5 +14,6 @@ void main() {
 class _TestApp extends StatelessWidget {
   const _TestApp();
   @override
-  Widget build(BuildContext context) => const MaterialApp(home: SizedBox.shrink());
+  Widget build(BuildContext context) =>
+      const MaterialApp(home: SizedBox.shrink());
 }

@@ -28,7 +28,6 @@ class _SecurityPulseAppState extends State<SecurityPulseApp> {
       title: 'Security Pulse',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
       routerConfig: _router,
       localizationsDelegates: const [
         // Generated delegate — run `flutter gen-l10n` to create

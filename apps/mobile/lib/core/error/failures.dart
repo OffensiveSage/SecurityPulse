@@ -45,7 +45,9 @@ final class NotFoundFailure extends Failure {
 
 /// A duplicate submission was detected (idempotency).
 final class ConflictFailure extends Failure {
-  const ConflictFailure({super.message = 'This action has already been recorded.'});
+  const ConflictFailure({
+    super.message = 'This action has already been recorded.',
+  });
 }
 
 /// Input validation failed.

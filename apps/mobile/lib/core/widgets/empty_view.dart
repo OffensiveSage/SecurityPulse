@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 class EmptyView extends StatelessWidget {
   const EmptyView({
-    super.key,
     required this.title,
+    super.key,
     this.message,
     this.action,
     this.icon,

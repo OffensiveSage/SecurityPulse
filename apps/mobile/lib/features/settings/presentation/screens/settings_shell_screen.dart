@@ -13,7 +13,8 @@ class SettingsShellScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Settings')),
       body: const EmptyView(
         title: 'Settings',
-        message: 'Notification preferences and accessibility options will appear here.',
+        message:
+            'Notification preferences and accessibility options will appear here.',
         icon: Icons.settings_rounded,
       ),
     );

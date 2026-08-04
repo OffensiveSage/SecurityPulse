@@ -27,7 +27,7 @@ void main() {
         ),
       );
       final semantics = tester.getSemantics(find.byType(LoadingView));
-      expect(semantics.hasFlag(SemanticsFlag.isLiveRegion), isTrue);
+      expect(semantics.flagsCollection.isLiveRegion, isTrue);
     });
   });
 }

@@ -10,14 +10,13 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../error/failures.dart';
-import '../widgets/error_view.dart';
-import '../widgets/loading_view.dart';
 import '../../features/auth/presentation/screens/sign_in_screen.dart';
-import '../../features/scenario/presentation/screens/scenario_shell_screen.dart';
 import '../../features/incident/presentation/screens/incident_shell_screen.dart';
 import '../../features/profile/presentation/screens/profile_shell_screen.dart';
+import '../../features/scenario/presentation/screens/scenario_shell_screen.dart';
 import '../../features/settings/presentation/screens/settings_shell_screen.dart';
+import '../error/failures.dart';
+import '../widgets/error_view.dart';
 import 'route_names.dart';
 
 /// Whether the user is currently authenticated.
@@ -35,7 +34,6 @@ GoRouter createAppRouter({
 }) {
   return GoRouter(
     initialLocation: RoutePaths.home,
-    debugLogDiagnostics: false, // Set to true only during route debugging
     redirect: _buildRedirectGuard(isAuthenticated),
     errorBuilder: (context, state) => _ErrorScreen(error: state.error),
     routes: [
@@ -94,10 +92,10 @@ bool _defaultIsAuthenticated() => _isAuthenticated;
 /// Sets authentication state (Phase 1 placeholder).
 ///
 /// Phase 2 replaces this with Riverpod auth state.
-// ignore: avoid_setters_without_getters
+// ignore: avoid_positional_boolean_parameters, avoid_setters_without_getters
 set isAuthenticated(bool value) => _isAuthenticated = value;
 
-RouterConfig<Object> Function(GoRouterState state)? _buildRedirectGuard(
+GoRouterRedirect? _buildRedirectGuard(
   bool Function() isAuthenticated,
 ) {
   return null; // Phase 2 implements the actual guard

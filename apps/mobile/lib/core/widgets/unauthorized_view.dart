@@ -6,8 +6,8 @@ library;
 
 import 'package:flutter/material.dart';
 
-import 'error_view.dart';
 import '../error/failures.dart';
+import 'error_view.dart';
 
 class UnauthorizedView extends StatelessWidget {
   const UnauthorizedView({super.key});

@@ -3,8 +3,8 @@ library;
 
 import 'package:flutter/material.dart';
 
-import 'error_view.dart';
 import '../error/failures.dart';
+import 'error_view.dart';
 
 class OfflineView extends StatelessWidget {
   const OfflineView({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:security_pulse/core/theme/app_theme.dart';
 import 'package:security_pulse/core/theme/app_colors.dart';
+import 'package:security_pulse/core/theme/app_theme.dart';
 
 void main() {
   group('AppTheme', () {

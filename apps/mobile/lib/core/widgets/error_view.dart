@@ -11,8 +11,8 @@ import '../error/failures.dart';
 
 class ErrorView extends StatelessWidget {
   const ErrorView({
-    super.key,
     required this.failure,
+    super.key,
     this.onRetry,
   });
 

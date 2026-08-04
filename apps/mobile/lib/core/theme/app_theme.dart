@@ -16,12 +16,9 @@ abstract final class AppTheme {
         brightness: Brightness.light,
         colorScheme: const ColorScheme.light(
           primary: AppColors.primary,
-          onPrimary: AppColors.onPrimary,
           secondary: AppColors.secondary,
           onSecondary: AppColors.onSecondary,
           error: AppColors.error,
-          onError: AppColors.onError,
-          surface: AppColors.surface,
           onSurface: AppColors.onSurface,
           surfaceContainerHighest: AppColors.surfaceVariant,
           onSurfaceVariant: AppColors.onSurfaceVariant,
@@ -37,7 +34,7 @@ abstract final class AppTheme {
           scrolledUnderElevation: 1,
           centerTitle: false,
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: AppColors.surface,
           elevation: 0,
           shape: RoundedRectangleBorder(
