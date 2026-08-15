@@ -64,4 +64,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scenarioAnswerSubmit => 'Submit answer';
+
+  @override
+  String get scenarioLoadingMessage => 'Loading today’s scenario…';
+
+  @override
+  String get scenarioDailyChallenge => 'Daily Security Challenge';
+
+  @override
+  String get scenarioSelectPrompt => 'Select your answer';
+
+  @override
+  String get scenarioCorrectTitle => 'Correct!';
+
+  @override
+  String get scenarioIncorrectTitle => 'Not quite right';
+
+  @override
+  String get scenarioExplanationHeading => 'Why this matters';
+
+  @override
+  String get scenarioRecommendedActionHeading => 'What you should do';
+
+  @override
+  String get scenarioCompletedBanner => 'Today’s challenge completed';
+
+  @override
+  String get scenarioSubmitting => 'Submitting your answer…';
+
+  @override
+  String get signInSubtitle => 'Corporate cybersecurity awareness';
+
+  @override
+  String get signInButtonLabel => 'Sign in with your company account';
+
+  @override
+  String get signInLoading => 'Signing in…';
+
+  @override
+  String get signInError => 'Sign in failed. Please try again.';
+
+  @override
+  String get signInPrivacyNote =>
+      'By signing in you agree to your organisation’s acceptable use policy.';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out?';
+
+  @override
+  String get signOutConfirmMessage =>
+      'You will need to sign in again to access Security Pulse.';
+
+  @override
+  String get signOutCancel => 'Cancel';
+
+  @override
+  String get authSessionExpiredTitle => 'Session expired';
+
+  @override
+  String get authSessionExpired =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get historyScreenTitle => 'History';
+
+  @override
+  String get historyItemCorrect => 'Correct';
+
+  @override
+  String get historyItemIncorrect => 'Incorrect';
 }

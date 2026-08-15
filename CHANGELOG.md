@@ -8,7 +8,56 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added
+### Added — Phase 3: Backend-Driven Daily Scenario Delivery
+
+**Backend**
+- ORM models: Scenario, AnswerOption, Assignment, Response, Campaign, AuditEvent (SQLAlchemy)
+- Alembic migration `0002` creating all scenario-related tables
+- Pydantic schemas with T-03 enforcement: `AnswerOptionForEmployee` (pre-submission, no `is_correct`) and `AnswerOptionWithResult` (post-submission, includes `is_correct` + explanation)
+- Scenario service layer with security enforcement: user-scoped queries (T-02), answer exposure prevention (T-03), duplicate response prevention (T-04)
+- API endpoints: GET /scenarios/today, GET /scenarios/{id}, POST /scenarios/{id}/responses, GET /scenarios/{id}/result, GET /me/history, GET /me/progress
+- Seed data: 5 published scenarios with answer options and assignments, loaded automatically in dev mode
+- UniqueConstraint on `(user_id, scenario_id)` + `idempotency_key` column on Response for safe retries (T-04)
+- 41 new backend tests (69 total): scenario service, API endpoints, authorization matrix, idempotency, seed verification
+
+**Mobile**
+- `ApiScenarioRepository` (Dio-based) for backend scenario API integration
+- History screen with loading, empty, error, and data states
+- Progress provider for streak and accuracy display
+- `ResponseRecord` and `UserProgress` models with `fromJson` factories
+- 21 new Flutter tests (106 total): API repository, history screen, progress provider, model serialization
+
+**Security**
+- T-02 implemented: all queries filter by authenticated `user_id`; service layer enforces user assignment on response submission
+- T-03 implemented: separate Pydantic schemas structurally prevent `is_correct` leakage before submission
+- T-04 implemented: database UniqueConstraint + idempotency_key prevent duplicate responses
+
+### Added — Phase 2: Authentication and Authorization
+
+**Backend**
+- User ORM model with roles (employee, content_admin, security_admin) and status (active, inactive)
+- Alembic migration for users table with unique index on identity_provider_subject
+- Auth service with strategy pattern: OIDCAuthProvider (JWKS + JWT validation) and MockAuthProvider (dev only)
+- FastAPI auth dependencies: get_current_user (Bearer token extraction + validation) and require_role (RBAC)
+- Auth endpoints: GET /api/v1/auth/me (user profile), POST /api/v1/auth/logout (204 stateless)
+- Auth schemas: TokenPayload and UserResponse (Pydantic)
+- Structured audit logging for auth events via structlog (never logs token values)
+- 28 backend tests (integration + unit) for auth endpoints, auth service, RBAC, and provider factory
+
+**Mobile**
+- Auth domain layer: User model, UserRole enum, AuthTokens value object, AuthRepository interface
+- SecureTokenStorage wrapping flutter_secure_storage (Keychain on iOS, EncryptedSharedPreferences on Android)
+- MockAuthRepository for local development (no IdP required)
+- OidcAuthRepository using flutter_appauth for Authorization Code Flow with PKCE
+- Auth presentation: sealed AuthState hierarchy, AuthNotifier (Riverpod), auth provider
+- Dio HTTP client with AuthInterceptor (Bearer token attachment, 401 session expiry handling)
+- GoRouter auth guard with redirect logic (unauthenticated → sign-in, authenticated → home)
+- SecurityPulseApp converted to ConsumerStatefulWidget with refreshListenable for auth state changes
+- SignInScreen wired to auth provider with loading/error states
+- Auth localization keys in ARB files
+- 33 new mobile tests (auth provider, sign-in screen, mock repository, router guards)
+
+### Added — Phase 1: Daily Security Challenge
 - Monorepo structure with Flutter mobile app, FastAPI backend, Next.js admin portal, and background worker
 - Documentation: README, PRODUCT_SPEC, ARCHITECTURE, SECURITY, THREAT_MODEL, TEST_STRATEGY, RUNBOOK, CONTRIBUTING, CLAUDE, AGENTS
 - OpenAPI 3.1 contract in packages/api-contract/openapi.yaml

@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     OIDC_ISSUER_URL: str = ""
     OIDC_CLIENT_ID: str = ""
     OIDC_AUDIENCE: str = ""
+    OIDC_JWKS_CACHE_TTL_SECONDS: int = 3600
 
     # API
     API_SECRET_KEY: str = "changeme-generate-with-openssl-rand-hex-32"  # noqa: S105

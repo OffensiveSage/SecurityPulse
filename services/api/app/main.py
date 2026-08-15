@@ -16,7 +16,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
+from app.cli.seed import seed_dev_data
 from app.core.config import get_settings
+from app.core.database import engine
 from app.core.logging import configure_logging
 
 logger = structlog.get_logger(__name__)
@@ -50,6 +52,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         mock_auth=settings.ALLOW_MOCK_AUTH,
         version=settings.APP_VERSION,
     )
+    # Seed development data if in dev mode with mock auth
+    if settings.ALLOW_MOCK_AUTH and settings.APP_ENV == "development":
+        await seed_dev_data(engine)
+
     yield
     logger.info("security_pulse_api_stopping")
 

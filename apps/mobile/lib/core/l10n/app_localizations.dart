@@ -195,6 +195,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit answer'**
   String get scenarioAnswerSubmit;
+
+  /// Loading message shown while fetching the daily scenario
+  ///
+  /// In en, this message translates to:
+  /// **'Loading today’s scenario…'**
+  String get scenarioLoadingMessage;
+
+  /// Section heading for the daily scenario question
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Security Challenge'**
+  String get scenarioDailyChallenge;
+
+  /// Label above the answer options prompting the employee to choose
+  ///
+  /// In en, this message translates to:
+  /// **'Select your answer'**
+  String get scenarioSelectPrompt;
+
+  /// Title shown when the employee answers correctly
+  ///
+  /// In en, this message translates to:
+  /// **'Correct!'**
+  String get scenarioCorrectTitle;
+
+  /// Title shown when the employee answers incorrectly
+  ///
+  /// In en, this message translates to:
+  /// **'Not quite right'**
+  String get scenarioIncorrectTitle;
+
+  /// Heading for the explanation section in the scenario result
+  ///
+  /// In en, this message translates to:
+  /// **'Why this matters'**
+  String get scenarioExplanationHeading;
+
+  /// Heading for the recommended action section in the scenario result
+  ///
+  /// In en, this message translates to:
+  /// **'What you should do'**
+  String get scenarioRecommendedActionHeading;
+
+  /// Banner text shown after the employee completes the daily scenario
+  ///
+  /// In en, this message translates to:
+  /// **'Today’s challenge completed'**
+  String get scenarioCompletedBanner;
+
+  /// Loading message shown while the answer is being submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting your answer…'**
+  String get scenarioSubmitting;
+
+  /// Subtitle shown on the sign-in screen below the app name
+  ///
+  /// In en, this message translates to:
+  /// **'Corporate cybersecurity awareness'**
+  String get signInSubtitle;
+
+  /// Accessible label for the sign-in button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your company account'**
+  String get signInButtonLabel;
+
+  /// Loading message shown during sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in…'**
+  String get signInLoading;
+
+  /// Error message shown when sign-in fails
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in failed. Please try again.'**
+  String get signInError;
+
+  /// Privacy note shown below the sign-in button
+  ///
+  /// In en, this message translates to:
+  /// **'By signing in you agree to your organisation’s acceptable use policy.'**
+  String get signInPrivacyNote;
+
+  /// Title of the sign-out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get signOutConfirmTitle;
+
+  /// Body text of the sign-out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You will need to sign in again to access Security Pulse.'**
+  String get signOutConfirmMessage;
+
+  /// Cancel button in the sign-out confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get signOutCancel;
+
+  /// Title shown when the session has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired'**
+  String get authSessionExpiredTitle;
+
+  /// Message shown when the session has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get authSessionExpired;
+
+  /// Title for the response history screen
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyScreenTitle;
+
+  /// Accessibility label for a correctly answered history item
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get historyItemCorrect;
+
+  /// Accessibility label for an incorrectly answered history item
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get historyItemIncorrect;
 }
 
 class _AppLocalizationsDelegate

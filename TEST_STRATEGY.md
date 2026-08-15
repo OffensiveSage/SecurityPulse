@@ -29,6 +29,10 @@ Version: 1.0 | Status: Draft
 | Load | locust | Daily notification spike (target: 10k employees in 5 minutes) |
 | Security | bandit, pip-audit | CI gate: no unreviewed HIGH findings |
 
+### Current test count: 69 tests (41 new in Phase 3)
+
+Tests cover: scenario service logic (user-scoped queries, answer exposure prevention, duplicate response handling), API endpoint integration tests for all 6 scenario/employee endpoints, authorization matrix tests, idempotency and concurrency tests, seed data verification.
+
 ### Required test fixtures
 - Mock OIDC token factory (each role)
 - Scenario factory (draft, approved, published)
@@ -49,6 +53,10 @@ Version: 1.0 | Status: Draft
 | Secure storage | mocktail | Token read/write/clear |
 | Accessibility | flutter_test + SemanticsDebugger | Semantics labels on all interactive elements |
 | Localization | flutter_test | ARB keys resolve; no overflow on 2× string length |
+
+### Current test count: 106 tests (21 new in Phase 3)
+
+New tests cover: ApiScenarioRepository (Dio-based HTTP calls, error handling), history screen widget tests (loading, empty, error, data states), progress provider tests, ResponseRecord and UserProgress model serialization (fromJson factories).
 
 ---
 

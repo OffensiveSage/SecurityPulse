@@ -90,12 +90,17 @@ The `DailyCardModel` written to shared storage contains only:
 
 ## Authentication and authorization
 
-- Mobile: OIDC Authorization Code Flow with PKCE via `flutter_appauth`.
+- Mobile: OIDC Authorization Code Flow with PKCE via `flutter_appauth` (implemented in Phase 2).
 - Admin portal: OIDC Authorization Code Flow via server-side session.
 - Token storage on mobile: `flutter_secure_storage` (Keychain on iOS, EncryptedSharedPreferences on Android).
 - Widget storage: App Group (iOS), SharedPreferences (Android). No tokens ever stored here.
-- Roles: `employee`, `author`, `reviewer`, `approver`, `soc_analyst`, `platform_admin`.
+- Full platform roles: `employee`, `author`, `reviewer`, `approver`, `soc_analyst`, `platform_admin`.
+- Phase 2 roles (implemented): `employee`, `content_admin`, `security_admin`. Additional roles will be added with the admin portal.
 - All role checks are enforced server-side. Client role state is display-only.
+- Auth provider strategy pattern: `OIDCAuthProvider` (production) and `MockAuthProvider` (development only, gated by `ALLOW_MOCK_AUTH=true` + `APP_ENV != production`).
+- JIT user provisioning: on first valid OIDC sign-in, a user record is auto-created with `role=employee`. Admin roles are assigned manually.
+- Stateless JWT: no server-side session store in Phase 2. Logout clears tokens on the client. Redis token denylist is a documented future enhancement.
+- GoRouter auth guard redirects unauthenticated users to sign-in and prevents authenticated users from accessing the sign-in screen.
 
 ---
 
@@ -113,17 +118,26 @@ The `DailyCardModel` written to shared storage contains only:
 
 ## Data flows
 
-### Daily question flow
+### Daily question flow (implemented in Phase 3)
 ```
 Employee opens app
   → Flutter checks auth → GoRouter guards route
-  → GET /api/v1/scenarios/today → returns scenario without is_correct
+  → GET /api/v1/scenarios/today → returns scenario without is_correct (T-03: AnswerOptionForEmployee schema)
   → Employee selects answer → POST /api/v1/scenarios/{id}/responses (with Idempotency-Key)
-  → Backend records Response, enforces unique(user_id, scenario_id)
-  → GET /api/v1/scenarios/{id}/result → returns is_correct + explanation
+  → Backend records Response, enforces unique(user_id, scenario_id) via UniqueConstraint + idempotency_key (T-04)
+  → All queries filter by authenticated user_id (T-02)
+  → GET /api/v1/scenarios/{id}/result → returns is_correct + explanation (AnswerOptionWithResult schema)
   → Flutter writes DailyCardModel{completionState: completed} to shared storage
   → Platform channel: WidgetCenter.reloadAllTimelines() (iOS) / widget update (Android)
 ```
+
+**Backend models (Phase 3):** Scenario, AnswerOption, Assignment, Response, Campaign, AuditEvent — defined as SQLAlchemy ORM models with Alembic migration `0002`.
+
+**Additional employee endpoints (Phase 3):**
+- `GET /api/v1/me/history` — paginated response history
+- `GET /api/v1/me/progress` — streak, total answered, accuracy
+
+**Flutter (Phase 3):** `ApiScenarioRepository` (Dio-based), history screen, progress provider, `ResponseRecord` and `UserProgress` models with `fromJson` factories.
 
 ### Incident report flow
 ```

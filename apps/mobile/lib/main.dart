@@ -1,11 +1,12 @@
 /// Security Pulse — application entry point.
 ///
 /// Initializes the dependency injection container before running the app.
-/// Phase 2 will add ProviderScope for Riverpod here.
+/// Wraps the app in [ProviderScope] for Riverpod state management.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 
@@ -18,8 +19,7 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Phase 1: No DI initialization yet.
-  // Phase 2: Add get_it setup and ProviderScope here.
+  // Phase 2: Add get_it setup here.
 
-  runApp(const SecurityPulseApp());
+  runApp(const ProviderScope(child: SecurityPulseApp()));
 }

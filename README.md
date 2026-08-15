@@ -86,6 +86,8 @@ uvicorn app.main:app --reload --port 8000
 
 Health check: http://localhost:8000/health
 
+In development mode (`APP_ENV=development`), 5 published scenarios are automatically seeded on startup. These provide immediate test data for the daily scenario flow without manual setup.
+
 ### 4. Run the admin portal
 
 ```bash
@@ -131,8 +133,45 @@ Key variables:
 | `REDIS_URL` | Redis connection string |
 | `OIDC_ISSUER_URL` | Corporate identity provider discovery URL |
 | `OIDC_CLIENT_ID` | OAuth2 client ID |
+| `OIDC_AUDIENCE` | OAuth2 audience (optional, defaults to `OIDC_CLIENT_ID`) |
 | `APP_ENV` | `development` or `production` |
 | `ALLOW_MOCK_AUTH` | `true` only when `APP_ENV=development` |
+
+---
+
+## Authentication (Phase 2)
+
+The app uses OIDC Authorization Code Flow with PKCE for authentication. In development, mock auth is enabled by default (`ALLOW_MOCK_AUTH=true`), which accepts mock tokens without a real identity provider.
+
+**Mock auth tokens** (development only):
+- `mock-employee` — signs in as a test employee
+- `mock-content_admin` — signs in as a content admin
+- `mock-security_admin` — signs in as a security admin
+
+**Production** requires `OIDC_ISSUER_URL` and `OIDC_CLIENT_ID` to be set. Mock auth is blocked when `APP_ENV=production`.
+
+For backend API auth testing:
+```bash
+# With mock auth enabled
+curl -H "Authorization: Bearer mock-employee" http://localhost:8000/api/v1/auth/me
+```
+
+---
+
+## Scenario delivery (Phase 3)
+
+The backend serves daily scenarios via the following endpoints (all require authentication):
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/v1/scenarios/today` | Today's assigned scenario (answer correctness hidden) |
+| `GET /api/v1/scenarios/{id}` | Single scenario by ID |
+| `POST /api/v1/scenarios/{id}/responses` | Submit an answer (idempotent via `Idempotency-Key`) |
+| `GET /api/v1/scenarios/{id}/result` | Correctness and explanation (only after submission) |
+| `GET /api/v1/me/history` | Paginated response history for the authenticated user |
+| `GET /api/v1/me/progress` | Streak, total answered, and accuracy stats |
+
+Seed data (5 published scenarios) is loaded automatically when `APP_ENV=development`.
 
 ---
 

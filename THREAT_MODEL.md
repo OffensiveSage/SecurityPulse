@@ -42,9 +42,9 @@ This threat model covers the Security Pulse MVP: Flutter mobile app, native widg
 | ID | Threat | Component | Impact | Mitigation |
 |---|---|---|---|---|
 | T-01 | Auth bypass via token replay | API | High | Short token lifetime, server-side validation, HTTPS only |
-| T-02 | Horizontal privilege escalation (accessing another user's responses) | API | High | Server enforces `response.user_id == authenticated_user_id` |
-| T-03 | Answer exposure before submission | API | Medium | `is_correct` stripped from GET /scenarios/{id}; only available from GET /scenarios/{id}/result after response recorded |
-| T-04 | Duplicate response submission | API/DB | Medium | Unique constraint on `(user_id, scenario_id)`; idempotency key |
+| T-02 | Horizontal privilege escalation (accessing another user's responses) | API | High | Server enforces `response.user_id == authenticated_user_id`. **Implemented in Phase 3.** |
+| T-03 | Answer exposure before submission | API | Medium | `is_correct` stripped from GET /scenarios/{id}; only available from GET /scenarios/{id}/result after response recorded. **Implemented in Phase 3.** |
+| T-04 | Duplicate response submission | API/DB | Medium | Unique constraint on `(user_id, scenario_id)`; idempotency key. **Implemented in Phase 3.** |
 | T-05 | Deep link tampering (widget) | Mobile | Medium | Backend validates ownership; `scenarioId` in deep link does not grant access without valid token |
 | T-06 | Sensitive data in widget storage | iOS/Android widget | High | Only `DailyCardModel` with title, state, deepLinkRoute written; no tokens, no PII |
 | T-07 | Token extraction from widget storage | iOS/Android widget | High | Tokens never written to App Group or SharedPreferences |
@@ -57,8 +57,55 @@ This threat model covers the Security Pulse MVP: Flutter mobile app, native widg
 | T-14 | Rate limit abuse on submission | API | Medium | Redis-backed rate limiting on scenario submission and incident creation |
 | T-15 | Stale widget showing incorrect state | iOS/Android widget | Low | `expiresAt` in DailyCardModel; widget shows "offline" state when expired |
 | T-16 | Sensitive data in crash reports | Mobile/API | Medium | Crash reporter configured to exclude auth headers, form data |
-| T-17 | Mock auth enabled in production | API | Critical | `ALLOW_MOCK_AUTH` gated by `APP_ENV != production`; startup check rejects misconfiguration |
+| T-17 | Mock auth enabled in production | API | Critical | `ALLOW_MOCK_AUTH` gated by `APP_ENV != production`; startup check (`_assert_production_safety()`) rejects misconfiguration. **Implemented in Phase 2.** |
 | T-18 | CSRF on admin portal | Admin web | Medium | CSRF tokens on all state-changing requests |
+
+---
+
+## Phase 2 auth data flow (implemented)
+
+```
+Employee opens app
+  → AuthNotifier checks SecureTokenStorage for stored tokens
+  → If valid tokens exist → AuthAuthenticated state → GoRouter allows access to home
+  → If no/expired tokens → AuthUnauthenticated state → GoRouter redirects to /sign-in
+  → Employee taps Sign In → flutter_appauth OIDC PKCE flow → IdP returns tokens
+  → Tokens stored in flutter_secure_storage (never SharedPreferences)
+  → Dio interceptor attaches Bearer token to all API requests
+  → On 401 → interceptor attempts token refresh → on failure → AuthUnauthenticated → redirect to /sign-in
+  → Sign out → SecureTokenStorage cleared → POST /api/v1/auth/logout (server no-op, stateless JWT)
+```
+
+### Mitigations implemented in Phase 2
+
+| Threat | Mitigation status |
+|---|---|
+| T-01 (Token replay) | Server-side JWT validation with signature, expiry, issuer, audience checks. HTTPS only. |
+| T-07 (Token in widget storage) | Tokens stored exclusively in flutter_secure_storage. Widget storage never contains tokens. |
+| T-08 (Admin role escalation) | RBAC enforced server-side via `require_role()` dependency. Claims from IdP only. |
+| T-17 (Mock auth in production) | `_assert_production_safety()` startup check + dual condition (`ALLOW_MOCK_AUTH=true` AND `APP_ENV != production`). |
+
+## Phase 3 scenario delivery data flow (implemented)
+
+```
+Employee opens app
+  → Flutter checks auth → GoRouter guards route
+  → GET /api/v1/scenarios/today → Pydantic AnswerOptionForEmployee schema (no is_correct)
+  → Employee selects answer → POST /api/v1/scenarios/{id}/responses (Idempotency-Key header)
+  → Backend: service layer checks user assignment, checks for existing response
+  → Database: UniqueConstraint on (user_id, scenario_id) + idempotency_key column
+  → GET /api/v1/scenarios/{id}/result → Pydantic AnswerOptionWithResult schema (includes is_correct + explanation)
+  → GET /api/v1/me/history → paginated response history (user-scoped)
+  → GET /api/v1/me/progress → streak and accuracy stats (user-scoped)
+```
+
+### Mitigations implemented in Phase 3
+
+| Threat | Mitigation status |
+|---|---|
+| T-02 (Horizontal privilege escalation) | All scenario, assignment, and response queries filter by `user_id` from the authenticated token. Service layer enforces user ownership on response submission. |
+| T-03 (Answer exposure before submission) | Separate Pydantic schemas: `AnswerOptionForEmployee` (pre-submission, no `is_correct`) vs `AnswerOptionWithResult` (post-submission, includes `is_correct`). Structural enforcement — not runtime stripping. |
+| T-04 (Duplicate response submission) | `UniqueConstraint` on `(user_id, scenario_id)` at database level. `idempotency_key` column on Response model for safe retries. Service layer pre-checks for existing responses. |
 
 ---
 
@@ -68,6 +115,7 @@ This threat model covers the Security Pulse MVP: Flutter mobile app, native widg
 - Attachment policy not confirmed (governance decision #12). Malware scanning not yet designed.
 - Notification provider not confirmed (governance decision #12 extension). Push token handling risk unknown.
 - Rooted/jailbroken device policy not confirmed (governance decision #13 extension).
+- Token denylist not implemented. Stateless JWT means revoked tokens remain valid until expiry. Redis denylist planned for a future phase.
 
 ---
 

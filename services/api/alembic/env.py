@@ -11,6 +11,12 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from app.core.config import get_settings
+from app.models import assignment as _assignment_models  # noqa: F401
+from app.models import audit_event as _audit_event_models  # noqa: F401
+from app.models import campaign as _campaign_models  # noqa: F401
+from app.models import response as _response_models  # noqa: F401
+from app.models import scenario as _scenario_models  # noqa: F401
+from app.models import user as _user_models  # noqa: F401  # Ensure User table is registered
 from app.models.base import Base
 
 config = context.config

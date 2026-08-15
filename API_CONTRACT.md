@@ -23,9 +23,9 @@ Base URL: `/api/v1`
 | Category | Endpoints |
 |---|---|
 | Health (no auth) | GET /health, GET /health/ready |
-| Auth | GET /api/v1/auth/me, POST /api/v1/auth/logout |
-| Employee | GET /me/profile, PATCH /me/preferences, GET /me/progress, GET /me/history |
-| Scenarios (employee) | GET /scenarios/today, GET /scenarios/{id}, POST /scenarios/{id}/responses, GET /scenarios/{id}/result |
+| Auth (implemented) | GET /api/v1/auth/me, POST /api/v1/auth/logout |
+| Employee (partially implemented) | GET /me/profile, PATCH /me/preferences, **GET /me/progress** *(impl)*, **GET /me/history** *(impl)* |
+| Scenarios (implemented) | **GET /scenarios/today** *(impl)*, **GET /scenarios/{id}** *(impl)*, **POST /scenarios/{id}/responses** *(impl)*, **GET /scenarios/{id}/result** *(impl)* |
 | Widget | GET /widget/daily-card |
 | Incident reports | POST /incident-reports, GET /incident-reports/{id}/receipt |
 | Admin — scenarios | GET/POST /admin/scenarios, PATCH /admin/scenarios/{id}, POST /admin/scenarios/{id}/submit-review \| approve \| publish |

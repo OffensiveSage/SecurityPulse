@@ -7,7 +7,7 @@
 /// Never include authentication tokens, passwords, or PII in failure messages.
 library;
 
-sealed class Failure {
+sealed class Failure implements Exception {
   const Failure({required this.message});
   final String message;
 }

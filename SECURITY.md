@@ -7,13 +7,30 @@ Version: 1.0 | Status: Draft
 
 ## Authentication
 
-- OIDC Authorization Code Flow with PKCE on mobile.
+- OIDC Authorization Code Flow with PKCE on mobile (implemented in Phase 2).
 - Short-lived access tokens (target: 15 minutes; governance decision required).
 - Refresh tokens stored in `flutter_secure_storage` (Keychain / EncryptedSharedPreferences).
 - Server validates every token on every request. No client-trusted role checks.
 - Separate RBAC roles: `employee`, `author`, `reviewer`, `approver`, `soc_analyst`, `platform_admin`.
+- Phase 2 roles (implemented): `employee`, `content_admin`, `security_admin`.
 - Deny by default: every protected endpoint returns `403` unless an explicit allow rule matches.
 - Reauthentication required for high-risk admin actions (configurable).
+
+### Phase 2 auth safety controls (implemented)
+
+- **Mock auth gating**: `MockAuthProvider` only activates when `ALLOW_MOCK_AUTH=true` AND `APP_ENV != production`. A startup assertion in `main.py` (`_assert_production_safety()`) rejects misconfiguration.
+- **Token never logged**: Auth service, audit service, and HTTP dependencies never log token values. Structured audit events log user_id and event type only.
+- **No tokens in SharedPreferences**: `SecureTokenStorage` uses `flutter_secure_storage` with `AndroidOptions(encryptedSharedPreferences: true)` and `IOSOptions(accessibility: first_unlock)`.
+- **401 handling**: Dio interceptor detects 401 responses, attempts token refresh, and triggers sign-out on refresh failure.
+- **RBAC dependency**: `require_role(*allowed_roles)` FastAPI dependency returns 403 for unauthorized role access.
+
+### Phase 3 scenario delivery security controls (implemented)
+
+- **T-02 — User-scoped queries**: All scenario, assignment, and response queries filter by `user_id` from the authenticated token. The service layer enforces that users can only access their own assignments and submit responses to scenarios assigned to them.
+- **T-03 — Answer exposure prevention**: Separate Pydantic schemas enforce the pre/post-submission boundary. `AnswerOptionForEmployee` (used in GET /scenarios/today and GET /scenarios/{id}) excludes `is_correct` and `explanation`. `AnswerOptionWithResult` (used in GET /scenarios/{id}/result) includes them. It is structurally impossible for the pre-submission schema to leak correctness.
+- **T-04 — Duplicate response prevention**: A `UniqueConstraint` on `(user_id, scenario_id)` in the Response table prevents duplicate answers at the database level. An `idempotency_key` column on Response supports safe client retries. The service layer checks for existing responses before insertion.
+
+---
 
 ## Data minimization
 

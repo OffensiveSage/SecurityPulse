@@ -1,13 +1,13 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2026-08-03",
-  
+  "@@last_modified": "2026-08-12",
+
   "appName": "Security Pulse",
   "@appName": {
     "description": "The application name displayed in the UI"
   },
 
-  "loadingDefault": "Loading…",
+  "loadingDefault": "Loading\u2026",
   "@loadingDefault": {
     "description": "Default loading indicator message"
   },
@@ -85,5 +85,115 @@
   "scenarioAnswerSubmit": "Submit answer",
   "@scenarioAnswerSubmit": {
     "description": "Submit button label in the scenario answer screen"
+  },
+
+  "scenarioLoadingMessage": "Loading today\u2019s scenario\u2026",
+  "@scenarioLoadingMessage": {
+    "description": "Loading message shown while fetching the daily scenario"
+  },
+
+  "scenarioDailyChallenge": "Daily Security Challenge",
+  "@scenarioDailyChallenge": {
+    "description": "Section heading for the daily scenario question"
+  },
+
+  "scenarioSelectPrompt": "Select your answer",
+  "@scenarioSelectPrompt": {
+    "description": "Label above the answer options prompting the employee to choose"
+  },
+
+  "scenarioCorrectTitle": "Correct!",
+  "@scenarioCorrectTitle": {
+    "description": "Title shown when the employee answers correctly"
+  },
+
+  "scenarioIncorrectTitle": "Not quite right",
+  "@scenarioIncorrectTitle": {
+    "description": "Title shown when the employee answers incorrectly"
+  },
+
+  "scenarioExplanationHeading": "Why this matters",
+  "@scenarioExplanationHeading": {
+    "description": "Heading for the explanation section in the scenario result"
+  },
+
+  "scenarioRecommendedActionHeading": "What you should do",
+  "@scenarioRecommendedActionHeading": {
+    "description": "Heading for the recommended action section in the scenario result"
+  },
+
+  "scenarioCompletedBanner": "Today\u2019s challenge completed",
+  "@scenarioCompletedBanner": {
+    "description": "Banner text shown after the employee completes the daily scenario"
+  },
+
+  "scenarioSubmitting": "Submitting your answer\u2026",
+  "@scenarioSubmitting": {
+    "description": "Loading message shown while the answer is being submitted"
+  },
+
+  "signInSubtitle": "Corporate cybersecurity awareness",
+  "@signInSubtitle": {
+    "description": "Subtitle shown on the sign-in screen below the app name"
+  },
+
+  "signInButtonLabel": "Sign in with your company account",
+  "@signInButtonLabel": {
+    "description": "Accessible label for the sign-in button"
+  },
+
+  "signInLoading": "Signing in\u2026",
+  "@signInLoading": {
+    "description": "Loading message shown during sign-in"
+  },
+
+  "signInError": "Sign in failed. Please try again.",
+  "@signInError": {
+    "description": "Error message shown when sign-in fails"
+  },
+
+  "signInPrivacyNote": "By signing in you agree to your organisation\u2019s acceptable use policy.",
+  "@signInPrivacyNote": {
+    "description": "Privacy note shown below the sign-in button"
+  },
+
+  "signOutConfirmTitle": "Sign out?",
+  "@signOutConfirmTitle": {
+    "description": "Title of the sign-out confirmation dialog"
+  },
+
+  "signOutConfirmMessage": "You will need to sign in again to access Security Pulse.",
+  "@signOutConfirmMessage": {
+    "description": "Body text of the sign-out confirmation dialog"
+  },
+
+  "signOutCancel": "Cancel",
+  "@signOutCancel": {
+    "description": "Cancel button in the sign-out confirmation dialog"
+  },
+
+  "authSessionExpiredTitle": "Session expired",
+  "@authSessionExpiredTitle": {
+    "description": "Title shown when the session has expired"
+  },
+
+  "authSessionExpired": "Your session has expired. Please sign in again.",
+  "@authSessionExpired": {
+    "description": "Message shown when the session has expired"
+  },
+
+  "historyScreenTitle": "History",
+  "@historyScreenTitle": {
+    "description": "Title for the response history screen"
+  },
+
+  "historyItemCorrect": "Correct",
+  "@historyItemCorrect": {
+    "description": "Accessibility label for a correctly answered history item"
+  },
+
+  "historyItemIncorrect": "Incorrect",
+  "@historyItemIncorrect": {
+    "description": "Accessibility label for an incorrectly answered history item"
   }
 }

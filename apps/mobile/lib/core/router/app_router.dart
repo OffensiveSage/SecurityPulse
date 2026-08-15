@@ -13,28 +13,27 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/sign_in_screen.dart';
 import '../../features/incident/presentation/screens/incident_shell_screen.dart';
 import '../../features/profile/presentation/screens/profile_shell_screen.dart';
-import '../../features/scenario/presentation/screens/scenario_shell_screen.dart';
+import '../../features/scenario/presentation/screens/daily_scenario_screen.dart';
+import '../../features/scenario/presentation/screens/history_screen.dart';
 import '../../features/settings/presentation/screens/settings_shell_screen.dart';
 import '../error/failures.dart';
 import '../widgets/error_view.dart';
 import 'route_names.dart';
 
-/// Whether the user is currently authenticated.
-///
-/// In Phase 1 this is a simple boolean placeholder.
-/// Phase 2 replaces this with a Riverpod-based auth state provider.
-bool _isAuthenticated = false;
-
 /// Creates the application router.
 ///
-/// [isAuthenticated] is a function that returns the current auth state.
-/// This is a parameter so it can be mocked in tests.
+/// [isAuthenticated] returns the current auth state. Used by the
+/// redirect guard to enforce authentication on protected routes.
+///
+/// [refreshListenable] triggers route re-evaluation when auth state changes.
 GoRouter createAppRouter({
-  bool Function() isAuthenticated = _defaultIsAuthenticated,
+  bool Function() isAuthenticated = _defaultIsNotAuthenticated,
+  Listenable? refreshListenable,
 }) {
   return GoRouter(
     initialLocation: RoutePaths.home,
     redirect: _buildRedirectGuard(isAuthenticated),
+    refreshListenable: refreshListenable,
     errorBuilder: (context, state) => _ErrorScreen(error: state.error),
     routes: [
       // Unauthenticated routes
@@ -44,18 +43,16 @@ GoRouter createAppRouter({
         builder: (context, state) => const SignInScreen(),
       ),
 
-      // Protected routes (Phase 2: wrapped in ShellRoute with auth guard)
+      // Protected routes
       GoRoute(
         path: RoutePaths.home,
         name: RouteNames.home,
-        builder: (context, state) => const ScenarioShellScreen(),
+        builder: (context, state) => const DailyScenarioScreen(),
         routes: [
           GoRoute(
             path: 'scenarios/:scenarioId',
             name: RouteNames.scenario,
-            builder: (context, state) => ScenarioShellScreen(
-              scenarioId: state.pathParameters['scenarioId'],
-            ),
+            builder: (context, state) => const DailyScenarioScreen(),
           ),
         ],
       ),
@@ -63,7 +60,7 @@ GoRouter createAppRouter({
       GoRoute(
         path: RoutePaths.history,
         name: RouteNames.history,
-        builder: (context, state) => const ScenarioShellScreen(),
+        builder: (context, state) => const HistoryScreen(),
       ),
 
       GoRoute(
@@ -87,18 +84,30 @@ GoRouter createAppRouter({
   );
 }
 
-bool _defaultIsAuthenticated() => _isAuthenticated;
+bool _defaultIsNotAuthenticated() => false;
 
-/// Sets authentication state (Phase 1 placeholder).
+/// Redirect guard that enforces authentication.
 ///
-/// Phase 2 replaces this with Riverpod auth state.
-// ignore: avoid_positional_boolean_parameters, avoid_setters_without_getters
-set isAuthenticated(bool value) => _isAuthenticated = value;
+/// - Unauthenticated users are redirected to sign-in.
+/// - Authenticated users trying to access sign-in are redirected to home.
+GoRouterRedirect _buildRedirectGuard(bool Function() isAuthenticated) {
+  return (BuildContext context, GoRouterState state) {
+    final authenticated = isAuthenticated();
+    final isSignInRoute = state.matchedLocation == RoutePaths.signIn;
 
-GoRouterRedirect? _buildRedirectGuard(
-  bool Function() isAuthenticated,
-) {
-  return null; // Phase 2 implements the actual guard
+    // Not authenticated and not already on sign-in → redirect to sign-in.
+    if (!authenticated && !isSignInRoute) {
+      return RoutePaths.signIn;
+    }
+
+    // Authenticated but on sign-in → redirect to home.
+    if (authenticated && isSignInRoute) {
+      return RoutePaths.home;
+    }
+
+    // No redirect needed.
+    return null;
+  };
 }
 
 class _ErrorScreen extends StatelessWidget {

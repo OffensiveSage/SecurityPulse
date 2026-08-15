@@ -1,7 +1,7 @@
-/// Sign-in screen — Phase 1 shell.
+/// Sign-in screen.
 ///
-/// This screen shows the OIDC sign-in button.
-/// Phase 2 implements the actual flutter_appauth integration.
+/// Displays the corporate sign-in button and app identity.
+/// On tap, initiates the OIDC sign-in flow via the auth provider.
 ///
 /// Accessibility:
 /// - The sign-in button has a clear label describing the action.
@@ -9,66 +9,94 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignInScreen extends StatelessWidget {
+import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/loading_view.dart';
+import '../providers/auth_provider.dart';
+import '../providers/auth_state.dart';
+
+class SignInScreen extends ConsumerWidget {
   const SignInScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // App identity
-              Icon(
-                Icons.security_rounded,
-                size: 64,
-                color: Theme.of(context).colorScheme.primary,
-                semanticLabel: 'Security Pulse',
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Security Pulse',
-                style: Theme.of(context).textTheme.displayMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Corporate cybersecurity awareness',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                textAlign: TextAlign.center,
-              ),
+      body: switch (authState) {
+        AuthLoading() => LoadingView(message: l10n.signInLoading),
+        AuthError(:final failure) => ErrorView(
+            failure: failure,
+            onRetry: ref.read(authProvider.notifier).dismissError,
+          ),
+        _ => _buildSignInBody(context, ref, l10n),
+      },
+    );
+  }
 
-              const SizedBox(height: 48),
+  Widget _buildSignInBody(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // App identity
+            Icon(
+              Icons.security_rounded,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary,
+              semanticLabel: l10n.appName,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.appName,
+              style: Theme.of(context).textTheme.displayMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.signInSubtitle,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
 
-              // Sign-in button — Phase 2 implements OIDC
-              FilledButton.icon(
+            const SizedBox(height: 48),
+
+            // Sign-in button
+            Semantics(
+              button: true,
+              label: l10n.signInButtonLabel,
+              child: FilledButton.icon(
                 onPressed: () {
-                  // TODO(phase-2): Implement OIDC sign-in via flutter_appauth
+                  ref.read(authProvider.notifier).signIn();
                 },
                 icon: const Icon(Icons.business_rounded),
-                label: const Text('Sign in with your company account'),
+                label: Text(l10n.signInButtonLabel),
               ),
+            ),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              // Privacy note
-              Text(
-                'By signing in you agree to your organisation\'s '
-                'acceptable use policy.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+            // Privacy note
+            Text(
+              l10n.signInPrivacyNote,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
