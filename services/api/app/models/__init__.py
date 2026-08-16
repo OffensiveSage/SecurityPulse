@@ -3,6 +3,12 @@
 from app.models.assignment import Assignment
 from app.models.audit_event import AuditEvent
 from app.models.campaign import Campaign, CampaignStatus
+from app.models.incident_report import (
+    IncidentReport,
+    IncidentSeverity,
+    IncidentStatus,
+    ReportType,
+)
 from app.models.response import Response, ResponseSource
 from app.models.scenario import (
     AnswerOption,
@@ -19,6 +25,10 @@ __all__ = [
     "AuditEvent",
     "Campaign",
     "CampaignStatus",
+    "IncidentReport",
+    "IncidentSeverity",
+    "IncidentStatus",
+    "ReportType",
     "Response",
     "ResponseSource",
     "Scenario",
