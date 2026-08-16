@@ -12,6 +12,8 @@ abstract final class RoutePaths {
   static const String history = '/history';
   static const String incidentReport = '/incident-report';
   static const String incidentReceipt = '/incident-report/:reportId/receipt';
+  static const String myReports = '/my-reports';
+  static const String incidentDetail = '/my-reports/:reportId';
   static const String profile = '/profile';
   static const String settings = '/settings';
 }
@@ -24,6 +26,8 @@ abstract final class RouteNames {
   static const String history = 'history';
   static const String incidentReport = 'incident-report';
   static const String incidentReceipt = 'incident-receipt';
+  static const String myReports = 'my-reports';
+  static const String incidentDetail = 'incident-detail';
   static const String profile = 'profile';
   static const String settings = 'settings';
 }

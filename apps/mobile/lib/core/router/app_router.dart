@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/screens/sign_in_screen.dart';
-import '../../features/incident/presentation/screens/incident_shell_screen.dart';
+import '../../features/incident/presentation/screens/incident_detail_screen.dart';
+import '../../features/incident/presentation/screens/incident_history_screen.dart';
+import '../../features/incident/presentation/screens/incident_report_screen.dart';
 import '../../features/profile/presentation/screens/profile_shell_screen.dart';
 import '../../features/scenario/presentation/screens/daily_scenario_screen.dart';
 import '../../features/scenario/presentation/screens/history_screen.dart';
@@ -66,7 +68,22 @@ GoRouter createAppRouter({
       GoRoute(
         path: RoutePaths.incidentReport,
         name: RouteNames.incidentReport,
-        builder: (context, state) => const IncidentShellScreen(),
+        builder: (context, state) => const IncidentReportScreen(),
+      ),
+
+      GoRoute(
+        path: RoutePaths.myReports,
+        name: RouteNames.myReports,
+        builder: (context, state) => const IncidentHistoryScreen(),
+        routes: [
+          GoRoute(
+            path: ':reportId',
+            name: RouteNames.incidentDetail,
+            builder: (context, state) => IncidentDetailScreen(
+              reportId: state.pathParameters['reportId']!,
+            ),
+          ),
+        ],
       ),
 
       GoRoute(

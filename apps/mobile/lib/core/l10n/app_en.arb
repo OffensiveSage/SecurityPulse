@@ -195,5 +195,222 @@
   "historyItemIncorrect": "Incorrect",
   "@historyItemIncorrect": {
     "description": "Accessibility label for an incorrectly answered history item"
+  },
+
+  "incidentReportFabLabel": "Report",
+  "@incidentReportFabLabel": {
+    "description": "FAB label on the home screen for reporting incidents"
+  },
+
+  "incidentReportScreenTitle": "Report suspicious activity",
+  "@incidentReportScreenTitle": {
+    "description": "Title for the incident report form screen"
+  },
+
+  "incidentReportTypeLabel": "Type of incident",
+  "@incidentReportTypeLabel": {
+    "description": "Label for the report type dropdown"
+  },
+
+  "incidentReportTypeHint": "Select incident type",
+  "@incidentReportTypeHint": {
+    "description": "Hint text for the report type dropdown"
+  },
+
+  "incidentReportTitleLabel": "Title",
+  "@incidentReportTitleLabel": {
+    "description": "Label for the incident title field"
+  },
+
+  "incidentReportTitleHint": "Brief summary of the incident",
+  "@incidentReportTitleHint": {
+    "description": "Hint text for the incident title field"
+  },
+
+  "incidentReportDescriptionLabel": "Description",
+  "@incidentReportDescriptionLabel": {
+    "description": "Label for the incident description field"
+  },
+
+  "incidentReportDescriptionHint": "Describe what happened in detail",
+  "@incidentReportDescriptionHint": {
+    "description": "Hint text for the incident description field"
+  },
+
+  "incidentReportOccurredAtLabel": "When did this happen?",
+  "@incidentReportOccurredAtLabel": {
+    "description": "Label for the date/time picker"
+  },
+
+  "incidentReportSeverityLabel": "Severity (optional)",
+  "@incidentReportSeverityLabel": {
+    "description": "Label for the severity selector"
+  },
+
+  "incidentReportSenderUrlLabel": "Sender or URL",
+  "@incidentReportSenderUrlLabel": {
+    "description": "Label for the sender/URL field in email/link reports"
+  },
+
+  "incidentReportSystemAffectedLabel": "System or application affected",
+  "@incidentReportSystemAffectedLabel": {
+    "description": "Label for the affected system field in unauthorized access reports"
+  },
+
+  "incidentReportDeviceTypeLabel": "Device type",
+  "@incidentReportDeviceTypeLabel": {
+    "description": "Label for the device type dropdown in lost device reports"
+  },
+
+  "incidentReportLastLocationLabel": "Last known location",
+  "@incidentReportLastLocationLabel": {
+    "description": "Label for the last known location field in lost device reports"
+  },
+
+  "incidentReportDataClassificationLabel": "Data classification",
+  "@incidentReportDataClassificationLabel": {
+    "description": "Label for the data classification dropdown in data exposure reports"
+  },
+
+  "incidentReportAttachmentLabel": "Add attachment",
+  "@incidentReportAttachmentLabel": {
+    "description": "Label for the attachment button"
+  },
+
+  "incidentReportAttachmentComingSoon": "Attachments coming soon",
+  "@incidentReportAttachmentComingSoon": {
+    "description": "Tooltip for the disabled attachment button"
+  },
+
+  "incidentReportSubmitButton": "Submit report",
+  "@incidentReportSubmitButton": {
+    "description": "Label for the submit button"
+  },
+
+  "incidentReportSubmitting": "Submitting report\u2026",
+  "@incidentReportSubmitting": {
+    "description": "Loading message during report submission"
+  },
+
+  "incidentReportUrgentGuidance": "For urgent incidents, also contact the Security Operations Center at {phoneNumber}.",
+  "@incidentReportUrgentGuidance": {
+    "description": "Urgent guidance banner shown for critical incidents",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String",
+        "example": "+1-555-SOC-LINE"
+      }
+    }
+  },
+
+  "incidentReceiptTitle": "Report submitted",
+  "@incidentReceiptTitle": {
+    "description": "Title on the receipt screen after successful submission"
+  },
+
+  "incidentReceiptReportId": "Report ID: {reportId}",
+  "@incidentReceiptReportId": {
+    "description": "Shows the report ID on the receipt screen",
+    "placeholders": {
+      "reportId": {
+        "type": "String",
+        "example": "a1b2c3d4"
+      }
+    }
+  },
+
+  "incidentReceiptDoneButton": "Done",
+  "@incidentReceiptDoneButton": {
+    "description": "Done button on the receipt screen that returns to dashboard"
+  },
+
+  "incidentReceiptViewReportsButton": "View my reports",
+  "@incidentReceiptViewReportsButton": {
+    "description": "Button on receipt screen to navigate to report history"
+  },
+
+  "incidentHistoryScreenTitle": "My reports",
+  "@incidentHistoryScreenTitle": {
+    "description": "Title for the incident report history screen"
+  },
+
+  "incidentHistoryEmptyTitle": "No reports",
+  "@incidentHistoryEmptyTitle": {
+    "description": "Empty state title when no reports exist"
+  },
+
+  "incidentHistoryEmptyMessage": "Your submitted incident reports will appear here.",
+  "@incidentHistoryEmptyMessage": {
+    "description": "Empty state message when no reports exist"
+  },
+
+  "incidentDetailScreenTitle": "Report details",
+  "@incidentDetailScreenTitle": {
+    "description": "Title for the incident report detail screen"
+  },
+
+  "incidentReportValidationRequired": "This field is required",
+  "@incidentReportValidationRequired": {
+    "description": "Validation error for required fields"
+  },
+
+  "incidentReportValidationTitleLength": "Title must be 5\u2013100 characters",
+  "@incidentReportValidationTitleLength": {
+    "description": "Validation error for title length"
+  },
+
+  "incidentReportValidationDescriptionLength": "Description must be 10\u20132000 characters",
+  "@incidentReportValidationDescriptionLength": {
+    "description": "Validation error for description length"
+  },
+
+  "incidentReportValidationFutureDate": "Date cannot be in the future",
+  "@incidentReportValidationFutureDate": {
+    "description": "Validation error for future date"
+  },
+
+  "incidentStatusSubmitted": "Submitted",
+  "@incidentStatusSubmitted": {
+    "description": "Display label for submitted status"
+  },
+
+  "incidentStatusAcknowledged": "Acknowledged",
+  "@incidentStatusAcknowledged": {
+    "description": "Display label for acknowledged status"
+  },
+
+  "incidentStatusInvestigating": "Investigating",
+  "@incidentStatusInvestigating": {
+    "description": "Display label for investigating status"
+  },
+
+  "incidentStatusResolved": "Resolved",
+  "@incidentStatusResolved": {
+    "description": "Display label for resolved status"
+  },
+
+  "incidentStatusClosed": "Closed",
+  "@incidentStatusClosed": {
+    "description": "Display label for closed status"
+  },
+
+  "incidentSeverityLow": "Low",
+  "@incidentSeverityLow": {
+    "description": "Display label for low severity"
+  },
+
+  "incidentSeverityMedium": "Medium",
+  "@incidentSeverityMedium": {
+    "description": "Display label for medium severity"
+  },
+
+  "incidentSeverityHigh": "High",
+  "@incidentSeverityHigh": {
+    "description": "Display label for high severity"
+  },
+
+  "incidentSeverityCritical": "Critical",
+  "@incidentSeverityCritical": {
+    "description": "Display label for critical severity"
   }
 }

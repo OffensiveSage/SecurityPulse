@@ -51,10 +51,10 @@ This threat model covers the Security Pulse MVP: Flutter mobile app, native widg
 | T-08 | Admin role escalation | API | High | RBAC enforced server-side; claims from trusted IdP only |
 | T-09 | Content published without approval | API | Medium | State machine enforces draft→review→approved→published; each transition requires appropriate role |
 | T-10 | Individual re-identification via analytics | API | Medium | Minimum group size suppression; preference for aggregate data |
-| T-11 | Credential submission via incident form | Mobile | High | No password/MFA fields; prominent warning displayed; backend rejects submissions with credential patterns |
+| T-11 | Credential submission via incident form | Mobile | High | No password/MFA fields; prominent warning displayed; backend rejects submissions with credential patterns. **Implemented in Phase 4.** |
 | T-12 | SQL injection | API | High | SQLAlchemy ORM with parameterized queries only |
 | T-13 | Mass assignment / over-posting | API | Medium | Pydantic schema explicitly defines accepted fields |
-| T-14 | Rate limit abuse on submission | API | Medium | Redis-backed rate limiting on scenario submission and incident creation |
+| T-14 | Rate limit abuse on submission | API | Medium | DB-based rate limiting on incident creation (max 10/hour/user); Redis-backed rate limiting planned for scenario submission. **Incident rate limiting implemented in Phase 4.** |
 | T-15 | Stale widget showing incorrect state | iOS/Android widget | Low | `expiresAt` in DailyCardModel; widget shows "offline" state when expired |
 | T-16 | Sensitive data in crash reports | Mobile/API | Medium | Crash reporter configured to exclude auth headers, form data |
 | T-17 | Mock auth enabled in production | API | Critical | `ALLOW_MOCK_AUTH` gated by `APP_ENV != production`; startup check (`_assert_production_safety()`) rejects misconfiguration. **Implemented in Phase 2.** |
@@ -106,6 +106,30 @@ Employee opens app
 | T-02 (Horizontal privilege escalation) | All scenario, assignment, and response queries filter by `user_id` from the authenticated token. Service layer enforces user ownership on response submission. |
 | T-03 (Answer exposure before submission) | Separate Pydantic schemas: `AnswerOptionForEmployee` (pre-submission, no `is_correct`) vs `AnswerOptionWithResult` (post-submission, includes `is_correct`). Structural enforcement — not runtime stripping. |
 | T-04 (Duplicate response submission) | `UniqueConstraint` on `(user_id, scenario_id)` at database level. `idempotency_key` column on Response model for safe retries. Service layer pre-checks for existing responses. |
+
+## Phase 4 incident reporting data flow (implemented)
+
+```
+Employee taps "Report" FAB on daily scenario screen
+  → Flutter renders incident form (CredentialWarningBanner always visible)
+  → No password/MFA fields; UrgentGuidanceBanner shown for critical severity or unauthorized_access/data_exposure
+  → Client-side validation: report type required, title 5–100 chars, description 10–2000 chars, occurred_at not future
+  → POST /api/v1/incidents (Idempotency-Key header)
+  → Backend: Pydantic schema rejects credential patterns in description, validates metadata keys against report type
+  → Backend: Service layer checks idempotency key → rate limit (COUNT, max 10/hour) → persist to DB → fire-and-forget router
+  → 201 Created (new report) or 200 OK (idempotent replay) or 429 (rate limit exceeded)
+  → Flutter shows receipt: report ID (first 8 chars), title, type, timestamp
+  → GET /api/v1/incidents/mine → paginated list of user's own reports
+  → GET /api/v1/incidents/{id} → detail view (user-scoped, 404 for other users)
+```
+
+### Mitigations implemented in Phase 4
+
+| Threat | Mitigation status |
+|---|---|
+| T-02 (Horizontal privilege escalation) | Incident report queries filter by `reporter_id == current_user.id`. GET /incidents/{id} returns 404 (not 403) for other users' reports, preventing existence disclosure. |
+| T-11 (Credential submission via incident form) | No credential fields in form. `CredentialWarningBanner` always visible. Backend `reject_credential_patterns` regex validator on description. `_FORBIDDEN_METADATA_KEYS` set validated on metadata. |
+| T-14 (Rate limit abuse on submission) | DB-based rate limiting: `COUNT(*) WHERE reporter_id = :uid AND created_at > now() - interval '1 hour'`. Returns 429 when >= 10 reports in the window. Idempotent replays bypass rate limit check. |
 
 ---
 

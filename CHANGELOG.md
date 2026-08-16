@@ -8,6 +8,35 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Phase 4: Incident Reporting
+
+**Backend**
+- IncidentReport ORM model with enums: ReportType (9 values), IncidentSeverity, IncidentStatus
+- Alembic migration `0003` creating incident_reports table with indexes on reporter_id, report_type, status, created_at
+- Pydantic schemas with credential pattern rejection (T-11): regex-based detection of passwords, MFA codes, API keys in descriptions; forbidden metadata key validation
+- Incident service layer: DB-based rate limiting (max 10 reports per user per hour, T-14), user-scoped queries (T-02), idempotency key support
+- Routing abstraction: `IncidentRouterBase` ABC with `LogOnlyIncidentRouter` default implementation (fire-and-forget after DB commit)
+- API endpoints: POST /incidents (201/200/429), GET /incidents/mine (paginated), GET /incidents/{id} (user-scoped)
+- 37 new backend tests (106 total): incident service unit tests, schema validation, endpoint integration tests, routing abstraction, rate limiting, idempotency
+
+**Mobile**
+- Incident domain layer: ReportType, IncidentSeverity, IncidentStatus, DeviceType, DataClassification enums; IncidentReport and IncidentReportSummary models with fromJson factories
+- IncidentRepository abstract interface with mock and API implementations
+- Riverpod providers: IncidentFormNotifier (AutoDispose) with sealed state hierarchy (editing/submitting/success/error), IncidentHistoryNotifier with sealed states
+- Incident report screen: full form with report type selector, title, description, date/time picker, severity radio buttons, conditional fields (type-specific), credential warning banner, urgent guidance banner
+- Receipt view: displays report ID (truncated), title, type, timestamp with navigation to dashboard or history
+- Incident history screen: paginated list with type badges, severity indicators, status
+- Incident detail screen: read-only report view with credential warning
+- FAB on daily scenario screen for quick incident reporting access
+- RateLimitFailure class and 429 HTTP status mapping
+- ~35 new localization keys for all incident reporting strings
+- 44 new Flutter tests (150 total): model JSON parsing, form provider state management, history provider, screen widget tests (credential warning, urgent guidance, loading, receipt)
+
+**Security**
+- T-02 implemented: all incident queries filter by `reporter_id == current_user.id`; GET /incidents/{id} returns 404 for other users' reports
+- T-11 implemented: no credential fields in forms; credential warning banner always visible; backend regex rejects password/MFA/API key patterns in descriptions; forbidden metadata keys validated
+- T-14 implemented: DB-based rate limiting (COUNT query with 1-hour window, max 10 reports)
+
 ### Added — Phase 3: Backend-Driven Daily Scenario Delivery
 
 **Backend**

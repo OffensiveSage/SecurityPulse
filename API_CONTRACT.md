@@ -27,7 +27,7 @@ Base URL: `/api/v1`
 | Employee (partially implemented) | GET /me/profile, PATCH /me/preferences, **GET /me/progress** *(impl)*, **GET /me/history** *(impl)* |
 | Scenarios (implemented) | **GET /scenarios/today** *(impl)*, **GET /scenarios/{id}** *(impl)*, **POST /scenarios/{id}/responses** *(impl)*, **GET /scenarios/{id}/result** *(impl)* |
 | Widget | GET /widget/daily-card |
-| Incident reports | POST /incident-reports, GET /incident-reports/{id}/receipt |
+| Incident reports (implemented) | **POST /incidents** *(impl)*, **GET /incidents/mine** *(impl)*, **GET /incidents/{id}** *(impl)* |
 | Admin — scenarios | GET/POST /admin/scenarios, PATCH /admin/scenarios/{id}, POST /admin/scenarios/{id}/submit-review \| approve \| publish |
 | Admin — analytics | GET /admin/analytics/summary |
 | Admin — campaigns | GET/POST /admin/campaigns, POST /admin/campaigns/{id}/calculate-eligibility |

@@ -30,6 +30,12 @@ Version: 1.0 | Status: Draft
 - **T-03 — Answer exposure prevention**: Separate Pydantic schemas enforce the pre/post-submission boundary. `AnswerOptionForEmployee` (used in GET /scenarios/today and GET /scenarios/{id}) excludes `is_correct` and `explanation`. `AnswerOptionWithResult` (used in GET /scenarios/{id}/result) includes them. It is structurally impossible for the pre-submission schema to leak correctness.
 - **T-04 — Duplicate response prevention**: A `UniqueConstraint` on `(user_id, scenario_id)` in the Response table prevents duplicate answers at the database level. An `idempotency_key` column on Response supports safe client retries. The service layer checks for existing responses before insertion.
 
+### Phase 4 incident reporting security controls (implemented)
+
+- **T-02 — User-scoped incident queries**: All incident report queries filter by `reporter_id == current_user.id`. GET /incidents/{id} returns 404 (not 403) when a report belongs to another user, preventing information disclosure about report existence.
+- **T-11 — Credential rejection**: No password or MFA fields exist in the incident form. A `CredentialWarningBanner` is always visible on the form. Backend `IncidentReportCreate` schema uses regex-based `reject_credential_patterns` validator to detect and reject password/MFA/API key patterns in descriptions. Metadata fields are validated against `_FORBIDDEN_METADATA_KEYS` (password, auth_token, mfa_code, api_key, secret_key, access_token, refresh_token).
+- **T-14 — Rate limiting**: DB-based rate limiting enforces max 10 incident reports per user per hour. The service layer runs `SELECT COUNT(*) WHERE reporter_id = :uid AND created_at > now() - interval '1 hour'` before each creation. Returns HTTP 429 when limit exceeded. Idempotent replays (via `Idempotency-Key` header) do not count against the rate limit.
+
 ---
 
 ## Data minimization

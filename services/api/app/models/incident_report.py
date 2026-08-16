@@ -118,7 +118,4 @@ class IncidentReport(Base, UUIDMixin, TimestampMixin):
     )
 
     def __repr__(self) -> str:
-        return (
-            f"<IncidentReport id={self.id} "
-            f"type={self.report_type} status={self.status}>"
-        )
+        return f"<IncidentReport id={self.id} type={self.report_type} status={self.status}>"

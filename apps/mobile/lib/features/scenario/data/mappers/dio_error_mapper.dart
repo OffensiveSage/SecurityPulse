@@ -30,6 +30,7 @@ Failure mapDioError(DioException error) {
     404 => NotFoundFailure(message: detail),
     409 => ConflictFailure(message: detail),
     410 => ServerFailure(message: detail, statusCode: 410),
+    429 => RateLimitFailure(message: detail),
     _ => ServerFailure(message: detail, statusCode: statusCode),
   };
 }

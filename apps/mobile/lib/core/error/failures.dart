@@ -59,6 +59,13 @@ final class ValidationFailure extends Failure {
   final Map<String, String> fieldErrors;
 }
 
+/// Rate limit exceeded.
+final class RateLimitFailure extends Failure {
+  const RateLimitFailure({
+    super.message = 'Too many reports. Please wait before submitting another.',
+  });
+}
+
 /// An unexpected local error (e.g., secure storage failure).
 final class LocalFailure extends Failure {
   const LocalFailure({super.message = 'A local error occurred.'});

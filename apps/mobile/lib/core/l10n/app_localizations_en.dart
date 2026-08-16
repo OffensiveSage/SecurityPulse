@@ -133,4 +133,137 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyItemIncorrect => 'Incorrect';
+
+  @override
+  String get incidentReportFabLabel => 'Report';
+
+  @override
+  String get incidentReportScreenTitle => 'Report suspicious activity';
+
+  @override
+  String get incidentReportTypeLabel => 'Type of incident';
+
+  @override
+  String get incidentReportTypeHint => 'Select incident type';
+
+  @override
+  String get incidentReportTitleLabel => 'Title';
+
+  @override
+  String get incidentReportTitleHint => 'Brief summary of the incident';
+
+  @override
+  String get incidentReportDescriptionLabel => 'Description';
+
+  @override
+  String get incidentReportDescriptionHint =>
+      'Describe what happened in detail';
+
+  @override
+  String get incidentReportOccurredAtLabel => 'When did this happen?';
+
+  @override
+  String get incidentReportSeverityLabel => 'Severity (optional)';
+
+  @override
+  String get incidentReportSenderUrlLabel => 'Sender or URL';
+
+  @override
+  String get incidentReportSystemAffectedLabel =>
+      'System or application affected';
+
+  @override
+  String get incidentReportDeviceTypeLabel => 'Device type';
+
+  @override
+  String get incidentReportLastLocationLabel => 'Last known location';
+
+  @override
+  String get incidentReportDataClassificationLabel => 'Data classification';
+
+  @override
+  String get incidentReportAttachmentLabel => 'Add attachment';
+
+  @override
+  String get incidentReportAttachmentComingSoon => 'Attachments coming soon';
+
+  @override
+  String get incidentReportSubmitButton => 'Submit report';
+
+  @override
+  String get incidentReportSubmitting => 'Submitting report…';
+
+  @override
+  String incidentReportUrgentGuidance(String phoneNumber) {
+    return 'For urgent incidents, also contact the Security Operations Center at $phoneNumber.';
+  }
+
+  @override
+  String get incidentReceiptTitle => 'Report submitted';
+
+  @override
+  String incidentReceiptReportId(String reportId) {
+    return 'Report ID: $reportId';
+  }
+
+  @override
+  String get incidentReceiptDoneButton => 'Done';
+
+  @override
+  String get incidentReceiptViewReportsButton => 'View my reports';
+
+  @override
+  String get incidentHistoryScreenTitle => 'My reports';
+
+  @override
+  String get incidentHistoryEmptyTitle => 'No reports';
+
+  @override
+  String get incidentHistoryEmptyMessage =>
+      'Your submitted incident reports will appear here.';
+
+  @override
+  String get incidentDetailScreenTitle => 'Report details';
+
+  @override
+  String get incidentReportValidationRequired => 'This field is required';
+
+  @override
+  String get incidentReportValidationTitleLength =>
+      'Title must be 5–100 characters';
+
+  @override
+  String get incidentReportValidationDescriptionLength =>
+      'Description must be 10–2000 characters';
+
+  @override
+  String get incidentReportValidationFutureDate =>
+      'Date cannot be in the future';
+
+  @override
+  String get incidentStatusSubmitted => 'Submitted';
+
+  @override
+  String get incidentStatusAcknowledged => 'Acknowledged';
+
+  @override
+  String get incidentStatusInvestigating => 'Investigating';
+
+  @override
+  String get incidentStatusResolved => 'Resolved';
+
+  @override
+  String get incidentStatusClosed => 'Closed';
+
+  @override
+  String get incidentSeverityLow => 'Low';
+
+  @override
+  String get incidentSeverityMedium => 'Medium';
+
+  @override
+  String get incidentSeverityHigh => 'High';
+
+  @override
+  String get incidentSeverityCritical => 'Critical';
 }

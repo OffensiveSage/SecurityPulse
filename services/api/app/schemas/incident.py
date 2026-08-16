@@ -15,7 +15,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.models.incident_report import IncidentSeverity, IncidentStatus, ReportType
+from app.models.incident_report import IncidentSeverity, ReportType
 
 # Patterns that suggest credential data (T-11).
 _CREDENTIAL_PATTERNS = re.compile(
@@ -28,15 +28,17 @@ _CREDENTIAL_PATTERNS = re.compile(
 )
 
 # Keys forbidden in metadata_fields.
-_FORBIDDEN_METADATA_KEYS = frozenset({
-    "password",
-    "auth_token",
-    "mfa_code",
-    "api_key",
-    "secret_key",
-    "access_token",
-    "refresh_token",
-})
+_FORBIDDEN_METADATA_KEYS = frozenset(
+    {
+        "password",
+        "auth_token",
+        "mfa_code",
+        "api_key",
+        "secret_key",
+        "access_token",
+        "refresh_token",
+    }
+)
 
 # Valid metadata keys per report type.
 _VALID_METADATA_KEYS: dict[ReportType, frozenset[str]] = {

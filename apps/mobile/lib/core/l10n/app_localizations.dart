@@ -327,6 +327,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect'**
   String get historyItemIncorrect;
+
+  /// FAB label on the home screen for reporting incidents
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get incidentReportFabLabel;
+
+  /// Title for the incident report form screen
+  ///
+  /// In en, this message translates to:
+  /// **'Report suspicious activity'**
+  String get incidentReportScreenTitle;
+
+  /// Label for the report type dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Type of incident'**
+  String get incidentReportTypeLabel;
+
+  /// Hint text for the report type dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select incident type'**
+  String get incidentReportTypeHint;
+
+  /// Label for the incident title field
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get incidentReportTitleLabel;
+
+  /// Hint text for the incident title field
+  ///
+  /// In en, this message translates to:
+  /// **'Brief summary of the incident'**
+  String get incidentReportTitleHint;
+
+  /// Label for the incident description field
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get incidentReportDescriptionLabel;
+
+  /// Hint text for the incident description field
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what happened in detail'**
+  String get incidentReportDescriptionHint;
+
+  /// Label for the date/time picker
+  ///
+  /// In en, this message translates to:
+  /// **'When did this happen?'**
+  String get incidentReportOccurredAtLabel;
+
+  /// Label for the severity selector
+  ///
+  /// In en, this message translates to:
+  /// **'Severity (optional)'**
+  String get incidentReportSeverityLabel;
+
+  /// Label for the sender/URL field in email/link reports
+  ///
+  /// In en, this message translates to:
+  /// **'Sender or URL'**
+  String get incidentReportSenderUrlLabel;
+
+  /// Label for the affected system field in unauthorized access reports
+  ///
+  /// In en, this message translates to:
+  /// **'System or application affected'**
+  String get incidentReportSystemAffectedLabel;
+
+  /// Label for the device type dropdown in lost device reports
+  ///
+  /// In en, this message translates to:
+  /// **'Device type'**
+  String get incidentReportDeviceTypeLabel;
+
+  /// Label for the last known location field in lost device reports
+  ///
+  /// In en, this message translates to:
+  /// **'Last known location'**
+  String get incidentReportLastLocationLabel;
+
+  /// Label for the data classification dropdown in data exposure reports
+  ///
+  /// In en, this message translates to:
+  /// **'Data classification'**
+  String get incidentReportDataClassificationLabel;
+
+  /// Label for the attachment button
+  ///
+  /// In en, this message translates to:
+  /// **'Add attachment'**
+  String get incidentReportAttachmentLabel;
+
+  /// Tooltip for the disabled attachment button
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments coming soon'**
+  String get incidentReportAttachmentComingSoon;
+
+  /// Label for the submit button
+  ///
+  /// In en, this message translates to:
+  /// **'Submit report'**
+  String get incidentReportSubmitButton;
+
+  /// Loading message during report submission
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting report…'**
+  String get incidentReportSubmitting;
+
+  /// Urgent guidance banner shown for critical incidents
+  ///
+  /// In en, this message translates to:
+  /// **'For urgent incidents, also contact the Security Operations Center at {phoneNumber}.'**
+  String incidentReportUrgentGuidance(String phoneNumber);
+
+  /// Title on the receipt screen after successful submission
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted'**
+  String get incidentReceiptTitle;
+
+  /// Shows the report ID on the receipt screen
+  ///
+  /// In en, this message translates to:
+  /// **'Report ID: {reportId}'**
+  String incidentReceiptReportId(String reportId);
+
+  /// Done button on the receipt screen that returns to dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get incidentReceiptDoneButton;
+
+  /// Button on receipt screen to navigate to report history
+  ///
+  /// In en, this message translates to:
+  /// **'View my reports'**
+  String get incidentReceiptViewReportsButton;
+
+  /// Title for the incident report history screen
+  ///
+  /// In en, this message translates to:
+  /// **'My reports'**
+  String get incidentHistoryScreenTitle;
+
+  /// Empty state title when no reports exist
+  ///
+  /// In en, this message translates to:
+  /// **'No reports'**
+  String get incidentHistoryEmptyTitle;
+
+  /// Empty state message when no reports exist
+  ///
+  /// In en, this message translates to:
+  /// **'Your submitted incident reports will appear here.'**
+  String get incidentHistoryEmptyMessage;
+
+  /// Title for the incident report detail screen
+  ///
+  /// In en, this message translates to:
+  /// **'Report details'**
+  String get incidentDetailScreenTitle;
+
+  /// Validation error for required fields
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get incidentReportValidationRequired;
+
+  /// Validation error for title length
+  ///
+  /// In en, this message translates to:
+  /// **'Title must be 5–100 characters'**
+  String get incidentReportValidationTitleLength;
+
+  /// Validation error for description length
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be 10–2000 characters'**
+  String get incidentReportValidationDescriptionLength;
+
+  /// Validation error for future date
+  ///
+  /// In en, this message translates to:
+  /// **'Date cannot be in the future'**
+  String get incidentReportValidationFutureDate;
+
+  /// Display label for submitted status
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get incidentStatusSubmitted;
+
+  /// Display label for acknowledged status
+  ///
+  /// In en, this message translates to:
+  /// **'Acknowledged'**
+  String get incidentStatusAcknowledged;
+
+  /// Display label for investigating status
+  ///
+  /// In en, this message translates to:
+  /// **'Investigating'**
+  String get incidentStatusInvestigating;
+
+  /// Display label for resolved status
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get incidentStatusResolved;
+
+  /// Display label for closed status
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get incidentStatusClosed;
+
+  /// Display label for low severity
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get incidentSeverityLow;
+
+  /// Display label for medium severity
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get incidentSeverityMedium;
+
+  /// Display label for high severity
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get incidentSeverityHigh;
+
+  /// Display label for critical severity
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get incidentSeverityCritical;
 }
 
 class _AppLocalizationsDelegate

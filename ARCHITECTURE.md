@@ -139,15 +139,26 @@ Employee opens app
 
 **Flutter (Phase 3):** `ApiScenarioRepository` (Dio-based), history screen, progress provider, `ResponseRecord` and `UserProgress` models with `fromJson` factories.
 
-### Incident report flow
+### Incident report flow (Phase 4)
 ```
-Employee taps "Report suspicious activity"
-  → Flutter renders wizard (no credential fields)
-  → POST /api/v1/incident-reports (with Idempotency-Key)
-  → Backend creates IncidentReport, routes to ticketing adapter
-  → GET /api/v1/incident-reports/{id}/receipt → reference number
-  → Flutter displays reference number
+Employee taps "Report" FAB on daily scenario screen
+  → Flutter renders incident form with CredentialWarningBanner (always visible)
+  → Form fields: report type (9 categories), title, description, date/time picker,
+    severity (radio buttons), conditional fields (type-specific: sender_or_url,
+    system_affected, device_type+location, data_classification)
+  → UrgentGuidanceBanner shown when severity=critical or type=unauthorized_access|data_exposure
+  → POST /api/v1/incidents (with Idempotency-Key header)
+  → Backend validates: Pydantic schema rejects credential patterns, validates metadata keys
+  → Service layer: idempotency check → rate limit (max 10/hour/user) → persist IncidentReport
+  → Fire-and-forget routing via LogOnlyIncidentRouter (future: email, webhook, ServiceNow)
+  → 201 Created → Flutter shows receipt (report ID, title, type, timestamp)
+  → GET /api/v1/incidents/mine → paginated report history (user-scoped)
+  → GET /api/v1/incidents/{id} → report detail (user-scoped, 404 for other users)
 ```
+
+**Backend models (Phase 4):** IncidentReport with ReportType (9 values), IncidentSeverity, IncidentStatus — defined as SQLAlchemy ORM model with Alembic migration `0003`. JSONB `metadata_json` column stores type-specific conditional fields.
+
+**Flutter (Phase 4):** `MockIncidentRepository` (default) and `ApiIncidentRepository` (Dio-based). Riverpod `IncidentFormNotifier` (AutoDispose) with sealed state hierarchy. 5 presentation widgets, 3 screens, ~35 localization keys.
 
 ---
 

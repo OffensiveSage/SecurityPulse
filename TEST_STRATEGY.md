@@ -29,9 +29,9 @@ Version: 1.0 | Status: Draft
 | Load | locust | Daily notification spike (target: 10k employees in 5 minutes) |
 | Security | bandit, pip-audit | CI gate: no unreviewed HIGH findings |
 
-### Current test count: 69 tests (41 new in Phase 3)
+### Current test count: 106 tests (37 new in Phase 4)
 
-Tests cover: scenario service logic (user-scoped queries, answer exposure prevention, duplicate response handling), API endpoint integration tests for all 6 scenario/employee endpoints, authorization matrix tests, idempotency and concurrency tests, seed data verification.
+Tests cover: scenario service logic (user-scoped queries, answer exposure prevention, duplicate response handling), API endpoint integration tests for all 6 scenario/employee endpoints, authorization matrix tests, idempotency and concurrency tests, seed data verification. Phase 4 adds: incident service unit tests (create, idempotency replay, rate limiting, user-scoped queries, routing abstraction), incident schema validation (credential pattern rejection, metadata key validation, field length constraints, future date rejection), incident endpoint integration tests (201/200/429 status codes, user-scoped access, pagination).
 
 ### Required test fixtures
 - Mock OIDC token factory (each role)
@@ -54,9 +54,9 @@ Tests cover: scenario service logic (user-scoped queries, answer exposure preven
 | Accessibility | flutter_test + SemanticsDebugger | Semantics labels on all interactive elements |
 | Localization | flutter_test | ARB keys resolve; no overflow on 2× string length |
 
-### Current test count: 106 tests (21 new in Phase 3)
+### Current test count: 150 tests (44 new in Phase 4)
 
-New tests cover: ApiScenarioRepository (Dio-based HTTP calls, error handling), history screen widget tests (loading, empty, error, data states), progress provider tests, ResponseRecord and UserProgress model serialization (fromJson factories).
+New tests cover: ApiScenarioRepository (Dio-based HTTP calls, error handling), history screen widget tests (loading, empty, error, data states), progress provider tests, ResponseRecord and UserProgress model serialization (fromJson factories). Phase 4 adds: incident report model JSON parsing (IncidentReport, IncidentReportSummary, enum fromApi factories), incident form provider tests (initial state, field updates, validation, submit success/error, retry from error, urgent guidance logic), incident history provider tests (loading/loaded/empty/error states, retry), incident report screen widget tests (credential warning banner, urgent guidance for critical severity and unauthorized access, form fields, loading state, receipt display), incident history screen widget tests (loading, empty, loaded with type badges).
 
 ---
 
