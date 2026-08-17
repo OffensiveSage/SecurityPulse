@@ -139,6 +139,58 @@ Employee opens app
 
 **Flutter (Phase 3):** `ApiScenarioRepository` (Dio-based), history screen, progress provider, `ResponseRecord` and `UserProgress` models with `fromJson` factories.
 
+### Widget bridge data flow (implemented in Phase 5)
+```
+Scenario state changes in Flutter
+  → widgetSyncProvider (Riverpod ref.listen) detects change
+  → widget_state_mapper maps DailyScenarioState to DailyCardBridgeModel
+  → PlatformWidgetBridge calls MethodChannel('com.securitypulse/widget_bridge')
+  → Android: WidgetBridgePlugin writes JSON to SharedPreferences("security_pulse_widget")
+    → triggers AppWidgetManager broadcast → Glance DailyCardWidget re-renders
+  → iOS: WidgetBridgePlugin writes JSON to UserDefaults("group.com.securitypulse.shared")
+    → triggers WidgetCenter.shared.reloadAllTimelines() → WidgetKit re-renders
+
+Auth sign-out:
+  → widgetSyncProvider detects AuthUnauthenticated
+  → writes DailyCardBridgeModel(completionState: "signed_out", deepLinkRoute: "/signin")
+  → widget shows "Sign in to see today's question"
+```
+
+### Notification architecture (implemented in Phase 5)
+```
+NotificationService (abstract)
+  ├── LocalNotificationService (dev: flutter_local_notifications)
+  └── [FcmNotificationService] (production: Firebase Cloud Messaging — future)
+
+NotificationPreferenceNotifier (Riverpod)
+  → reads/writes preference to flutter_secure_storage
+  → calls NotificationService.scheduleDailyReminder() or cancelDailyReminder()
+  → Settings screen: SwitchListTile toggle
+
+Daily notification (static, non-sensitive):
+  Title: "Security Pulse"
+  Body: "Your daily security challenge is ready"
+  Schedule: 9:00 AM local time, daily repeating
+  Tap action: deep link securitypulse:///today
+```
+
+### Deep link handling (implemented in Phase 5)
+```
+Widget/notification tap → securitypulse:///today
+  → Android: intent-filter routes to MainActivity
+  → iOS: CFBundleURLTypes routes to Runner
+  → GoRouter receives path /today
+  → Redirect route: /today → RoutePaths.home
+  → Auth guard: if unauthenticated → redirect to /sign-in
+  → If authenticated → DailyScenarioScreen
+```
+
+Accepted deep link paths (whitelist):
+- `/today` → home screen (daily scenario)
+- `/progress` → history screen
+- `/signin` → sign-in screen
+- All other paths → rejected (fail safe)
+
 ### Incident report flow (Phase 4)
 ```
 Employee taps "Report" FAB on daily scenario screen

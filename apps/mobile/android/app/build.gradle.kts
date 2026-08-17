@@ -15,6 +15,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -44,6 +45,8 @@ android {
 dependencies {
     // Required by DailyCardWidget's GlanceAppWidget implementation.
     implementation("androidx.glance:glance-appwidget:1.1.1")
+    // Required by flutter_local_notifications for Java 8+ API desugaring.
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 kotlin {

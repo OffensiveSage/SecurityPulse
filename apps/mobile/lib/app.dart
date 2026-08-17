@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 
 import 'core/l10n/app_localizations.dart';
 import 'core/router/app_router.dart';
+import 'core/storage/widget_sync_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'features/auth/presentation/providers/auth_state.dart';
@@ -56,6 +57,9 @@ class _SecurityPulseAppState extends ConsumerState<SecurityPulseApp> {
     ref.listen<AuthState>(authProvider, (previous, next) {
       _authChangeNotifier.notify();
     });
+
+    // Activate widget sync — updates native widget on state changes.
+    ref.watch(widgetSyncProvider);
 
     return MaterialApp.router(
       title: 'Security Pulse',

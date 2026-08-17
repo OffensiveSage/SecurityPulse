@@ -7,11 +7,15 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize timezone data for scheduled notifications.
+  tz.initializeTimeZones();
 
   // Lock to portrait by default; tablet layouts (Phase 7) may relax this
   await SystemChrome.setPreferredOrientations([

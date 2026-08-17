@@ -412,5 +412,35 @@
   "incidentSeverityCritical": "Critical",
   "@incidentSeverityCritical": {
     "description": "Display label for critical severity"
+  },
+
+  "settingsScreenTitle": "Settings",
+  "@settingsScreenTitle": {
+    "description": "Title for the settings screen"
+  },
+
+  "settingsNotificationToggleLabel": "Daily reminder",
+  "@settingsNotificationToggleLabel": {
+    "description": "Label for the notification preference toggle"
+  },
+
+  "settingsNotificationToggleDescription": "Get a daily notification when your security challenge is ready",
+  "@settingsNotificationToggleDescription": {
+    "description": "Description for the notification preference toggle"
+  },
+
+  "settingsNotificationPermissionDenied": "Notification permission is required. Enable it in device settings.",
+  "@settingsNotificationPermissionDenied": {
+    "description": "Message shown when notification permission is denied"
+  },
+
+  "notificationTitle": "Security Pulse",
+  "@notificationTitle": {
+    "description": "Title for the daily reminder notification. Static and non-sensitive."
+  },
+
+  "notificationBody": "Your daily security challenge is ready",
+  "@notificationBody": {
+    "description": "Body for the daily reminder notification. Static and non-sensitive."
   }
 }

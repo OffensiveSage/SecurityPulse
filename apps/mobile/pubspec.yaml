@@ -36,6 +36,12 @@ dependencies:
   # Network connectivity
   connectivity_plus: ^6.0.3
 
+  # Local notifications (dev mode; production uses FCM/APNs via provider abstraction)
+  flutter_local_notifications: ^18.0.0
+
+  # Timezone support for scheduled notifications
+  timezone: ^0.9.4
+
   # Serialization
   json_annotation: ^4.9.0
 

@@ -8,6 +8,53 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Phase 5: Daily Notifications + Native Home-Screen Widget
+
+**Mobile — Widget Bridge**
+- Flutter ↔ native widget bridge via MethodChannel (`com.securitypulse/widget_bridge`)
+- `DailyCardBridgeModel` with 5 completion states (available, completed, no_assignment, offline, signed_out)
+- Android `WidgetBridgePlugin.kt`: writes to `SharedPreferences("security_pulse_widget")`, triggers AppWidget update
+- iOS `WidgetBridgePlugin.swift`: writes to App Group `UserDefaults("group.com.securitypulse.shared")`, triggers WidgetKit timeline reload
+- `widgetSyncProvider` (Riverpod): auto-updates native widget on scenario or auth state changes
+- `widget_state_mapper.dart`: pure functions mapping DailyScenarioState and auth state to bridge model
+
+**Mobile — Android Widget Wiring**
+- AndroidManifest.xml: widget receiver registration for `DailyCardWidgetReceiver`
+- AndroidManifest.xml: deep link intent-filter for `securitypulse://` URI scheme
+- `security_pulse_widget_info.xml`: AppWidget metadata (180x110dp, 1hr update, resizable)
+- `widget_loading.xml`: initial placeholder layout
+- `build.gradle.kts`: core library desugaring enabled for flutter_local_notifications
+
+**Mobile — iOS Widget Wiring**
+- Info.plist: `CFBundleURLTypes` with `securitypulse` URL scheme
+- Runner.entitlements and SecurityPulseWidget.entitlements: App Group `group.com.securitypulse.shared`
+- SecurityPulseWidgetBundle.swift: WidgetKit entry point
+
+**Mobile — Deep Link Handling**
+- `deep_link_validator.dart`: whitelist-based path validation (T-05) — only `/today`, `/progress`, `/signin` accepted
+- GoRouter redirect routes: `/today` → home, `/progress` → history, `/signin` → sign-in
+- `DeepLinkPaths` constants in route_names.dart
+
+**Mobile — Daily Notifications**
+- `NotificationService` abstract interface (provider abstraction — no Firebase dependency)
+- `LocalNotificationService` using `flutter_local_notifications`: daily repeating at 9:00 AM, static content only
+- `MockNotificationService` for tests
+- `NotificationPreferenceNotifier` (Riverpod): persists preference in flutter_secure_storage, handles permission requests
+- Settings screen: notification toggle with SwitchListTile (replaced Phase 1 placeholder)
+- 6 new localization keys for settings and notifications
+
+**Testing**
+- 35 new Flutter tests (185 total): DailyCardBridgeModel serialization, widget state mapper (all 7 states), deep link validation (whitelist, case-insensitive, query/fragment stripping), notification preference provider (enable/disable/permission denied), settings screen, widget sync provider
+- All 106 backend tests pass (no regression)
+- Debug APK builds successfully
+
+**Security**
+- T-05 mitigated: deep link paths validated via whitelist; unknown paths rejected; auth guard prevents unauthenticated access
+- T-06 mitigated: only `DailyCardBridgeModel` written to shared storage; no tokens, answers, PII, or incident data
+- T-07 mitigated: tokens never written to SharedPreferences or App Group UserDefaults
+- T-15 mitigated: `expiresAt` field causes fallback to offline state; widget refreshes on timeline
+- Notification content is static ("Security Pulse" / "Your daily security challenge is ready") — no sensitive data, lock-screen safe
+
 ### Added — Phase 4: Incident Reporting
 
 **Backend**

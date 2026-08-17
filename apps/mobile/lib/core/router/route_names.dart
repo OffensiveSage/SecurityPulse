@@ -40,3 +40,13 @@ abstract final class DeepLinkScheme {
   static const String scheme = 'securitypulse';
   static const String host = '';
 }
+
+/// Accepted deep link paths from native widgets and notifications.
+///
+/// Only these paths are recognized. Unknown paths are rejected
+/// to prevent malicious navigation. See THREAT_MODEL.md T-05.
+abstract final class DeepLinkPaths {
+  static const String today = '/today';
+  static const String progress = '/progress';
+  static const String signIn = '/signin';
+}

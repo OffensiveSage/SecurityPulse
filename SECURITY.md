@@ -36,6 +36,15 @@ Version: 1.0 | Status: Draft
 - **T-11 — Credential rejection**: No password or MFA fields exist in the incident form. A `CredentialWarningBanner` is always visible on the form. Backend `IncidentReportCreate` schema uses regex-based `reject_credential_patterns` validator to detect and reject password/MFA/API key patterns in descriptions. Metadata fields are validated against `_FORBIDDEN_METADATA_KEYS` (password, auth_token, mfa_code, api_key, secret_key, access_token, refresh_token).
 - **T-14 — Rate limiting**: DB-based rate limiting enforces max 10 incident reports per user per hour. The service layer runs `SELECT COUNT(*) WHERE reporter_id = :uid AND created_at > now() - interval '1 hour'` before each creation. Returns HTTP 429 when limit exceeded. Idempotent replays (via `Idempotency-Key` header) do not count against the rate limit.
 
+### Phase 5 widget and notification security controls (implemented)
+
+- **T-05 — Deep link validation**: Incoming deep links from widgets and notifications are validated against a whitelist of accepted paths (`/today`, `/progress`, `/signin`). Unknown paths are rejected. GoRouter's auth guard prevents unauthenticated access to protected routes even when valid deep links are used.
+- **T-06 — Widget data minimization**: Only `DailyCardBridgeModel` is written to shared storage (SharedPreferences on Android, App Group UserDefaults on iOS). Fields: `scenarioId`, `title`, `completionState`, `deepLinkRoute`, `expiresAt`. No auth tokens, answer correctness, PII, or incident data.
+- **T-07 — Token isolation**: `PlatformWidgetBridge` and `WidgetBridgePlugin` never receive or write auth tokens. The bridge model is constructed from scenario state only.
+- **T-15 — Stale widget state**: `expiresAt` field (2 hours from last update) causes native widgets to show "offline" fallback when data is stale. Widget timelines refresh hourly.
+- **Notification content safety**: Notification title ("Security Pulse") and body ("Your daily security challenge is ready") are static, non-sensitive strings. No user data, answers, or incident information is included. Safe for lock-screen display.
+- **Notification preference storage**: Preference stored in `flutter_secure_storage` (not plain SharedPreferences).
+
 ---
 
 ## Data minimization

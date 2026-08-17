@@ -573,6 +573,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Critical'**
   String get incidentSeverityCritical;
+
+  /// Title for the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsScreenTitle;
+
+  /// Label for the notification preference toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder'**
+  String get settingsNotificationToggleLabel;
+
+  /// Description for the notification preference toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Get a daily notification when your security challenge is ready'**
+  String get settingsNotificationToggleDescription;
+
+  /// Message shown when notification permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission is required. Enable it in device settings.'**
+  String get settingsNotificationPermissionDenied;
+
+  /// Title for the daily reminder notification. Static and non-sensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'Security Pulse'**
+  String get notificationTitle;
+
+  /// Body for the daily reminder notification. Static and non-sensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your daily security challenge is ready'**
+  String get notificationBody;
 }
 
 class _AppLocalizationsDelegate

@@ -38,6 +38,22 @@ GoRouter createAppRouter({
     refreshListenable: refreshListenable,
     errorBuilder: (context, state) => _ErrorScreen(error: state.error),
     routes: [
+      // Deep link redirect routes (from native widgets and notifications).
+      // These map securitypulse:// paths to internal routes.
+      // The auth guard handles unauthenticated access.
+      GoRoute(
+        path: DeepLinkPaths.today,
+        redirect: (_, __) => RoutePaths.home,
+      ),
+      GoRoute(
+        path: DeepLinkPaths.progress,
+        redirect: (_, __) => RoutePaths.history,
+      ),
+      GoRoute(
+        path: DeepLinkPaths.signIn,
+        redirect: (_, __) => RoutePaths.signIn,
+      ),
+
       // Unauthenticated routes
       GoRoute(
         path: RoutePaths.signIn,

@@ -266,4 +266,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incidentSeverityCritical => 'Critical';
+
+  @override
+  String get settingsScreenTitle => 'Settings';
+
+  @override
+  String get settingsNotificationToggleLabel => 'Daily reminder';
+
+  @override
+  String get settingsNotificationToggleDescription =>
+      'Get a daily notification when your security challenge is ready';
+
+  @override
+  String get settingsNotificationPermissionDenied =>
+      'Notification permission is required. Enable it in device settings.';
+
+  @override
+  String get notificationTitle => 'Security Pulse';
+
+  @override
+  String get notificationBody => 'Your daily security challenge is ready';
 }
