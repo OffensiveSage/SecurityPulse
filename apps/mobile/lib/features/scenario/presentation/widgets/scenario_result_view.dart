@@ -1,16 +1,20 @@
 /// Displays the result after the employee submits an answer.
 ///
-/// Shows whether the answer was correct, an explanation of the scenario,
-/// the recommended secure action, and a completion indicator.
+/// Full-screen celebratory layout:
+/// - Hero section (gradient) with large icon and result title
+/// - Scrollable explanation and recommended action cards
+/// - Streak/motivational banner at the bottom
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/models/scenario.dart';
+import '../providers/progress_provider.dart';
 
-class ScenarioResultView extends StatelessWidget {
+class ScenarioResultView extends ConsumerWidget {
   const ScenarioResultView({
     required this.scenario,
     required this.result,
@@ -21,136 +25,119 @@ class ScenarioResultView extends StatelessWidget {
   final ScenarioResult result;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final size = MediaQuery.sizeOf(context);
+    final progressAsync = ref.watch(progressProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Result banner
-          _ResultBanner(
-            isCorrect: result.isCorrect,
-            title: result.isCorrect
-                ? l10n.scenarioCorrectTitle
-                : l10n.scenarioIncorrectTitle,
+    final isCorrect = result.isCorrect;
+    final heroColors = isCorrect
+        ? [AppColors.secondary, AppColors.secondaryDark]
+        : [const Color(0xFFD97706), const Color(0xFFB45309)];
+
+    final streak = progressAsync.maybeWhen(
+      data: (p) => p.currentStreakDays,
+      orElse: () => 0,
+    );
+
+    return Column(
+      children: [
+        // ── Hero result section ──────────────────────────────────────────
+        Container(
+          width: double.infinity,
+          height: size.height * 0.28,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: heroColors,
+            ),
           ),
-          const SizedBox(height: 24),
-
-          // Scenario title for context
-          Text(
-            scenario.title,
-            style: theme.textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 20),
-
-          // Explanation section
-          _InfoSection(
-            icon: Icons.lightbulb_outline_rounded,
-            heading: l10n.scenarioExplanationHeading,
-            body: result.explanation,
-          ),
-          const SizedBox(height: 16),
-
-          // Recommended action section
-          _InfoSection(
-            icon: Icons.shield_outlined,
-            heading: l10n.scenarioRecommendedActionHeading,
-            body: result.recommendedAction,
-          ),
-          const SizedBox(height: 24),
-
-          // Completion indicator
-          Semantics(
+          child: Semantics(
             liveRegion: true,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.successContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.check_circle_rounded,
-                    color: AppColors.success,
-                    size: 24,
+            label: isCorrect ? l10n.scenarioCorrectTitle : l10n.scenarioIncorrectTitle,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isCorrect
+                      ? Icons.check_circle_rounded
+                      : Icons.cancel_rounded,
+                  color: Colors.white,
+                  size: 64,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  isCorrect
+                      ? l10n.scenarioCorrectTitle
+                      : l10n.scenarioIncorrectTitle,
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.scenarioCompletedBanner,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: AppColors.success,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-}
-
-class _ResultBanner extends StatelessWidget {
-  const _ResultBanner({
-    required this.isCorrect,
-    required this.title,
-  });
-
-  final bool isCorrect;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = isCorrect ? AppColors.success : AppColors.warning;
-    final containerColor =
-        isCorrect ? AppColors.successContainer : AppColors.warningContainer;
-    final icon =
-        isCorrect ? Icons.check_circle_rounded : Icons.info_outline_rounded;
-
-    return Semantics(
-      liveRegion: true,
-      label: title,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: containerColor,
-          borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: theme.textTheme.headlineMedium?.copyWith(color: color),
-              ),
+
+        // ── Scrollable explanation ───────────────────────────────────────
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Scenario title for context
+                Text(
+                  scenario.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _InfoCard(
+                  icon: Icons.lightbulb_rounded,
+                  iconColor: const Color(0xFFD97706),
+                  heading: l10n.scenarioExplanationHeading,
+                  body: result.explanation,
+                ),
+                const SizedBox(height: 12),
+
+                _InfoCard(
+                  icon: Icons.shield_rounded,
+                  iconColor: AppColors.primary,
+                  heading: l10n.scenarioRecommendedActionHeading,
+                  body: result.recommendedAction,
+                ),
+                const SizedBox(height: 20),
+
+                // ── Streak / motivation banner ───────────────────────────
+                if (isCorrect)
+                  _StreakBanner(streak: streak, l10n: l10n)
+                else
+                  _MotivationBanner(l10n: l10n),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-class _InfoSection extends StatelessWidget {
-  const _InfoSection({
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({
     required this.icon,
+    required this.iconColor,
     required this.heading,
     required this.body,
   });
 
   final IconData icon;
+  final Color iconColor;
   final String heading;
   final String body;
 
@@ -158,35 +145,131 @@ class _InfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: theme.colorScheme.primary,
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 8),
+                child: Icon(icon, size: 16, color: iconColor),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                heading,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            body,
+            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StreakBanner extends StatelessWidget {
+  const _StreakBanner({required this.streak, required this.l10n});
+
+  final int streak;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.secondary, AppColors.secondaryDark],
+        ),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('🔥', style: TextStyle(fontSize: 24)),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.scenarioStreakKept,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                ),
+              ),
+              if (streak > 0)
                 Text(
-                  heading,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: theme.colorScheme.primary,
+                  '$streak day streak',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
                   ),
                 ),
-              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MotivationBanner extends StatelessWidget {
+  const _MotivationBanner({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.warningContainer,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        children: [
+          const Text('💪', style: TextStyle(fontSize: 24)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              l10n.scenarioKeepGoing,
+              style: const TextStyle(
+                color: AppColors.warning,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              body,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

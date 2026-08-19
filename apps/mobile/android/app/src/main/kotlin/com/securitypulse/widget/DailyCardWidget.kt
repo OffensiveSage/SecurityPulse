@@ -1,11 +1,6 @@
 // DailyCardWidget.kt
 // Security Pulse — Android home-screen widget using Jetpack Glance
 //
-// Setup required (Android Studio):
-// 1. Add Jetpack Glance dependencies to build.gradle
-// 2. Register the widget receiver in AndroidManifest.xml
-// 3. Create res/xml/security_pulse_widget_info.xml
-//
 // Security:
 // - Only reads DailyCardModel from SharedPreferences
 // - Never reads auth tokens, answer correctness, or PII
@@ -14,27 +9,30 @@
 package com.securitypulse.widget
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.*
-import androidx.glance.semantics.semantics
 import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import android.graphics.Color
-import androidx.glance.action.Action
-import androidx.glance.appwidget.action.actionStartActivity
-import android.content.Intent
 
 class DailyCardWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -47,59 +45,112 @@ class DailyCardWidget : GlanceAppWidget() {
     }
 }
 
+// Brand colours
+private val brandBlue   = ColorProvider(Color.parseColor("#1A56DB"))
+private val brandGreen  = ColorProvider(Color.parseColor("#057A55"))
+private val white       = ColorProvider(Color.WHITE)
+private val lightBlue   = ColorProvider(Color.parseColor("#EBF5FF"))
+private val lightGreen  = ColorProvider(Color.parseColor("#DEF7EC"))
+private val lightGray   = ColorProvider(Color.parseColor("#F3F4F6"))
+private val textDark    = ColorProvider(Color.parseColor("#111928"))
+private val textMuted   = ColorProvider(Color.parseColor("#6B7280"))
+
 @Composable
 private fun DailyCardWidgetContent(context: Context, model: DailyCardModel) {
+    val action = deepLinkAction(context, model)
+
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(ColorProvider(Color.WHITE))
-            .padding(12.dp)
-            .clickable(deepLinkAction(context, model)),
-        contentAlignment = Alignment.TopStart,
+            .background(white)
+            .cornerRadius(16)
+            .clickable(action),
     ) {
         Column(modifier = GlanceModifier.fillMaxSize()) {
-            // Header
-            Text(
-                text = "Security Pulse",
-                style = TextStyle(
-                    color = ColorProvider(Color.parseColor("#6B7280")),
-                ),
-            )
 
-            Spacer(modifier = GlanceModifier.defaultWeight())
+            // ── Blue accent bar at the top ──────────────────────────────
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .background(brandBlue),
+            ) {}
 
-            // Content based on state
-            when (model.completionState) {
-                CompletionState.AVAILABLE -> AvailableContent(model)
-                CompletionState.COMPLETED -> CompletedContent()
-                CompletionState.NO_ASSIGNMENT -> NoAssignmentContent()
-                CompletionState.OFFLINE -> OfflineContent("Offline")
-                CompletionState.SIGNED_OUT -> OfflineContent("Sign in to continue")
+            // ── Main content ────────────────────────────────────────────
+            Column(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+            ) {
+                // App label row
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Security Pulse",
+                        style = TextStyle(
+                            color = brandBlue,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    )
+                }
+
+                Spacer(modifier = GlanceModifier.height(10.dp))
+
+                when (model.completionState) {
+                    CompletionState.AVAILABLE    -> AvailableContent(model)
+                    CompletionState.COMPLETED    -> CompletedContent()
+                    CompletionState.NO_ASSIGNMENT -> NoAssignmentContent()
+                    CompletionState.OFFLINE      -> StatusContent("Offline", isWarning = true)
+                    CompletionState.SIGNED_OUT   -> StatusContent("Sign in →", isWarning = false)
+                }
             }
-
-            Spacer(modifier = GlanceModifier.defaultWeight())
         }
     }
 }
 
 @Composable
 private fun AvailableContent(model: DailyCardModel) {
-    Column {
+    Column(modifier = GlanceModifier.fillMaxSize()) {
+        // Challenge badge
+        Box(
+            modifier = GlanceModifier
+                .background(lightBlue)
+                .cornerRadius(6)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+        ) {
+            Text(
+                text = "Daily Challenge",
+                style = TextStyle(
+                    color = brandBlue,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+        }
+
+        Spacer(modifier = GlanceModifier.height(8.dp))
+
         Text(
-            text = model.title,
+            text = model.title.take(72),
             style = TextStyle(
-                color = ColorProvider(Color.parseColor("#111928")),
+                color = textDark,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
             ),
             maxLines = 3,
             modifier = GlanceModifier.semantics {
                 contentDescription = "Security Pulse: ${model.title}. Tap to answer."
             },
         )
-        Spacer(modifier = GlanceModifier.height(8.dp))
+
+        Spacer(modifier = GlanceModifier.defaultWeight())
+
         Text(
-            text = "Answer now →",
+            text = "Tap to answer →",
             style = TextStyle(
-                color = ColorProvider(Color.parseColor("#1A56DB")),
+                color = brandBlue,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
             ),
         )
     }
@@ -107,35 +158,92 @@ private fun AvailableContent(model: DailyCardModel) {
 
 @Composable
 private fun CompletedContent() {
-    Text(
-        text = "✓ Completed today",
-        style = TextStyle(color = ColorProvider(Color.parseColor("#057A55"))),
-        modifier = GlanceModifier.semantics {
-            contentDescription = "Security Pulse: Today's question completed."
-        },
-    )
+    Column(modifier = GlanceModifier.fillMaxSize()) {
+        Box(
+            modifier = GlanceModifier
+                .background(lightGreen)
+                .cornerRadius(6)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+        ) {
+            Text(
+                text = "Completed",
+                style = TextStyle(
+                    color = brandGreen,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+        }
+
+        Spacer(modifier = GlanceModifier.height(8.dp))
+
+        Text(
+            text = "Today's challenge done!",
+            style = TextStyle(
+                color = textDark,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+            ),
+            modifier = GlanceModifier.semantics {
+                contentDescription = "Security Pulse: Today's question completed."
+            },
+        )
+
+        Spacer(modifier = GlanceModifier.defaultWeight())
+
+        Text(
+            text = "See your history →",
+            style = TextStyle(
+                color = brandGreen,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+            ),
+        )
+    }
 }
 
 @Composable
 private fun NoAssignmentContent() {
-    Text(
-        text = "No question today",
-        style = TextStyle(color = ColorProvider(Color.parseColor("#6B7280"))),
-        modifier = GlanceModifier.semantics {
-            contentDescription = "Security Pulse: No question assigned today."
-        },
-    )
+    Column(modifier = GlanceModifier.fillMaxSize()) {
+        Text(
+            text = "No question today",
+            style = TextStyle(
+                color = textDark,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+            ),
+            modifier = GlanceModifier.semantics {
+                contentDescription = "Security Pulse: No question assigned today."
+            },
+        )
+        Spacer(modifier = GlanceModifier.height(6.dp))
+        Text(
+            text = "Check back tomorrow",
+            style = TextStyle(color = textMuted, fontSize = 11.sp),
+        )
+    }
 }
 
 @Composable
-private fun OfflineContent(label: String) {
-    Text(
-        text = label,
-        style = TextStyle(color = ColorProvider(Color.parseColor("#6B7280"))),
-        modifier = GlanceModifier.semantics {
-            contentDescription = "Security Pulse: $label."
-        },
-    )
+private fun StatusContent(label: String, isWarning: Boolean) {
+    Column(modifier = GlanceModifier.fillMaxSize()) {
+        Text(
+            text = label,
+            style = TextStyle(
+                color = if (isWarning) textMuted else brandBlue,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+            ),
+            modifier = GlanceModifier.semantics {
+                contentDescription = "Security Pulse: $label."
+            },
+        )
+        Spacer(modifier = GlanceModifier.height(6.dp))
+        Text(
+            text = if (isWarning) "Tap to retry" else "Tap to open app",
+            style = TextStyle(color = textMuted, fontSize = 11.sp),
+        )
+    }
 }
 
 private fun deepLinkAction(context: Context, model: DailyCardModel): Action {

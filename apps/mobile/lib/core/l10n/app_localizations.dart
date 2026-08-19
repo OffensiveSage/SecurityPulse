@@ -610,11 +610,10 @@ abstract class AppLocalizations {
   /// **'Your daily security challenge is ready'**
   String get notificationBody;
 
-
   /// Streak days display on the progress summary card
   ///
   /// In en, this message translates to:
-  /// **'{count} day streak'**
+  /// **'{count, plural, =1{1 day streak} other{{count} day streak}}'**
   String progressStreakDays(int count);
 
   /// Scenarios completed out of total assigned
@@ -634,6 +633,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are eligible for the current prize draw'**
   String get campaignEligibleSemantics;
+
+  /// Button label to begin the daily scenario question
+  ///
+  /// In en, this message translates to:
+  /// **'Start Challenge'**
+  String get scenarioStartButton;
+
+  /// Section heading on the challenge intro card
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Challenge'**
+  String get scenarioChallengeReadyTitle;
+
+  /// Estimated time shown on the challenge intro card
+  ///
+  /// In en, this message translates to:
+  /// **'~2 min'**
+  String get scenarioEstimatedTime;
+
+  /// Banner shown on result screen when the user keeps their streak
+  ///
+  /// In en, this message translates to:
+  /// **'Streak maintained!'**
+  String get scenarioStreakKept;
+
+  /// Motivational message on result screen when answer was incorrect
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow to keep learning'**
+  String get scenarioKeepGoing;
+
+  /// Heading shown on the sign-in card below the hero section
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get signInWelcomeTitle;
+
+  /// Bottom navigation label for the daily scenario tab
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get navToday;
+
+  /// Bottom navigation label for the history tab
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get navHistory;
+
+  /// Bottom navigation label for the incident reports tab
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get navReports;
+
+  /// Bottom navigation label for the settings tab
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
 }
 
 class _AppLocalizationsDelegate

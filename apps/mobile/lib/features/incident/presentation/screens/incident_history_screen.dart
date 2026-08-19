@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
@@ -27,6 +28,12 @@ class IncidentHistoryScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.incidentHistoryScreenTitle)),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push(RoutePaths.incidentReport),
+        icon: const Icon(Icons.add_rounded),
+        label: Text(l10n.incidentReportFabLabel),
+        tooltip: l10n.incidentReportFabLabel,
+      ),
       body: switch (state) {
         IncidentHistoryLoading() => LoadingView(
             message: l10n.loadingDefault,

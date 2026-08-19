@@ -475,5 +475,55 @@
   "campaignEligibleSemantics": "You are eligible for the current prize draw",
   "@campaignEligibleSemantics": {
     "description": "Screen reader label for the campaign eligibility badge"
+  },
+
+  "scenarioStartButton": "Start Challenge",
+  "@scenarioStartButton": {
+    "description": "Button label to begin the daily scenario question"
+  },
+
+  "scenarioChallengeReadyTitle": "Today's Challenge",
+  "@scenarioChallengeReadyTitle": {
+    "description": "Section heading on the challenge intro card"
+  },
+
+  "scenarioEstimatedTime": "~2 min",
+  "@scenarioEstimatedTime": {
+    "description": "Estimated time shown on the challenge intro card"
+  },
+
+  "scenarioStreakKept": "Streak maintained!",
+  "@scenarioStreakKept": {
+    "description": "Banner shown on result screen when the user keeps their streak"
+  },
+
+  "scenarioKeepGoing": "Come back tomorrow to keep learning",
+  "@scenarioKeepGoing": {
+    "description": "Motivational message on result screen when answer was incorrect"
+  },
+
+  "signInWelcomeTitle": "Welcome back",
+  "@signInWelcomeTitle": {
+    "description": "Heading shown on the sign-in card below the hero section"
+  },
+
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom navigation label for the daily scenario tab"
+  },
+
+  "navHistory": "History",
+  "@navHistory": {
+    "description": "Bottom navigation label for the history tab"
+  },
+
+  "navReports": "Reports",
+  "@navReports": {
+    "description": "Bottom navigation label for the incident reports tab"
+  },
+
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom navigation label for the settings tab"
   }
 }

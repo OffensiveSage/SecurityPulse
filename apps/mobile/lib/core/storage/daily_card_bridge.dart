@@ -12,6 +12,7 @@ library;
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 
 /// Minimal model written to shared storage for native widget consumption.
@@ -75,6 +76,7 @@ class PlatformWidgetBridge implements WidgetBridge {
 
   @override
   Future<void> updateWidget(DailyCardBridgeModel model) async {
+    if (kIsWeb) return; // Platform channels are not available on web.
     try {
       final jsonString = jsonEncode(model.toJson());
       await _channel.invokeMethod<void>('updateDailyCard', jsonString);
@@ -85,6 +87,7 @@ class PlatformWidgetBridge implements WidgetBridge {
 
   @override
   Future<void> clearWidget() async {
+    if (kIsWeb) return; // Platform channels are not available on web.
     try {
       await _channel.invokeMethod<void>('clearDailyCard');
     } on PlatformException {

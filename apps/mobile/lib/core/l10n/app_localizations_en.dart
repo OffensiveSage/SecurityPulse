@@ -288,12 +288,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationBody => 'Your daily security challenge is ready';
 
   @override
-  String progressStreakDays(int count) =>
-      count == 1 ? '1 day streak' : '$count day streak';
+  String progressStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count day streak',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String progressCompleted(int completed, int total) =>
-      '$completed of $total completed';
+  String progressCompleted(int completed, int total) {
+    return '$completed of $total completed';
+  }
 
   @override
   String get campaignEligibleBadge => 'Prize draw eligible';
@@ -301,4 +309,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get campaignEligibleSemantics =>
       'You are eligible for the current prize draw';
+
+  @override
+  String get scenarioStartButton => 'Start Challenge';
+
+  @override
+  String get scenarioChallengeReadyTitle => 'Today\'s Challenge';
+
+  @override
+  String get scenarioEstimatedTime => '~2 min';
+
+  @override
+  String get scenarioStreakKept => 'Streak maintained!';
+
+  @override
+  String get scenarioKeepGoing => 'Come back tomorrow to keep learning';
+
+  @override
+  String get signInWelcomeTitle => 'Welcome back';
+
+  @override
+  String get navToday => 'Today';
+
+  @override
+  String get navHistory => 'History';
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get navSettings => 'Settings';
 }
