@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, health, incidents, me, scenarios
+from app.api.v1.endpoints import admin, auth, health, incidents, me, scenarios
 
 # Root router — includes health (unauthenticated) and versioned API
 api_router = APIRouter()
@@ -29,7 +29,7 @@ v1_router.include_router(me.router, tags=["me"])
 # Incident report endpoints (Phase 4)
 v1_router.include_router(incidents.router, tags=["incidents"])
 
-# TODO (Phase 4): Add widget endpoint
-# TODO (Phase 6): Add admin endpoints
+# Admin endpoints (Phase 6)
+v1_router.include_router(admin.router, tags=["admin"])
 
 api_router.include_router(v1_router)

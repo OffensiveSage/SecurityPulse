@@ -15,9 +15,15 @@ from app.models.base import Base, TimestampMixin, UUIDMixin
 
 
 class UserRole(enum.StrEnum):
-    """Roles supported in Phase 2."""
+    """All roles supported by the platform (Phase 2 + Phase 6 additions)."""
 
     employee = "employee"
+    author = "author"
+    reviewer = "reviewer"
+    approver = "approver"
+    soc_analyst = "soc_analyst"
+    platform_admin = "platform_admin"
+    # Keep for backward compatibility (pre-Phase 6)
     content_admin = "content_admin"
     security_admin = "security_admin"
 

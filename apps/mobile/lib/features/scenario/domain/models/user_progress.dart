@@ -10,23 +10,23 @@ class UserProgress {
     required this.scenariosAssigned,
     required this.scenariosCompleted,
     required this.currentStreakDays,
+    this.campaignEligible,
   });
 
-  /// Creates a [UserProgress] from a JSON map (API response).
   factory UserProgress.fromJson(Map<String, dynamic> json) {
     return UserProgress(
       scenariosAssigned: json['scenarios_assigned'] as int,
       scenariosCompleted: json['scenarios_completed'] as int,
       currentStreakDays: json['current_streak_days'] as int,
+      campaignEligible: json['campaign_eligible'] as bool?,
     );
   }
 
-  /// Total number of scenarios assigned to the user.
   final int scenariosAssigned;
-
-  /// Number of scenarios the user has completed.
   final int scenariosCompleted;
-
-  /// Current streak of consecutive days with a response.
   final int currentStreakDays;
+
+  /// Whether the user is eligible for the current active campaign drawing.
+  /// Null when no campaign is active.
+  final bool? campaignEligible;
 }

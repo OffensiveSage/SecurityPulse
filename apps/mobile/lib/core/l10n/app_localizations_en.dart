@@ -286,4 +286,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationBody => 'Your daily security challenge is ready';
+
+  @override
+  String progressStreakDays(int count) =>
+      count == 1 ? '1 day streak' : '$count day streak';
+
+  @override
+  String progressCompleted(int completed, int total) =>
+      '$completed of $total completed';
+
+  @override
+  String get campaignEligibleBadge => 'Prize draw eligible';
+
+  @override
+  String get campaignEligibleSemantics =>
+      'You are eligible for the current prize draw';
 }

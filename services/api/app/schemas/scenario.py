@@ -103,3 +103,4 @@ class UserProgress(BaseModel):
     scenarios_assigned: int
     scenarios_completed: int
     current_streak_days: int
+    campaign_eligible: bool | None = None

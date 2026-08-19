@@ -19,6 +19,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.assignment import Assignment
+from app.models.campaign import Campaign, CampaignStatus
 from app.models.response import Response, ResponseSource
 from app.models.scenario import AnswerOption, Scenario, ScenarioStatus
 
@@ -302,7 +303,7 @@ async def get_user_progress(
     """Get progress summary for a user.
 
     Returns dict with scenarios_assigned, scenarios_completed,
-    current_streak_days.
+    current_streak_days, and campaign_eligible (None if no active campaign).
     """
     # Count assigned scenarios
     assigned_stmt = (
@@ -317,11 +318,54 @@ async def get_user_progress(
     # Calculate streak: consecutive days with a response
     streak = await _calculate_streak(user_id, db)
 
+    # Determine campaign eligibility
+    campaign_eligible = await _get_campaign_eligible(
+        user_id=user_id,
+        scenarios_assigned=scenarios_assigned,
+        scenarios_completed=scenarios_completed,
+        db=db,
+    )
+
     return {
         "scenarios_assigned": scenarios_assigned,
         "scenarios_completed": scenarios_completed,
         "current_streak_days": streak,
+        "campaign_eligible": campaign_eligible,
     }
+
+
+async def _get_campaign_eligible(
+    user_id: uuid.UUID,
+    scenarios_assigned: int,
+    scenarios_completed: int,
+    db: AsyncSession,
+) -> bool | None:
+    """Check campaign eligibility for the user.
+
+    Returns None if no active campaign exists.
+    Returns True if the user has completed all assigned scenarios and
+    scenarios_assigned > 0. Returns False otherwise.
+    """
+    now = datetime.now(UTC)
+    campaign_stmt = (
+        select(Campaign)
+        .where(
+            Campaign.status == CampaignStatus.active,
+            Campaign.start_at <= now,
+            Campaign.end_at >= now,
+        )
+        .limit(1)
+    )
+    campaign_result = await db.execute(campaign_stmt)
+    active_campaign = campaign_result.scalar_one_or_none()
+
+    if active_campaign is None:
+        return None
+
+    # Simplified eligibility: completed all assigned and has at least one assigned
+    return bool(
+        scenarios_assigned > 0 and scenarios_completed >= scenarios_assigned
+    )
 
 
 async def _calculate_streak(

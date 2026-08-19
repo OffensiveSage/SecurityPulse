@@ -609,6 +609,31 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your daily security challenge is ready'**
   String get notificationBody;
+
+
+  /// Streak days display on the progress summary card
+  ///
+  /// In en, this message translates to:
+  /// **'{count} day streak'**
+  String progressStreakDays(int count);
+
+  /// Scenarios completed out of total assigned
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} completed'**
+  String progressCompleted(int completed, int total);
+
+  /// Badge shown when user is eligible for the current prize campaign drawing
+  ///
+  /// In en, this message translates to:
+  /// **'Prize draw eligible'**
+  String get campaignEligibleBadge;
+
+  /// Screen reader label for the campaign eligibility badge
+  ///
+  /// In en, this message translates to:
+  /// **'You are eligible for the current prize draw'**
+  String get campaignEligibleSemantics;
 }
 
 class _AppLocalizationsDelegate

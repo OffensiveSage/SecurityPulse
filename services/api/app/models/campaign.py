@@ -46,12 +46,26 @@ class Campaign(Base, UUIDMixin, TimestampMixin):
         comment="JSON rule for audience eligibility.",
     )
 
+    reward_description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+        comment="Human-readable description of the reward offered to eligible participants.",
+    )
+
     status: Mapped[CampaignStatus] = mapped_column(
         Enum(CampaignStatus, name="campaign_status", native_enum=False),
         nullable=False,
         default=CampaignStatus.draft,
         server_default="draft",
     )
+
+    @property
+    def governance_disclaimer(self) -> str:
+        """Static disclaimer required on all campaign reward displays."""
+        return (
+            "Final winner selection and prize fulfillment require approval from HR, Legal, Tax, "
+            "and Ethics. This eligibility count is for planning purposes only."
+        )
 
     def __repr__(self) -> str:
         return f"<Campaign id={self.id} name={self.name!r} status={self.status.value}>"

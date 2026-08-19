@@ -442,5 +442,38 @@
   "notificationBody": "Your daily security challenge is ready",
   "@notificationBody": {
     "description": "Body for the daily reminder notification. Static and non-sensitive."
+  },
+
+  "progressStreakDays": "{count, plural, =1{1 day streak} other{{count} day streak}}",
+  "@progressStreakDays": {
+    "description": "Streak days display on the progress summary card",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "progressCompleted": "{completed} of {total} completed",
+  "@progressCompleted": {
+    "description": "Scenarios completed out of total assigned",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "campaignEligibleBadge": "Prize draw eligible",
+  "@campaignEligibleBadge": {
+    "description": "Badge shown when user is eligible for the current prize campaign drawing"
+  },
+
+  "campaignEligibleSemantics": "You are eligible for the current prize draw",
+  "@campaignEligibleSemantics": {
+    "description": "Screen reader label for the campaign eligibility badge"
   }
 }

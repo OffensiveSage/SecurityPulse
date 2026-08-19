@@ -249,29 +249,85 @@ class TestGetScenarioResult:
 class TestGetUserProgress:
     async def test_returns_zero_state(self) -> None:
         db = _make_mock_db()
-        # Three sequential calls: assigned count, completed count, streak dates
-        results = [MagicMock(), MagicMock(), MagicMock()]
+        # Four sequential calls:
+        # 1. assigned count
+        # 2. completed count
+        # 3. streak dates (returns .all())
+        # 4. active campaign lookup (returns .scalar_one_or_none() → None)
+        results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
         results[0].scalar_one.return_value = 0
         results[1].scalar_one.return_value = 0
         results[2].all.return_value = []
+        results[3].scalar_one_or_none.return_value = None  # No active campaign
         db.execute.side_effect = results
 
         progress = await get_user_progress(uuid.uuid4(), db)
         assert progress["scenarios_assigned"] == 0
         assert progress["scenarios_completed"] == 0
         assert progress["current_streak_days"] == 0
+        assert progress["campaign_eligible"] is None  # No active campaign
 
     async def test_counts_assignments_and_completions(self) -> None:
         db = _make_mock_db()
-        results = [MagicMock(), MagicMock(), MagicMock()]
+        # Four calls: assigned, completed, streak, campaign
+        results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
         results[0].scalar_one.return_value = 5
         results[1].scalar_one.return_value = 3
         results[2].all.return_value = []
+        results[3].scalar_one_or_none.return_value = None  # No active campaign
         db.execute.side_effect = results
 
         progress = await get_user_progress(uuid.uuid4(), db)
         assert progress["scenarios_assigned"] == 5
         assert progress["scenarios_completed"] == 3
+
+    async def test_campaign_eligible_true_when_all_completed_and_campaign_active(
+        self,
+    ) -> None:
+        """campaign_eligible=True when user completed all assigned scenarios
+        and an active campaign exists."""
+        db = _make_mock_db()
+        mock_campaign = MagicMock()  # Non-None = active campaign found
+
+        results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
+        results[0].scalar_one.return_value = 4   # 4 assigned
+        results[1].scalar_one.return_value = 4   # 4 completed (all done)
+        results[2].all.return_value = []
+        results[3].scalar_one_or_none.return_value = mock_campaign  # Active campaign
+        db.execute.side_effect = results
+
+        progress = await get_user_progress(uuid.uuid4(), db)
+        assert progress["campaign_eligible"] is True
+
+    async def test_campaign_eligible_false_when_not_all_completed(self) -> None:
+        """campaign_eligible=False when user has not completed all scenarios
+        but an active campaign exists."""
+        db = _make_mock_db()
+        mock_campaign = MagicMock()
+
+        results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
+        results[0].scalar_one.return_value = 5   # 5 assigned
+        results[1].scalar_one.return_value = 3   # only 3 completed
+        results[2].all.return_value = []
+        results[3].scalar_one_or_none.return_value = mock_campaign
+        db.execute.side_effect = results
+
+        progress = await get_user_progress(uuid.uuid4(), db)
+        assert progress["campaign_eligible"] is False
+
+    async def test_campaign_eligible_none_when_no_active_campaign(self) -> None:
+        """campaign_eligible=None when no active campaign is running."""
+        db = _make_mock_db()
+
+        results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
+        results[0].scalar_one.return_value = 5
+        results[1].scalar_one.return_value = 5
+        results[2].all.return_value = []
+        results[3].scalar_one_or_none.return_value = None  # No active campaign
+        db.execute.side_effect = results
+
+        progress = await get_user_progress(uuid.uuid4(), db)
+        assert progress["campaign_eligible"] is None
 
 
 class TestServiceExceptions:
