@@ -108,6 +108,11 @@ GoRouter createAppRouter({
         name: RouteNames.leaderboard,
         builder: (context, state) => const LeaderboardScreen(),
       ),
+      GoRoute(
+        path: RoutePaths.challenge,
+        name: RouteNames.challenge,
+        builder: (context, state) => const DailyScenarioScreen(),
+      ),
 
       // ── Main tab shell ────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(

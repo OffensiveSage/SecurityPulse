@@ -6,8 +6,10 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/router/route_names.dart';
 
 // ── Topic data ────────────────────────────────────────────────────────────────
 
@@ -135,15 +137,7 @@ class TopicPacksScreen extends StatelessWidget {
                   colorScheme: colorScheme,
                   textTheme: textTheme,
                   challengeCount: l10n.topicPacksChallengeCount,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content:
-                            Text(l10n.topicPacksStartToast(topic.category)),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
+                  onTap: () => context.pushNamed(RouteNames.challenge),
                 );
               },
             ),

@@ -22,6 +22,7 @@ abstract final class RoutePaths {
   static const String classJoin = '/onboarding/join-class';
   // Personal mode
   static const String topicPacks = '/topics';
+  static const String challenge = '/challenge';
   // School mode
   static const String leaderboard = '/leaderboard';
   static const String teacherDashboard = '/teacher';
@@ -45,6 +46,7 @@ abstract final class RouteNames {
   static const String classJoin = 'class-join';
   // Personal mode
   static const String topicPacks = 'topic-packs';
+  static const String challenge = 'challenge';
   // School mode
   static const String leaderboard = 'leaderboard';
   static const String teacherDashboard = 'teacher-dashboard';

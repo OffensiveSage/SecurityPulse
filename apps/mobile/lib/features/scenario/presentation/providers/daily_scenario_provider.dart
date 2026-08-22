@@ -4,22 +4,21 @@
 /// [dailyScenarioProvider] manages the full question->answer->result lifecycle.
 library;
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/network/dio_provider.dart';
-import '../../data/repositories/api_scenario_repository.dart';
+import '../../data/repositories/mock_scenario_repository.dart';
 import '../../domain/repositories/scenario_repository.dart';
 import 'daily_scenario_state.dart';
 
 /// Provides the [ScenarioRepository] implementation.
 ///
-/// Uses [ApiScenarioRepository] backed by the configured [Dio] client.
+/// Currently uses [MockScenarioRepository] for all modes because the
+/// backend API is not yet deployed. Switch to [ApiScenarioRepository]
+/// once the backend is live and set the base URL via environment config.
 /// Override this provider in tests with a mock implementation.
 final scenarioRepositoryProvider = Provider<ScenarioRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  return ApiScenarioRepository(dio: dio);
+  return MockScenarioRepository();
 });
 
 /// Manages the daily scenario lifecycle: load -> select -> submit -> result.
