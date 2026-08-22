@@ -8,6 +8,7 @@ import 'package:security_pulse/features/auth/presentation/providers/auth_provide
 import 'package:security_pulse/features/auth/presentation/providers/auth_state.dart';
 import 'package:security_pulse/features/scenario/domain/repositories/scenario_repository.dart';
 import 'package:security_pulse/features/scenario/presentation/providers/daily_scenario_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _MockScenarioRepository extends Mock implements ScenarioRepository {}
 
@@ -22,6 +23,12 @@ class _FixedAuthNotifier extends AuthNotifier {
 
 void main() {
   group('GoRouter auth guard', () {
+    setUp(() {
+      // Simulate Work mode being set so the mode-selector redirect is skipped
+      // and the existing auth guard logic is exercised.
+      SharedPreferences.setMockInitialValues({'app_mode': 'work'});
+    });
+
     testWidgets(
       'redirects unauthenticated user to sign-in',
       (tester) async {

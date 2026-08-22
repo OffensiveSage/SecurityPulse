@@ -62,9 +62,10 @@ void main() {
         );
         await tester.pump();
 
+        // The subtitle appears in both the hero section and the bottom card.
         expect(
           find.text('Corporate cybersecurity awareness'),
-          findsOneWidget,
+          findsWidgets,
         );
       });
 
@@ -86,7 +87,8 @@ void main() {
         );
         await tester.pump();
 
-        expect(find.byIcon(Icons.security_rounded), findsOneWidget);
+        // The sign-in hero uses shield_rounded as the main security icon.
+        expect(find.byIcon(Icons.shield_rounded), findsOneWidget);
       });
     });
 

@@ -33,6 +33,9 @@ dependencies:
   # Secure token storage — never use SharedPreferences for tokens
   flutter_secure_storage: ^9.2.2
 
+  # Non-sensitive preference storage (app mode, class code, guest flag)
+  shared_preferences: ^2.3.2
+
   # Network connectivity
   connectivity_plus: ^6.0.3
 

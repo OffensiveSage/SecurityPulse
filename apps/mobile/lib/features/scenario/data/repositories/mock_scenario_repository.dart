@@ -25,11 +25,24 @@ class MockScenarioRepository implements ScenarioRepository {
         options: [
           AnswerOption(
             id: 'ph-1',
-            text: 'Click the link and enter your credentials to avoid losing access',
+            text:
+                'Click the link and enter your credentials to avoid losing access',
           ),
-          AnswerOption(id: 'ph-2', text: 'Forward the email to the security team and delete it', displayOrder: 1),
-          AnswerOption(id: 'ph-3', text: 'Reply to the sender asking if the email is legitimate', displayOrder: 2),
-          AnswerOption(id: 'ph-4', text: 'Ignore the email and do nothing', displayOrder: 3),
+          AnswerOption(
+            id: 'ph-2',
+            text: 'Forward the email to the security team and delete it',
+            displayOrder: 1,
+          ),
+          AnswerOption(
+            id: 'ph-3',
+            text: 'Reply to the sender asking if the email is legitimate',
+            displayOrder: 2,
+          ),
+          AnswerOption(
+            id: 'ph-4',
+            text: 'Ignore the email and do nothing',
+            displayOrder: 3,
+          ),
         ],
       ),
       correctOptionId: 'ph-2',
@@ -56,10 +69,27 @@ class MockScenarioRepository implements ScenarioRepository {
             'pushes, just approve one to clear them."',
         category: 'MFA Fatigue',
         options: [
-          AnswerOption(id: 'mf-1', text: 'Approve one notification to clear the queue as your colleague asked'),
-          AnswerOption(id: 'mf-2', text: 'Deny all notifications, change your password immediately, and report it to the security team', displayOrder: 1),
-          AnswerOption(id: 'mf-3', text: 'Ignore the notifications until they stop', displayOrder: 2),
-          AnswerOption(id: 'mf-4', text: 'Call your colleague back to confirm before approving', displayOrder: 3),
+          AnswerOption(
+            id: 'mf-1',
+            text:
+                'Approve one notification to clear the queue as your colleague asked',
+          ),
+          AnswerOption(
+            id: 'mf-2',
+            text:
+                'Deny all notifications, change your password immediately, and report it to the security team',
+            displayOrder: 1,
+          ),
+          AnswerOption(
+            id: 'mf-3',
+            text: 'Ignore the notifications until they stop',
+            displayOrder: 2,
+          ),
+          AnswerOption(
+            id: 'mf-4',
+            text: 'Call your colleague back to confirm before approving',
+            displayOrder: 3,
+          ),
         ],
       ),
       correctOptionId: 'mf-2',
@@ -78,17 +108,33 @@ class MockScenarioRepository implements ScenarioRepository {
       scenario: Scenario(
         id: 'scenario-ransomware',
         title: 'Encrypted Files Message',
-        prompt:
-            'You return from lunch to find a message on your screen: '
+        prompt: 'You return from lunch to find a message on your screen: '
             '"Your files have been encrypted. Pay 2 BTC within 48 hours to '
             'recover them. Do NOT restart your computer." '
             'Several files on your desktop now have a .locked extension.',
         category: 'Ransomware',
         options: [
-          AnswerOption(id: 'rw-1', text: 'Pay the ransom — it\'s the fastest way to recover your files'),
-          AnswerOption(id: 'rw-2', text: 'Immediately disconnect your device from the network, do not restart, and call the security operations centre', displayOrder: 1),
-          AnswerOption(id: 'rw-3', text: 'Restart the computer to see if the message goes away', displayOrder: 2),
-          AnswerOption(id: 'rw-4', text: 'Delete the .locked files to contain the spread', displayOrder: 3),
+          AnswerOption(
+            id: 'rw-1',
+            text:
+                'Pay the ransom — it\'s the fastest way to recover your files',
+          ),
+          AnswerOption(
+            id: 'rw-2',
+            text:
+                'Immediately disconnect your device from the network, do not restart, and call the security operations centre',
+            displayOrder: 1,
+          ),
+          AnswerOption(
+            id: 'rw-3',
+            text: 'Restart the computer to see if the message goes away',
+            displayOrder: 2,
+          ),
+          AnswerOption(
+            id: 'rw-4',
+            text: 'Delete the .locked files to contain the spread',
+            displayOrder: 3,
+          ),
         ],
       ),
       correctOptionId: 'rw-2',
@@ -115,10 +161,29 @@ class MockScenarioRepository implements ScenarioRepository {
             "because it's a surprise acquisition deal.",
         category: 'Social Engineering',
         options: [
-          AnswerOption(id: 'se-1', text: 'Process the transfer — the CEO is rarely wrong and the deadline is urgent'),
-          AnswerOption(id: 'se-2', text: 'Verify the request by calling the CEO directly using a phone number from the company directory, then follow normal approval procedures', displayOrder: 1),
-          AnswerOption(id: 'se-3', text: 'Reply to the email to confirm the details before transferring', displayOrder: 2),
-          AnswerOption(id: 'se-4', text: 'Forward the email to your manager even though the CEO said not to', displayOrder: 3),
+          AnswerOption(
+            id: 'se-1',
+            text:
+                'Process the transfer — the CEO is rarely wrong and the deadline is urgent',
+          ),
+          AnswerOption(
+            id: 'se-2',
+            text:
+                'Verify the request by calling the CEO directly using a phone number from the company directory, then follow normal approval procedures',
+            displayOrder: 1,
+          ),
+          AnswerOption(
+            id: 'se-3',
+            text:
+                'Reply to the email to confirm the details before transferring',
+            displayOrder: 2,
+          ),
+          AnswerOption(
+            id: 'se-4',
+            text:
+                'Forward the email to your manager even though the CEO said not to',
+            displayOrder: 3,
+          ),
         ],
       ),
       correctOptionId: 'se-2',

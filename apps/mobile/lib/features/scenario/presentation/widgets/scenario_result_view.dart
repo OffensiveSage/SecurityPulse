@@ -56,14 +56,14 @@ class ScenarioResultView extends ConsumerWidget {
           ),
           child: Semantics(
             liveRegion: true,
-            label: isCorrect ? l10n.scenarioCorrectTitle : l10n.scenarioIncorrectTitle,
+            label: isCorrect
+                ? l10n.scenarioCorrectTitle
+                : l10n.scenarioIncorrectTitle,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  isCorrect
-                      ? Icons.check_circle_rounded
-                      : Icons.cancel_rounded,
+                  isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
                   color: Colors.white,
                   size: 64,
                 ),

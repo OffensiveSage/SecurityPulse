@@ -693,6 +693,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// Title for the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileScreenTitle;
+
+  /// Empty state title on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'No activity yet'**
+  String get profileEmptyTitle;
+
+  /// Empty state message on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first scenario to see your profile.'**
+  String get profileEmptyMessage;
+
+  /// Label next to the streak count on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'day streak'**
+  String get profileStreakLabel;
+
+  /// Stat card label for total responses on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Responses'**
+  String get profileTotalResponsesLabel;
+
+  /// Stat card label for accuracy percentage on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get profileAccuracyLabel;
+
+  /// Stat card label for streak days on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get profileStreakDaysLabel;
+
+  /// Section heading for badges on the profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Badges'**
+  String get profileBadgesSectionTitle;
+
+  /// Badge label shown when user is eligible for the current campaign prize draw
+  ///
+  /// In en, this message translates to:
+  /// **'Prize draw eligible'**
+  String get profileBadgeCampaignEligible;
+
+  /// Badge label for completing the first scenario
+  ///
+  /// In en, this message translates to:
+  /// **'First challenge'**
+  String get profileBadgeFirstScenario;
+
+  /// Badge label for maintaining a 7-day streak
+  ///
+  /// In en, this message translates to:
+  /// **'7-day streak'**
+  String get profileBadgeWeekStreak;
+
+  /// Screen reader label for the masked employee display name
+  ///
+  /// In en, this message translates to:
+  /// **'Your anonymised employee identifier is {name}'**
+  String profileDisplayNameSemantics(String name);
+
+  /// Screen reader label for the accuracy stat
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} accuracy rate'**
+  String profileAccuracySemantics(String percent);
+
+  /// Section header for the Account section in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccountSectionTitle;
+
+  /// Label for the Profile navigation tile in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfileLabel;
+
+  /// Section header for the Preferences section in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsPreferencesSectionTitle;
+
+  /// Section header for the App section in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get settingsAppSectionTitle;
+
+  /// Label for the app version tile in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersionLabel;
+
+  /// Label for the privacy policy tile in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get settingsPrivacyLabel;
+
+  /// Label for the support tile in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get settingsSupportLabel;
+
+  /// Label for the sign out tile in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get settingsSignOutLabel;
+
+  /// Title of the dialog shown when opening an external URL from Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open in browser'**
+  String get settingsUrlDialogTitle;
+
+  /// Body text of the URL dialog in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this address to open it in your browser:'**
+  String get settingsUrlDialogBody;
+
+  /// Close button label in the URL dialog in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get settingsUrlDialogClose;
+
+  /// Heading on the mode selector onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'How will you use Security Pulse?'**
+  String get modeSelectorTitle;
+
+  /// Subtitle on the mode selector onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the experience that fits you best.'**
+  String get modeSelectorSubtitle;
+
+  /// Title for the Work mode card on the mode selector screen
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get modeWorkTitle;
+
+  /// Subtitle for the Work mode card
+  ///
+  /// In en, this message translates to:
+  /// **'Your organisation’s security awareness platform'**
+  String get modeWorkSubtitle;
+
+  /// Title for the School mode card on the mode selector screen
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get modeSchoolTitle;
+
+  /// Subtitle for the School mode card
+  ///
+  /// In en, this message translates to:
+  /// **'For students and teachers'**
+  String get modeSchoolSubtitle;
+
+  /// Title for the Personal mode card on the mode selector screen
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get modePersonalTitle;
+
+  /// Subtitle for the Personal mode card
+  ///
+  /// In en, this message translates to:
+  /// **'Learn at your own pace, no account needed'**
+  String get modePersonalSubtitle;
+
+  /// Link at the bottom of the mode selector for existing Work users
+  ///
+  /// In en, this message translates to:
+  /// **'Already have a Work account? Sign in'**
+  String get modeAlreadyHaveAccount;
+
+  /// Heading on the guest welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Security Pulse'**
+  String get guestWelcomeTitle;
+
+  /// Subtitle on the guest welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Learn to spot cyber threats — no account required.'**
+  String get guestWelcomeSubtitle;
+
+  /// Primary button on the guest welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Start exploring'**
+  String get guestStartButton;
+
+  /// Secondary link on the guest welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with existing account'**
+  String get guestSignInLink;
+
+  /// Privacy note on the guest welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'No personal data is collected in guest mode.'**
+  String get guestPrivacyNote;
+
+  /// Heading on the school class join screen
+  ///
+  /// In en, this message translates to:
+  /// **'Join your class'**
+  String get classJoinTitle;
+
+  /// Student role option on the class join screen
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get classJoinRoleStudent;
+
+  /// Teacher role option on the class join screen
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher'**
+  String get classJoinRoleTeacher;
+
+  /// Label for the class code text field
+  ///
+  /// In en, this message translates to:
+  /// **'Class code'**
+  String get classJoinCodeLabel;
+
+  /// Hint text for the class code field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. SEC-2024'**
+  String get classJoinCodeHint;
+
+  /// Submit button on the class join screen
+  ///
+  /// In en, this message translates to:
+  /// **'Join class'**
+  String get classJoinButton;
+
+  /// Validation error when class code is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Class code is required'**
+  String get classJoinValidationRequired;
+
+  /// Validation error when class code length is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Code must be 3–20 characters'**
+  String get classJoinValidationLength;
+
+  /// Section heading on the topic packs screen
+  ///
+  /// In en, this message translates to:
+  /// **'Security Topics'**
+  String get topicPacksTitle;
+
+  /// Demo banner on the topic packs screen
+  ///
+  /// In en, this message translates to:
+  /// **'Exploring as guest — sign in to track your progress.'**
+  String get topicPacksDemoBanner;
+
+  /// Challenge count shown on each topic card (demo)
+  ///
+  /// In en, this message translates to:
+  /// **'8 challenges'**
+  String get topicPacksChallengeCount;
+
+  /// SnackBar message when user taps a topic pack
+  ///
+  /// In en, this message translates to:
+  /// **'Loading a {category} challenge…'**
+  String topicPacksStartToast(String category);
+
+  /// Title on the class leaderboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'This Week’s Leaders'**
+  String get leaderboardTitle;
+
+  /// Subtitle on the leaderboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your class'**
+  String get leaderboardSubtitle;
+
+  /// Demo banner on the leaderboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Showing demo leaderboard data.'**
+  String get leaderboardDemoBanner;
+
+  /// Label next to streak count in the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'streak'**
+  String get leaderboardStreakLabel;
+
+  /// Label next to completed count in the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get leaderboardCompletedLabel;
+
+  /// Badge shown on the current user's row in the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get leaderboardYouLabel;
+
+  /// Bottom navigation label for the leaderboard tab (school mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get navLeaderboard;
+
+  /// Bottom navigation label for the topic packs tab (personal mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Topics'**
+  String get navTopics;
+
+  /// Bottom navigation label for the teacher dashboard tab
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get navDashboard;
+
+  /// Heading on the teacher dashboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your Classroom'**
+  String get teacherDashboardTitle;
+
+  /// Demo banner on the teacher dashboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Showing demo data for class SEC-101.'**
+  String get teacherDashboardDemoBanner;
+
+  /// Stat card label for active students on the teacher dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Active Students'**
+  String get teacherDashboardActiveStudents;
+
+  /// Stat card label for average completion rate on the teacher dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Completion'**
+  String get teacherDashboardAvgCompletion;
+
+  /// Stat card label for top streak on the teacher dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Top Streak'**
+  String get teacherDashboardTopStreak;
+
+  /// Section heading for recent activity on the teacher dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get teacherDashboardRecentActivity;
+
+  /// FAB label on the teacher dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Assign challenge'**
+  String get teacherDashboardAssignButton;
+
+  /// SnackBar message when teacher taps the assign FAB
+  ///
+  /// In en, this message translates to:
+  /// **'Scenario assignment coming soon.'**
+  String get teacherDashboardAssignComingSoon;
+
+  /// Link on the teacher dashboard to the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'View leaderboard'**
+  String get teacherDashboardViewLeaderboard;
 }
 
 class _AppLocalizationsDelegate

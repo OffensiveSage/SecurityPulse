@@ -130,8 +130,7 @@ void main() {
           pageSize: any(named: 'pageSize'),
         ),
       ).thenAnswer((_) async => []);
-      when(() => mockRepo.getProgress())
-          .thenAnswer((_) async => _kEmptyProgress);
+      when(mockRepo.getProgress).thenAnswer((_) async => _kEmptyProgress);
 
       await tester.pumpWidget(_buildWithMockRepo(mockRepo));
       await tester.pumpAndSettle();

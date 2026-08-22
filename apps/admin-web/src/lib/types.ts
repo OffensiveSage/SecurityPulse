@@ -105,3 +105,48 @@ export interface AuditEvent {
   readonly timestamp: string;
   readonly correlationId: string | null;
 }
+
+// ---- Admin: Scenarios ----
+export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';
+export type ScenarioCategory =
+  | 'phishing'
+  | 'password_security'
+  | 'social_engineering'
+  | 'data_protection'
+  | 'device_security'
+  | 'physical_security';
+
+export interface AnswerOptionAdmin {
+  readonly id: string;
+  readonly text: string;
+  readonly isCorrect: boolean;
+  readonly displayOrder: number;
+}
+
+export interface ScenarioAdmin {
+  readonly id: string;
+  readonly title: string;
+  readonly prompt: string;
+  readonly category: ScenarioCategory;
+  readonly difficulty: ScenarioDifficulty;
+  readonly status: ScenarioStatus;
+  readonly explanation: string;
+  readonly recommendedAction: string;
+  readonly answerOptions: readonly AnswerOptionAdmin[];
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}
+
+export interface ScenarioCreate {
+  readonly title: string;
+  readonly prompt: string;
+  readonly category: ScenarioCategory;
+  readonly difficulty: ScenarioDifficulty;
+  readonly explanation: string;
+  readonly recommendedAction: string;
+  readonly answerOptions: readonly {
+    readonly text: string;
+    readonly isCorrect: boolean;
+    readonly displayOrder: number;
+  }[];
+}

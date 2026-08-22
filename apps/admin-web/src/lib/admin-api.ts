@@ -12,6 +12,8 @@ import type {
   CampaignCreate,
   EligibilityResult,
   PaginatedResponse,
+  ScenarioAdmin,
+  ScenarioCreate,
 } from './types';
 
 // Snake-to-camelCase helpers (backend returns snake_case)
@@ -152,4 +154,74 @@ export async function fetchAuditEvents(
       totalPages: raw.meta['total_pages'] as number,
     },
   };
+}
+
+function toScenarioAdmin(raw: Record<string, unknown>): ScenarioAdmin {
+  return {
+    id: raw['id'] as string,
+    title: raw['title'] as string,
+    prompt: raw['prompt'] as string,
+    category: raw['category'] as ScenarioAdmin['category'],
+    difficulty: raw['difficulty'] as ScenarioAdmin['difficulty'],
+    status: raw['status'] as ScenarioAdmin['status'],
+    explanation: raw['explanation'] as string,
+    recommendedAction: raw['recommended_action'] as string,
+    answerOptions: ((raw['answer_options'] as Array<Record<string, unknown>>) ?? []).map((o) => ({
+      id: o['id'] as string,
+      text: o['text'] as string,
+      isCorrect: o['is_correct'] as boolean,
+      displayOrder: o['display_order'] as number,
+    })),
+    createdAt: raw['created_at'] as string,
+    updatedAt: raw['updated_at'] as string,
+  };
+}
+
+export async function fetchScenarios(
+  page = 1,
+  pageSize = 20,
+  status?: string,
+  accessToken?: string,
+): Promise<PaginatedResponse<ScenarioAdmin>> {
+  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  if (status) params.set('status', status);
+  const raw = await apiFetch<{ data: Array<Record<string, unknown>>; meta: Record<string, unknown> }>(
+    `/admin/scenarios?${params.toString()}`,
+    {},
+    accessToken,
+  );
+  return {
+    data: raw.data.map(toScenarioAdmin),
+    meta: {
+      page: raw.meta['page'] as number,
+      pageSize: raw.meta['page_size'] as number,
+      total: raw.meta['total'] as number,
+      totalPages: raw.meta['total_pages'] as number,
+    },
+  };
+}
+
+export async function createScenarioAdmin(
+  payload: ScenarioCreate,
+  accessToken?: string,
+): Promise<ScenarioAdmin> {
+  const body = {
+    title: payload.title,
+    prompt: payload.prompt,
+    category: payload.category,
+    difficulty: payload.difficulty,
+    explanation: payload.explanation,
+    recommended_action: payload.recommendedAction,
+    answer_options: payload.answerOptions.map((o) => ({
+      text: o.text,
+      is_correct: o.isCorrect,
+      display_order: o.displayOrder,
+    })),
+  };
+  const raw = await apiFetch<Record<string, unknown>>(
+    '/admin/scenarios',
+    { method: 'POST', body: JSON.stringify(body) },
+    accessToken,
+  );
+  return toScenarioAdmin(raw);
 }

@@ -151,8 +151,7 @@ class ScenarioQuestionView extends StatelessWidget {
                       index: index,
                       isSelected:
                           scenario.options[index].id == selectedOptionId,
-                      onTap: () =>
-                          onOptionSelected(scenario.options[index].id),
+                      onTap: () => onOptionSelected(scenario.options[index].id),
                     ),
                   ),
                 ),

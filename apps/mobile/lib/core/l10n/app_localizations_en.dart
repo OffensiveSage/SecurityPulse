@@ -339,4 +339,223 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navSettings => 'Settings';
+
+  @override
+  String get profileScreenTitle => 'Profile';
+
+  @override
+  String get profileEmptyTitle => 'No activity yet';
+
+  @override
+  String get profileEmptyMessage =>
+      'Complete your first scenario to see your profile.';
+
+  @override
+  String get profileStreakLabel => 'day streak';
+
+  @override
+  String get profileTotalResponsesLabel => 'Responses';
+
+  @override
+  String get profileAccuracyLabel => 'Accuracy';
+
+  @override
+  String get profileStreakDaysLabel => 'Streak';
+
+  @override
+  String get profileBadgesSectionTitle => 'Badges';
+
+  @override
+  String get profileBadgeCampaignEligible => 'Prize draw eligible';
+
+  @override
+  String get profileBadgeFirstScenario => 'First challenge';
+
+  @override
+  String get profileBadgeWeekStreak => '7-day streak';
+
+  @override
+  String profileDisplayNameSemantics(String name) {
+    return 'Your anonymised employee identifier is $name';
+  }
+
+  @override
+  String profileAccuracySemantics(String percent) {
+    return '$percent accuracy rate';
+  }
+
+  @override
+  String get settingsAccountSectionTitle => 'Account';
+
+  @override
+  String get settingsProfileLabel => 'Profile';
+
+  @override
+  String get settingsPreferencesSectionTitle => 'Preferences';
+
+  @override
+  String get settingsAppSectionTitle => 'App';
+
+  @override
+  String get settingsVersionLabel => 'Version';
+
+  @override
+  String get settingsPrivacyLabel => 'Privacy Policy';
+
+  @override
+  String get settingsSupportLabel => 'Support';
+
+  @override
+  String get settingsSignOutLabel => 'Sign out';
+
+  @override
+  String get settingsUrlDialogTitle => 'Open in browser';
+
+  @override
+  String get settingsUrlDialogBody =>
+      'Copy this address to open it in your browser:';
+
+  @override
+  String get settingsUrlDialogClose => 'Close';
+
+  @override
+  String get modeSelectorTitle => 'How will you use Security Pulse?';
+
+  @override
+  String get modeSelectorSubtitle =>
+      'Choose the experience that fits you best.';
+
+  @override
+  String get modeWorkTitle => 'Work';
+
+  @override
+  String get modeWorkSubtitle =>
+      'Your organisation’s security awareness platform';
+
+  @override
+  String get modeSchoolTitle => 'School';
+
+  @override
+  String get modeSchoolSubtitle => 'For students and teachers';
+
+  @override
+  String get modePersonalTitle => 'Personal';
+
+  @override
+  String get modePersonalSubtitle =>
+      'Learn at your own pace, no account needed';
+
+  @override
+  String get modeAlreadyHaveAccount => 'Already have a Work account? Sign in';
+
+  @override
+  String get guestWelcomeTitle => 'Welcome to Security Pulse';
+
+  @override
+  String get guestWelcomeSubtitle =>
+      'Learn to spot cyber threats — no account required.';
+
+  @override
+  String get guestStartButton => 'Start exploring';
+
+  @override
+  String get guestSignInLink => 'Sign in with existing account';
+
+  @override
+  String get guestPrivacyNote => 'No personal data is collected in guest mode.';
+
+  @override
+  String get classJoinTitle => 'Join your class';
+
+  @override
+  String get classJoinRoleStudent => 'Student';
+
+  @override
+  String get classJoinRoleTeacher => 'Teacher';
+
+  @override
+  String get classJoinCodeLabel => 'Class code';
+
+  @override
+  String get classJoinCodeHint => 'e.g. SEC-2024';
+
+  @override
+  String get classJoinButton => 'Join class';
+
+  @override
+  String get classJoinValidationRequired => 'Class code is required';
+
+  @override
+  String get classJoinValidationLength => 'Code must be 3–20 characters';
+
+  @override
+  String get topicPacksTitle => 'Security Topics';
+
+  @override
+  String get topicPacksDemoBanner =>
+      'Exploring as guest — sign in to track your progress.';
+
+  @override
+  String get topicPacksChallengeCount => '8 challenges';
+
+  @override
+  String topicPacksStartToast(String category) {
+    return 'Loading a $category challenge…';
+  }
+
+  @override
+  String get leaderboardTitle => 'This Week’s Leaders';
+
+  @override
+  String get leaderboardSubtitle => 'Your class';
+
+  @override
+  String get leaderboardDemoBanner => 'Showing demo leaderboard data.';
+
+  @override
+  String get leaderboardStreakLabel => 'streak';
+
+  @override
+  String get leaderboardCompletedLabel => 'completed';
+
+  @override
+  String get leaderboardYouLabel => 'You';
+
+  @override
+  String get navLeaderboard => 'Leaderboard';
+
+  @override
+  String get navTopics => 'Topics';
+
+  @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get teacherDashboardTitle => 'Your Classroom';
+
+  @override
+  String get teacherDashboardDemoBanner =>
+      'Showing demo data for class SEC-101.';
+
+  @override
+  String get teacherDashboardActiveStudents => 'Active Students';
+
+  @override
+  String get teacherDashboardAvgCompletion => 'Avg Completion';
+
+  @override
+  String get teacherDashboardTopStreak => 'Top Streak';
+
+  @override
+  String get teacherDashboardRecentActivity => 'Recent Activity';
+
+  @override
+  String get teacherDashboardAssignButton => 'Assign challenge';
+
+  @override
+  String get teacherDashboardAssignComingSoon =>
+      'Scenario assignment coming soon.';
+
+  @override
+  String get teacherDashboardViewLeaderboard => 'View leaderboard';
 }

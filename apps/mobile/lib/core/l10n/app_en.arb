@@ -525,5 +525,360 @@
   "navSettings": "Settings",
   "@navSettings": {
     "description": "Bottom navigation label for the settings tab"
+  },
+
+  "profileScreenTitle": "Profile",
+  "@profileScreenTitle": {
+    "description": "Title for the profile screen"
+  },
+
+  "profileEmptyTitle": "No activity yet",
+  "@profileEmptyTitle": {
+    "description": "Empty state title on the profile screen"
+  },
+
+  "profileEmptyMessage": "Complete your first scenario to see your profile.",
+  "@profileEmptyMessage": {
+    "description": "Empty state message on the profile screen"
+  },
+
+  "profileStreakLabel": "day streak",
+  "@profileStreakLabel": {
+    "description": "Label next to the streak count on the profile screen"
+  },
+
+  "profileTotalResponsesLabel": "Responses",
+  "@profileTotalResponsesLabel": {
+    "description": "Stat card label for total responses on the profile screen"
+  },
+
+  "profileAccuracyLabel": "Accuracy",
+  "@profileAccuracyLabel": {
+    "description": "Stat card label for accuracy percentage on the profile screen"
+  },
+
+  "profileStreakDaysLabel": "Streak",
+  "@profileStreakDaysLabel": {
+    "description": "Stat card label for streak days on the profile screen"
+  },
+
+  "profileBadgesSectionTitle": "Badges",
+  "@profileBadgesSectionTitle": {
+    "description": "Section heading for badges on the profile screen"
+  },
+
+  "profileBadgeCampaignEligible": "Prize draw eligible",
+  "@profileBadgeCampaignEligible": {
+    "description": "Badge label shown when user is eligible for the current campaign prize draw"
+  },
+
+  "profileBadgeFirstScenario": "First challenge",
+  "@profileBadgeFirstScenario": {
+    "description": "Badge label for completing the first scenario"
+  },
+
+  "profileBadgeWeekStreak": "7-day streak",
+  "@profileBadgeWeekStreak": {
+    "description": "Badge label for maintaining a 7-day streak"
+  },
+
+  "profileDisplayNameSemantics": "Your anonymised employee identifier is {name}",
+  "@profileDisplayNameSemantics": {
+    "description": "Screen reader label for the masked employee display name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "profileAccuracySemantics": "{percent} accuracy rate",
+  "@profileAccuracySemantics": {
+    "description": "Screen reader label for the accuracy stat",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+
+  "settingsAccountSectionTitle": "Account",
+  "@settingsAccountSectionTitle": {
+    "description": "Section header for the Account section in Settings"
+  },
+
+  "settingsProfileLabel": "Profile",
+  "@settingsProfileLabel": {
+    "description": "Label for the Profile navigation tile in Settings"
+  },
+
+  "settingsPreferencesSectionTitle": "Preferences",
+  "@settingsPreferencesSectionTitle": {
+    "description": "Section header for the Preferences section in Settings"
+  },
+
+  "settingsAppSectionTitle": "App",
+  "@settingsAppSectionTitle": {
+    "description": "Section header for the App section in Settings"
+  },
+
+  "settingsVersionLabel": "Version",
+  "@settingsVersionLabel": {
+    "description": "Label for the app version tile in Settings"
+  },
+
+  "settingsPrivacyLabel": "Privacy Policy",
+  "@settingsPrivacyLabel": {
+    "description": "Label for the privacy policy tile in Settings"
+  },
+
+  "settingsSupportLabel": "Support",
+  "@settingsSupportLabel": {
+    "description": "Label for the support tile in Settings"
+  },
+
+  "settingsSignOutLabel": "Sign out",
+  "@settingsSignOutLabel": {
+    "description": "Label for the sign out tile in Settings"
+  },
+
+  "settingsUrlDialogTitle": "Open in browser",
+  "@settingsUrlDialogTitle": {
+    "description": "Title of the dialog shown when opening an external URL from Settings"
+  },
+
+  "settingsUrlDialogBody": "Copy this address to open it in your browser:",
+  "@settingsUrlDialogBody": {
+    "description": "Body text of the URL dialog in Settings"
+  },
+
+  "settingsUrlDialogClose": "Close",
+  "@settingsUrlDialogClose": {
+    "description": "Close button label in the URL dialog in Settings"
+  },
+
+  "modeSelectorTitle": "How will you use Security Pulse?",
+  "@modeSelectorTitle": {
+    "description": "Heading on the mode selector onboarding screen"
+  },
+
+  "modeSelectorSubtitle": "Choose the experience that fits you best.",
+  "@modeSelectorSubtitle": {
+    "description": "Subtitle on the mode selector onboarding screen"
+  },
+
+  "modeWorkTitle": "Work",
+  "@modeWorkTitle": {
+    "description": "Title for the Work mode card on the mode selector screen"
+  },
+
+  "modeWorkSubtitle": "Your organisation\u2019s security awareness platform",
+  "@modeWorkSubtitle": {
+    "description": "Subtitle for the Work mode card"
+  },
+
+  "modeSchoolTitle": "School",
+  "@modeSchoolTitle": {
+    "description": "Title for the School mode card on the mode selector screen"
+  },
+
+  "modeSchoolSubtitle": "For students and teachers",
+  "@modeSchoolSubtitle": {
+    "description": "Subtitle for the School mode card"
+  },
+
+  "modePersonalTitle": "Personal",
+  "@modePersonalTitle": {
+    "description": "Title for the Personal mode card on the mode selector screen"
+  },
+
+  "modePersonalSubtitle": "Learn at your own pace, no account needed",
+  "@modePersonalSubtitle": {
+    "description": "Subtitle for the Personal mode card"
+  },
+
+  "modeAlreadyHaveAccount": "Already have a Work account? Sign in",
+  "@modeAlreadyHaveAccount": {
+    "description": "Link at the bottom of the mode selector for existing Work users"
+  },
+
+  "guestWelcomeTitle": "Welcome to Security Pulse",
+  "@guestWelcomeTitle": {
+    "description": "Heading on the guest welcome screen"
+  },
+
+  "guestWelcomeSubtitle": "Learn to spot cyber threats \u2014 no account required.",
+  "@guestWelcomeSubtitle": {
+    "description": "Subtitle on the guest welcome screen"
+  },
+
+  "guestStartButton": "Start exploring",
+  "@guestStartButton": {
+    "description": "Primary button on the guest welcome screen"
+  },
+
+  "guestSignInLink": "Sign in with existing account",
+  "@guestSignInLink": {
+    "description": "Secondary link on the guest welcome screen"
+  },
+
+  "guestPrivacyNote": "No personal data is collected in guest mode.",
+  "@guestPrivacyNote": {
+    "description": "Privacy note on the guest welcome screen"
+  },
+
+  "classJoinTitle": "Join your class",
+  "@classJoinTitle": {
+    "description": "Heading on the school class join screen"
+  },
+
+  "classJoinRoleStudent": "Student",
+  "@classJoinRoleStudent": {
+    "description": "Student role option on the class join screen"
+  },
+
+  "classJoinRoleTeacher": "Teacher",
+  "@classJoinRoleTeacher": {
+    "description": "Teacher role option on the class join screen"
+  },
+
+  "classJoinCodeLabel": "Class code",
+  "@classJoinCodeLabel": {
+    "description": "Label for the class code text field"
+  },
+
+  "classJoinCodeHint": "e.g. SEC-2024",
+  "@classJoinCodeHint": {
+    "description": "Hint text for the class code field"
+  },
+
+  "classJoinButton": "Join class",
+  "@classJoinButton": {
+    "description": "Submit button on the class join screen"
+  },
+
+  "classJoinValidationRequired": "Class code is required",
+  "@classJoinValidationRequired": {
+    "description": "Validation error when class code is empty"
+  },
+
+  "classJoinValidationLength": "Code must be 3\u201320 characters",
+  "@classJoinValidationLength": {
+    "description": "Validation error when class code length is invalid"
+  },
+
+  "topicPacksTitle": "Security Topics",
+  "@topicPacksTitle": {
+    "description": "Section heading on the topic packs screen"
+  },
+
+  "topicPacksDemoBanner": "Exploring as guest \u2014 sign in to track your progress.",
+  "@topicPacksDemoBanner": {
+    "description": "Demo banner on the topic packs screen"
+  },
+
+  "topicPacksChallengeCount": "8 challenges",
+  "@topicPacksChallengeCount": {
+    "description": "Challenge count shown on each topic card (demo)"
+  },
+
+  "topicPacksStartToast": "Loading a {category} challenge\u2026",
+  "@topicPacksStartToast": {
+    "description": "SnackBar message when user taps a topic pack",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+
+  "leaderboardTitle": "This Week\u2019s Leaders",
+  "@leaderboardTitle": {
+    "description": "Title on the class leaderboard screen"
+  },
+
+  "leaderboardSubtitle": "Your class",
+  "@leaderboardSubtitle": {
+    "description": "Subtitle on the leaderboard screen"
+  },
+
+  "leaderboardDemoBanner": "Showing demo leaderboard data.",
+  "@leaderboardDemoBanner": {
+    "description": "Demo banner on the leaderboard screen"
+  },
+
+  "leaderboardStreakLabel": "streak",
+  "@leaderboardStreakLabel": {
+    "description": "Label next to streak count in the leaderboard"
+  },
+
+  "leaderboardCompletedLabel": "completed",
+  "@leaderboardCompletedLabel": {
+    "description": "Label next to completed count in the leaderboard"
+  },
+
+  "leaderboardYouLabel": "You",
+  "@leaderboardYouLabel": {
+    "description": "Badge shown on the current user's row in the leaderboard"
+  },
+
+  "navLeaderboard": "Leaderboard",
+  "@navLeaderboard": {
+    "description": "Bottom navigation label for the leaderboard tab (school mode)"
+  },
+
+  "navTopics": "Topics",
+  "@navTopics": {
+    "description": "Bottom navigation label for the topic packs tab (personal mode)"
+  },
+
+  "navDashboard": "Dashboard",
+  "@navDashboard": {
+    "description": "Bottom navigation label for the teacher dashboard tab"
+  },
+
+  "teacherDashboardTitle": "Your Classroom",
+  "@teacherDashboardTitle": {
+    "description": "Heading on the teacher dashboard screen"
+  },
+
+  "teacherDashboardDemoBanner": "Showing demo data for class SEC-101.",
+  "@teacherDashboardDemoBanner": {
+    "description": "Demo banner on the teacher dashboard screen"
+  },
+
+  "teacherDashboardActiveStudents": "Active Students",
+  "@teacherDashboardActiveStudents": {
+    "description": "Stat card label for active students on the teacher dashboard"
+  },
+
+  "teacherDashboardAvgCompletion": "Avg Completion",
+  "@teacherDashboardAvgCompletion": {
+    "description": "Stat card label for average completion rate on the teacher dashboard"
+  },
+
+  "teacherDashboardTopStreak": "Top Streak",
+  "@teacherDashboardTopStreak": {
+    "description": "Stat card label for top streak on the teacher dashboard"
+  },
+
+  "teacherDashboardRecentActivity": "Recent Activity",
+  "@teacherDashboardRecentActivity": {
+    "description": "Section heading for recent activity on the teacher dashboard"
+  },
+
+  "teacherDashboardAssignButton": "Assign challenge",
+  "@teacherDashboardAssignButton": {
+    "description": "FAB label on the teacher dashboard"
+  },
+
+  "teacherDashboardAssignComingSoon": "Scenario assignment coming soon.",
+  "@teacherDashboardAssignComingSoon": {
+    "description": "SnackBar message when teacher taps the assign FAB"
+  },
+
+  "teacherDashboardViewLeaderboard": "View leaderboard",
+  "@teacherDashboardViewLeaderboard": {
+    "description": "Link on the teacher dashboard to the leaderboard"
   }
 }

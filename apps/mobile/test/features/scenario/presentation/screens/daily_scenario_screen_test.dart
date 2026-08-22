@@ -8,9 +8,11 @@ import 'package:security_pulse/core/widgets/empty_view.dart';
 import 'package:security_pulse/core/widgets/error_view.dart';
 import 'package:security_pulse/core/widgets/loading_view.dart';
 import 'package:security_pulse/features/scenario/domain/models/scenario.dart';
+import 'package:security_pulse/features/scenario/domain/models/user_progress.dart';
 import 'package:security_pulse/features/scenario/domain/repositories/scenario_repository.dart';
 import 'package:security_pulse/features/scenario/presentation/providers/daily_scenario_provider.dart';
 import 'package:security_pulse/features/scenario/presentation/providers/daily_scenario_state.dart';
+import 'package:security_pulse/features/scenario/presentation/providers/progress_provider.dart';
 import 'package:security_pulse/features/scenario/presentation/screens/daily_scenario_screen.dart';
 import 'package:security_pulse/features/scenario/presentation/widgets/answer_option_tile.dart';
 
@@ -46,11 +48,21 @@ const _incorrectResult = ScenarioResult(
   recommendedAction: 'Report to security team instead.',
 );
 
+const _testProgress = UserProgress(
+  scenariosAssigned: 5,
+  scenariosCompleted: 3,
+  currentStreakDays: 2,
+);
+
 /// Builds a test app with the [DailyScenarioScreen] pinned to a fixed state.
+///
+/// Overrides [progressProvider] with [_testProgress] so no network call is
+/// made and the streak banner renders deterministically.
 Widget _buildWithFixedState(DailyScenarioState state) {
   return ProviderScope(
     overrides: [
       dailyScenarioProvider.overrideWith(() => _FixedNotifier(state)),
+      progressProvider.overrideWith((ref) async => _testProgress),
     ],
     child: const MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -180,6 +192,10 @@ void main() {
     });
 
     group('loaded state', () {
+      // The screen shows ScenarioChallengeCard first (intro card). Tests must
+      // tap 'Start Challenge' to reveal ScenarioQuestionView before asserting
+      // on the question prompt, category, options, and submit button.
+
       testWidgets('shows scenario prompt', (tester) async {
         await tester.pumpWidget(
           _buildWithFixedState(
@@ -187,6 +203,8 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
         expect(find.text(_testScenario.prompt), findsOneWidget);
       });
@@ -198,6 +216,8 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
         expect(find.text('Phishing'), findsOneWidget);
       });
@@ -209,6 +229,8 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
         expect(find.text('Daily Security Challenge'), findsOneWidget);
       });
@@ -220,6 +242,8 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
         expect(find.byType(AnswerOptionTile), findsNWidgets(3));
         expect(find.text('Click the link'), findsOneWidget);
@@ -234,6 +258,8 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
         expect(find.text('Submit answer'), findsOneWidget);
       });
@@ -246,9 +272,11 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
-        final button = tester.widget<ElevatedButton>(
-          find.widgetWithText(ElevatedButton, 'Submit answer'),
+        final button = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, 'Submit answer'),
         );
         expect(button.onPressed, isNull);
       });
@@ -263,9 +291,11 @@ void main() {
           ),
         );
         await tester.pump();
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
 
-        final button = tester.widget<ElevatedButton>(
-          find.widgetWithText(ElevatedButton, 'Submit answer'),
+        final button = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, 'Submit answer'),
         );
         expect(button.onPressed, isNotNull);
       });
@@ -343,7 +373,7 @@ void main() {
         expect(find.text(_correctResult.recommendedAction), findsOneWidget);
       });
 
-      testWidgets('shows completion banner', (tester) async {
+      testWidgets('shows streak banner on correct answer', (tester) async {
         await tester.pumpWidget(
           _buildWithFixedState(
             const DailyScenarioCompleted(
@@ -354,8 +384,11 @@ void main() {
         );
         await tester.pump();
 
+        // ScenarioResultView shows _StreakBanner with 'Streak maintained!'
+        // when the answer is correct (scenarioCompletedBanner is no longer
+        // rendered directly; streak banner replaced it).
         expect(
-          find.textContaining('challenge completed'),
+          find.textContaining('Streak maintained'),
           findsOneWidget,
         );
       });
@@ -381,6 +414,7 @@ void main() {
       testWidgets('load → select → submit → result', (tester) async {
         final mockRepo = _MockScenarioRepository();
         when(mockRepo.getTodayScenario).thenAnswer((_) async => _testScenario);
+        when(mockRepo.getProgress).thenAnswer((_) async => _testProgress);
         when(
           () => mockRepo.submitAnswer(
             scenarioId: any(named: 'scenarioId'),
@@ -393,10 +427,14 @@ void main() {
         // Loading state
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-        // Wait for scenario to load
+        // Wait for scenario to load — ScenarioChallengeCard is shown first.
         await tester.pumpAndSettle();
 
-        // Verify loaded state
+        // Tap 'Start Challenge' to reveal ScenarioQuestionView.
+        await tester.tap(find.text('Start Challenge'));
+        await tester.pumpAndSettle();
+
+        // Verify loaded state shows question prompt and submit button.
         expect(find.text(_testScenario.prompt), findsOneWidget);
         expect(find.text('Submit answer'), findsOneWidget);
 
@@ -408,16 +446,18 @@ void main() {
         await tester.tap(find.text('Submit answer'));
         await tester.pumpAndSettle();
 
-        // Verify result
+        // Verify result — ScenarioResultView shows streak banner, not the old
+        // 'challenge completed' banner.
         expect(find.text('Correct!'), findsOneWidget);
         expect(find.text(_correctResult.explanation), findsOneWidget);
         expect(find.text(_correctResult.recommendedAction), findsOneWidget);
-        expect(find.textContaining('challenge completed'), findsOneWidget);
+        expect(find.textContaining('Streak maintained'), findsOneWidget);
       });
 
       testWidgets('shows incorrect result for wrong answer', (tester) async {
         final mockRepo = _MockScenarioRepository();
         when(mockRepo.getTodayScenario).thenAnswer((_) async => _testScenario);
+        when(mockRepo.getProgress).thenAnswer((_) async => _testProgress);
         when(
           () => mockRepo.submitAnswer(
             scenarioId: any(named: 'scenarioId'),
@@ -426,6 +466,10 @@ void main() {
         ).thenAnswer((_) async => _incorrectResult);
 
         await tester.pumpWidget(_buildWithMockRepo(mockRepo));
+        await tester.pumpAndSettle();
+
+        // Tap 'Start Challenge' to reveal ScenarioQuestionView.
+        await tester.tap(find.text('Start Challenge'));
         await tester.pumpAndSettle();
 
         // Select wrong answer and submit

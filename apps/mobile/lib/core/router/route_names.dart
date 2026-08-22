@@ -16,6 +16,15 @@ abstract final class RoutePaths {
   static const String incidentDetail = '/my-reports/:reportId';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  // Onboarding
+  static const String modeSelector = '/onboarding/mode';
+  static const String guestWelcome = '/onboarding/guest';
+  static const String classJoin = '/onboarding/join-class';
+  // Personal mode
+  static const String topicPacks = '/topics';
+  // School mode
+  static const String leaderboard = '/leaderboard';
+  static const String teacherDashboard = '/teacher';
 }
 
 abstract final class RouteNames {
@@ -30,6 +39,15 @@ abstract final class RouteNames {
   static const String incidentDetail = 'incident-detail';
   static const String profile = 'profile';
   static const String settings = 'settings';
+  // Onboarding
+  static const String modeSelector = 'mode-selector';
+  static const String guestWelcome = 'guest-welcome';
+  static const String classJoin = 'class-join';
+  // Personal mode
+  static const String topicPacks = 'topic-packs';
+  // School mode
+  static const String leaderboard = 'leaderboard';
+  static const String teacherDashboard = 'teacher-dashboard';
 }
 
 /// Deep link scheme for widget and notification links.
