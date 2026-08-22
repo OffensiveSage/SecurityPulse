@@ -1,0 +1,884 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-08-12",
+
+  "appName": "Security Pulse",
+  "@appName": {
+    "description": "The application name displayed in the UI"
+  },
+
+  "loadingDefault": "Loading\u2026",
+  "@loadingDefault": {
+    "description": "Default loading indicator message"
+  },
+
+  "errorGenericTitle": "Something went wrong",
+  "@errorGenericTitle": {
+    "description": "Generic error title shown when an unhandled error occurs"
+  },
+
+  "errorGenericMessage": "An unexpected error occurred. Please try again.",
+  "@errorGenericMessage": {
+    "description": "Generic error message shown when an unhandled error occurs"
+  },
+
+  "errorNetworkTitle": "No connection",
+  "@errorNetworkTitle": {
+    "description": "Error title shown when network is unavailable"
+  },
+
+  "errorNetworkMessage": "Check your network connection and try again.",
+  "@errorNetworkMessage": {
+    "description": "Error message shown when network is unavailable"
+  },
+
+  "errorUnauthorizedTitle": "Access denied",
+  "@errorUnauthorizedTitle": {
+    "description": "Error title shown when user lacks permission"
+  },
+
+  "errorUnauthorizedMessage": "You do not have permission to view this content.",
+  "@errorUnauthorizedMessage": {
+    "description": "Error message shown when user lacks permission. Does not reveal why access was denied."
+  },
+
+  "buttonRetry": "Try again",
+  "@buttonRetry": {
+    "description": "Label for retry buttons"
+  },
+
+  "buttonSignIn": "Sign in with your company account",
+  "@buttonSignIn": {
+    "description": "Sign in button label. References company account to clarify SSO is used."
+  },
+
+  "buttonSignOut": "Sign out",
+  "@buttonSignOut": {
+    "description": "Sign out button label"
+  },
+
+  "emptyScenarioTitle": "No question today",
+  "@emptyScenarioTitle": {
+    "description": "Shown when no scenario is assigned to the employee today"
+  },
+
+  "emptyScenarioMessage": "Check back later for your next security question.",
+  "@emptyScenarioMessage": {
+    "description": "Shown when no scenario is assigned to the employee today"
+  },
+
+  "emptyHistoryTitle": "No activity yet",
+  "@emptyHistoryTitle": {
+    "description": "Shown when the employee has no response history"
+  },
+
+  "emptyHistoryMessage": "Your completed questions will appear here.",
+  "@emptyHistoryMessage": {
+    "description": "Shown when the employee has no response history"
+  },
+
+  "incidentReportWarningCredentials": "Never enter your password or MFA code in this form.",
+  "@incidentReportWarningCredentials": {
+    "description": "REQUIRED security warning displayed in the incident report form. Must appear on every step of the wizard."
+  },
+
+  "scenarioAnswerSubmit": "Submit answer",
+  "@scenarioAnswerSubmit": {
+    "description": "Submit button label in the scenario answer screen"
+  },
+
+  "scenarioLoadingMessage": "Loading today\u2019s scenario\u2026",
+  "@scenarioLoadingMessage": {
+    "description": "Loading message shown while fetching the daily scenario"
+  },
+
+  "scenarioDailyChallenge": "Daily Security Challenge",
+  "@scenarioDailyChallenge": {
+    "description": "Section heading for the daily scenario question"
+  },
+
+  "scenarioSelectPrompt": "Select your answer",
+  "@scenarioSelectPrompt": {
+    "description": "Label above the answer options prompting the employee to choose"
+  },
+
+  "scenarioCorrectTitle": "Correct!",
+  "@scenarioCorrectTitle": {
+    "description": "Title shown when the employee answers correctly"
+  },
+
+  "scenarioIncorrectTitle": "Not quite right",
+  "@scenarioIncorrectTitle": {
+    "description": "Title shown when the employee answers incorrectly"
+  },
+
+  "scenarioExplanationHeading": "Why this matters",
+  "@scenarioExplanationHeading": {
+    "description": "Heading for the explanation section in the scenario result"
+  },
+
+  "scenarioRecommendedActionHeading": "What you should do",
+  "@scenarioRecommendedActionHeading": {
+    "description": "Heading for the recommended action section in the scenario result"
+  },
+
+  "scenarioCompletedBanner": "Today\u2019s challenge completed",
+  "@scenarioCompletedBanner": {
+    "description": "Banner text shown after the employee completes the daily scenario"
+  },
+
+  "scenarioSubmitting": "Submitting your answer\u2026",
+  "@scenarioSubmitting": {
+    "description": "Loading message shown while the answer is being submitted"
+  },
+
+  "signInSubtitle": "Corporate cybersecurity awareness",
+  "@signInSubtitle": {
+    "description": "Subtitle shown on the sign-in screen below the app name"
+  },
+
+  "signInButtonLabel": "Sign in with your company account",
+  "@signInButtonLabel": {
+    "description": "Accessible label for the sign-in button"
+  },
+
+  "signInLoading": "Signing in\u2026",
+  "@signInLoading": {
+    "description": "Loading message shown during sign-in"
+  },
+
+  "signInError": "Sign in failed. Please try again.",
+  "@signInError": {
+    "description": "Error message shown when sign-in fails"
+  },
+
+  "signInPrivacyNote": "By signing in you agree to your organisation\u2019s acceptable use policy.",
+  "@signInPrivacyNote": {
+    "description": "Privacy note shown below the sign-in button"
+  },
+
+  "signOutConfirmTitle": "Sign out?",
+  "@signOutConfirmTitle": {
+    "description": "Title of the sign-out confirmation dialog"
+  },
+
+  "signOutConfirmMessage": "You will need to sign in again to access Security Pulse.",
+  "@signOutConfirmMessage": {
+    "description": "Body text of the sign-out confirmation dialog"
+  },
+
+  "signOutCancel": "Cancel",
+  "@signOutCancel": {
+    "description": "Cancel button in the sign-out confirmation dialog"
+  },
+
+  "authSessionExpiredTitle": "Session expired",
+  "@authSessionExpiredTitle": {
+    "description": "Title shown when the session has expired"
+  },
+
+  "authSessionExpired": "Your session has expired. Please sign in again.",
+  "@authSessionExpired": {
+    "description": "Message shown when the session has expired"
+  },
+
+  "historyScreenTitle": "History",
+  "@historyScreenTitle": {
+    "description": "Title for the response history screen"
+  },
+
+  "historyItemCorrect": "Correct",
+  "@historyItemCorrect": {
+    "description": "Accessibility label for a correctly answered history item"
+  },
+
+  "historyItemIncorrect": "Incorrect",
+  "@historyItemIncorrect": {
+    "description": "Accessibility label for an incorrectly answered history item"
+  },
+
+  "incidentReportFabLabel": "Report",
+  "@incidentReportFabLabel": {
+    "description": "FAB label on the home screen for reporting incidents"
+  },
+
+  "incidentReportScreenTitle": "Report suspicious activity",
+  "@incidentReportScreenTitle": {
+    "description": "Title for the incident report form screen"
+  },
+
+  "incidentReportTypeLabel": "Type of incident",
+  "@incidentReportTypeLabel": {
+    "description": "Label for the report type dropdown"
+  },
+
+  "incidentReportTypeHint": "Select incident type",
+  "@incidentReportTypeHint": {
+    "description": "Hint text for the report type dropdown"
+  },
+
+  "incidentReportTitleLabel": "Title",
+  "@incidentReportTitleLabel": {
+    "description": "Label for the incident title field"
+  },
+
+  "incidentReportTitleHint": "Brief summary of the incident",
+  "@incidentReportTitleHint": {
+    "description": "Hint text for the incident title field"
+  },
+
+  "incidentReportDescriptionLabel": "Description",
+  "@incidentReportDescriptionLabel": {
+    "description": "Label for the incident description field"
+  },
+
+  "incidentReportDescriptionHint": "Describe what happened in detail",
+  "@incidentReportDescriptionHint": {
+    "description": "Hint text for the incident description field"
+  },
+
+  "incidentReportOccurredAtLabel": "When did this happen?",
+  "@incidentReportOccurredAtLabel": {
+    "description": "Label for the date/time picker"
+  },
+
+  "incidentReportSeverityLabel": "Severity (optional)",
+  "@incidentReportSeverityLabel": {
+    "description": "Label for the severity selector"
+  },
+
+  "incidentReportSenderUrlLabel": "Sender or URL",
+  "@incidentReportSenderUrlLabel": {
+    "description": "Label for the sender/URL field in email/link reports"
+  },
+
+  "incidentReportSystemAffectedLabel": "System or application affected",
+  "@incidentReportSystemAffectedLabel": {
+    "description": "Label for the affected system field in unauthorized access reports"
+  },
+
+  "incidentReportDeviceTypeLabel": "Device type",
+  "@incidentReportDeviceTypeLabel": {
+    "description": "Label for the device type dropdown in lost device reports"
+  },
+
+  "incidentReportLastLocationLabel": "Last known location",
+  "@incidentReportLastLocationLabel": {
+    "description": "Label for the last known location field in lost device reports"
+  },
+
+  "incidentReportDataClassificationLabel": "Data classification",
+  "@incidentReportDataClassificationLabel": {
+    "description": "Label for the data classification dropdown in data exposure reports"
+  },
+
+  "incidentReportAttachmentLabel": "Add attachment",
+  "@incidentReportAttachmentLabel": {
+    "description": "Label for the attachment button"
+  },
+
+  "incidentReportAttachmentComingSoon": "Attachments coming soon",
+  "@incidentReportAttachmentComingSoon": {
+    "description": "Tooltip for the disabled attachment button"
+  },
+
+  "incidentReportSubmitButton": "Submit report",
+  "@incidentReportSubmitButton": {
+    "description": "Label for the submit button"
+  },
+
+  "incidentReportSubmitting": "Submitting report\u2026",
+  "@incidentReportSubmitting": {
+    "description": "Loading message during report submission"
+  },
+
+  "incidentReportUrgentGuidance": "For urgent incidents, also contact the Security Operations Center at {phoneNumber}.",
+  "@incidentReportUrgentGuidance": {
+    "description": "Urgent guidance banner shown for critical incidents",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String",
+        "example": "+1-555-SOC-LINE"
+      }
+    }
+  },
+
+  "incidentReceiptTitle": "Report submitted",
+  "@incidentReceiptTitle": {
+    "description": "Title on the receipt screen after successful submission"
+  },
+
+  "incidentReceiptReportId": "Report ID: {reportId}",
+  "@incidentReceiptReportId": {
+    "description": "Shows the report ID on the receipt screen",
+    "placeholders": {
+      "reportId": {
+        "type": "String",
+        "example": "a1b2c3d4"
+      }
+    }
+  },
+
+  "incidentReceiptDoneButton": "Done",
+  "@incidentReceiptDoneButton": {
+    "description": "Done button on the receipt screen that returns to dashboard"
+  },
+
+  "incidentReceiptViewReportsButton": "View my reports",
+  "@incidentReceiptViewReportsButton": {
+    "description": "Button on receipt screen to navigate to report history"
+  },
+
+  "incidentHistoryScreenTitle": "My reports",
+  "@incidentHistoryScreenTitle": {
+    "description": "Title for the incident report history screen"
+  },
+
+  "incidentHistoryEmptyTitle": "No reports",
+  "@incidentHistoryEmptyTitle": {
+    "description": "Empty state title when no reports exist"
+  },
+
+  "incidentHistoryEmptyMessage": "Your submitted incident reports will appear here.",
+  "@incidentHistoryEmptyMessage": {
+    "description": "Empty state message when no reports exist"
+  },
+
+  "incidentDetailScreenTitle": "Report details",
+  "@incidentDetailScreenTitle": {
+    "description": "Title for the incident report detail screen"
+  },
+
+  "incidentReportValidationRequired": "This field is required",
+  "@incidentReportValidationRequired": {
+    "description": "Validation error for required fields"
+  },
+
+  "incidentReportValidationTitleLength": "Title must be 5\u2013100 characters",
+  "@incidentReportValidationTitleLength": {
+    "description": "Validation error for title length"
+  },
+
+  "incidentReportValidationDescriptionLength": "Description must be 10\u20132000 characters",
+  "@incidentReportValidationDescriptionLength": {
+    "description": "Validation error for description length"
+  },
+
+  "incidentReportValidationFutureDate": "Date cannot be in the future",
+  "@incidentReportValidationFutureDate": {
+    "description": "Validation error for future date"
+  },
+
+  "incidentStatusSubmitted": "Submitted",
+  "@incidentStatusSubmitted": {
+    "description": "Display label for submitted status"
+  },
+
+  "incidentStatusAcknowledged": "Acknowledged",
+  "@incidentStatusAcknowledged": {
+    "description": "Display label for acknowledged status"
+  },
+
+  "incidentStatusInvestigating": "Investigating",
+  "@incidentStatusInvestigating": {
+    "description": "Display label for investigating status"
+  },
+
+  "incidentStatusResolved": "Resolved",
+  "@incidentStatusResolved": {
+    "description": "Display label for resolved status"
+  },
+
+  "incidentStatusClosed": "Closed",
+  "@incidentStatusClosed": {
+    "description": "Display label for closed status"
+  },
+
+  "incidentSeverityLow": "Low",
+  "@incidentSeverityLow": {
+    "description": "Display label for low severity"
+  },
+
+  "incidentSeverityMedium": "Medium",
+  "@incidentSeverityMedium": {
+    "description": "Display label for medium severity"
+  },
+
+  "incidentSeverityHigh": "High",
+  "@incidentSeverityHigh": {
+    "description": "Display label for high severity"
+  },
+
+  "incidentSeverityCritical": "Critical",
+  "@incidentSeverityCritical": {
+    "description": "Display label for critical severity"
+  },
+
+  "settingsScreenTitle": "Settings",
+  "@settingsScreenTitle": {
+    "description": "Title for the settings screen"
+  },
+
+  "settingsNotificationToggleLabel": "Daily reminder",
+  "@settingsNotificationToggleLabel": {
+    "description": "Label for the notification preference toggle"
+  },
+
+  "settingsNotificationToggleDescription": "Get a daily notification when your security challenge is ready",
+  "@settingsNotificationToggleDescription": {
+    "description": "Description for the notification preference toggle"
+  },
+
+  "settingsNotificationPermissionDenied": "Notification permission is required. Enable it in device settings.",
+  "@settingsNotificationPermissionDenied": {
+    "description": "Message shown when notification permission is denied"
+  },
+
+  "notificationTitle": "Security Pulse",
+  "@notificationTitle": {
+    "description": "Title for the daily reminder notification. Static and non-sensitive."
+  },
+
+  "notificationBody": "Your daily security challenge is ready",
+  "@notificationBody": {
+    "description": "Body for the daily reminder notification. Static and non-sensitive."
+  },
+
+  "progressStreakDays": "{count, plural, =1{1 day streak} other{{count} day streak}}",
+  "@progressStreakDays": {
+    "description": "Streak days display on the progress summary card",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "progressCompleted": "{completed} of {total} completed",
+  "@progressCompleted": {
+    "description": "Scenarios completed out of total assigned",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "campaignEligibleBadge": "Prize draw eligible",
+  "@campaignEligibleBadge": {
+    "description": "Badge shown when user is eligible for the current prize campaign drawing"
+  },
+
+  "campaignEligibleSemantics": "You are eligible for the current prize draw",
+  "@campaignEligibleSemantics": {
+    "description": "Screen reader label for the campaign eligibility badge"
+  },
+
+  "scenarioStartButton": "Start Challenge",
+  "@scenarioStartButton": {
+    "description": "Button label to begin the daily scenario question"
+  },
+
+  "scenarioChallengeReadyTitle": "Today's Challenge",
+  "@scenarioChallengeReadyTitle": {
+    "description": "Section heading on the challenge intro card"
+  },
+
+  "scenarioEstimatedTime": "~2 min",
+  "@scenarioEstimatedTime": {
+    "description": "Estimated time shown on the challenge intro card"
+  },
+
+  "scenarioStreakKept": "Streak maintained!",
+  "@scenarioStreakKept": {
+    "description": "Banner shown on result screen when the user keeps their streak"
+  },
+
+  "scenarioKeepGoing": "Come back tomorrow to keep learning",
+  "@scenarioKeepGoing": {
+    "description": "Motivational message on result screen when answer was incorrect"
+  },
+
+  "signInWelcomeTitle": "Welcome back",
+  "@signInWelcomeTitle": {
+    "description": "Heading shown on the sign-in card below the hero section"
+  },
+
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom navigation label for the daily scenario tab"
+  },
+
+  "navHistory": "History",
+  "@navHistory": {
+    "description": "Bottom navigation label for the history tab"
+  },
+
+  "navReports": "Reports",
+  "@navReports": {
+    "description": "Bottom navigation label for the incident reports tab"
+  },
+
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom navigation label for the settings tab"
+  },
+
+  "profileScreenTitle": "Profile",
+  "@profileScreenTitle": {
+    "description": "Title for the profile screen"
+  },
+
+  "profileEmptyTitle": "No activity yet",
+  "@profileEmptyTitle": {
+    "description": "Empty state title on the profile screen"
+  },
+
+  "profileEmptyMessage": "Complete your first scenario to see your profile.",
+  "@profileEmptyMessage": {
+    "description": "Empty state message on the profile screen"
+  },
+
+  "profileStreakLabel": "day streak",
+  "@profileStreakLabel": {
+    "description": "Label next to the streak count on the profile screen"
+  },
+
+  "profileTotalResponsesLabel": "Responses",
+  "@profileTotalResponsesLabel": {
+    "description": "Stat card label for total responses on the profile screen"
+  },
+
+  "profileAccuracyLabel": "Accuracy",
+  "@profileAccuracyLabel": {
+    "description": "Stat card label for accuracy percentage on the profile screen"
+  },
+
+  "profileStreakDaysLabel": "Streak",
+  "@profileStreakDaysLabel": {
+    "description": "Stat card label for streak days on the profile screen"
+  },
+
+  "profileBadgesSectionTitle": "Badges",
+  "@profileBadgesSectionTitle": {
+    "description": "Section heading for badges on the profile screen"
+  },
+
+  "profileBadgeCampaignEligible": "Prize draw eligible",
+  "@profileBadgeCampaignEligible": {
+    "description": "Badge label shown when user is eligible for the current campaign prize draw"
+  },
+
+  "profileBadgeFirstScenario": "First challenge",
+  "@profileBadgeFirstScenario": {
+    "description": "Badge label for completing the first scenario"
+  },
+
+  "profileBadgeWeekStreak": "7-day streak",
+  "@profileBadgeWeekStreak": {
+    "description": "Badge label for maintaining a 7-day streak"
+  },
+
+  "profileDisplayNameSemantics": "Your anonymised employee identifier is {name}",
+  "@profileDisplayNameSemantics": {
+    "description": "Screen reader label for the masked employee display name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "profileAccuracySemantics": "{percent} accuracy rate",
+  "@profileAccuracySemantics": {
+    "description": "Screen reader label for the accuracy stat",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+
+  "settingsAccountSectionTitle": "Account",
+  "@settingsAccountSectionTitle": {
+    "description": "Section header for the Account section in Settings"
+  },
+
+  "settingsProfileLabel": "Profile",
+  "@settingsProfileLabel": {
+    "description": "Label for the Profile navigation tile in Settings"
+  },
+
+  "settingsPreferencesSectionTitle": "Preferences",
+  "@settingsPreferencesSectionTitle": {
+    "description": "Section header for the Preferences section in Settings"
+  },
+
+  "settingsAppSectionTitle": "App",
+  "@settingsAppSectionTitle": {
+    "description": "Section header for the App section in Settings"
+  },
+
+  "settingsVersionLabel": "Version",
+  "@settingsVersionLabel": {
+    "description": "Label for the app version tile in Settings"
+  },
+
+  "settingsPrivacyLabel": "Privacy Policy",
+  "@settingsPrivacyLabel": {
+    "description": "Label for the privacy policy tile in Settings"
+  },
+
+  "settingsSupportLabel": "Support",
+  "@settingsSupportLabel": {
+    "description": "Label for the support tile in Settings"
+  },
+
+  "settingsSignOutLabel": "Sign out",
+  "@settingsSignOutLabel": {
+    "description": "Label for the sign out tile in Settings"
+  },
+
+  "settingsUrlDialogTitle": "Open in browser",
+  "@settingsUrlDialogTitle": {
+    "description": "Title of the dialog shown when opening an external URL from Settings"
+  },
+
+  "settingsUrlDialogBody": "Copy this address to open it in your browser:",
+  "@settingsUrlDialogBody": {
+    "description": "Body text of the URL dialog in Settings"
+  },
+
+  "settingsUrlDialogClose": "Close",
+  "@settingsUrlDialogClose": {
+    "description": "Close button label in the URL dialog in Settings"
+  },
+
+  "modeSelectorTitle": "How will you use Security Pulse?",
+  "@modeSelectorTitle": {
+    "description": "Heading on the mode selector onboarding screen"
+  },
+
+  "modeSelectorSubtitle": "Choose the experience that fits you best.",
+  "@modeSelectorSubtitle": {
+    "description": "Subtitle on the mode selector onboarding screen"
+  },
+
+  "modeWorkTitle": "Work",
+  "@modeWorkTitle": {
+    "description": "Title for the Work mode card on the mode selector screen"
+  },
+
+  "modeWorkSubtitle": "Your organisation\u2019s security awareness platform",
+  "@modeWorkSubtitle": {
+    "description": "Subtitle for the Work mode card"
+  },
+
+  "modeSchoolTitle": "School",
+  "@modeSchoolTitle": {
+    "description": "Title for the School mode card on the mode selector screen"
+  },
+
+  "modeSchoolSubtitle": "For students and teachers",
+  "@modeSchoolSubtitle": {
+    "description": "Subtitle for the School mode card"
+  },
+
+  "modePersonalTitle": "Personal",
+  "@modePersonalTitle": {
+    "description": "Title for the Personal mode card on the mode selector screen"
+  },
+
+  "modePersonalSubtitle": "Learn at your own pace, no account needed",
+  "@modePersonalSubtitle": {
+    "description": "Subtitle for the Personal mode card"
+  },
+
+  "modeAlreadyHaveAccount": "Already have a Work account? Sign in",
+  "@modeAlreadyHaveAccount": {
+    "description": "Link at the bottom of the mode selector for existing Work users"
+  },
+
+  "guestWelcomeTitle": "Welcome to Security Pulse",
+  "@guestWelcomeTitle": {
+    "description": "Heading on the guest welcome screen"
+  },
+
+  "guestWelcomeSubtitle": "Learn to spot cyber threats \u2014 no account required.",
+  "@guestWelcomeSubtitle": {
+    "description": "Subtitle on the guest welcome screen"
+  },
+
+  "guestStartButton": "Start exploring",
+  "@guestStartButton": {
+    "description": "Primary button on the guest welcome screen"
+  },
+
+  "guestSignInLink": "Sign in with existing account",
+  "@guestSignInLink": {
+    "description": "Secondary link on the guest welcome screen"
+  },
+
+  "guestPrivacyNote": "No personal data is collected in guest mode.",
+  "@guestPrivacyNote": {
+    "description": "Privacy note on the guest welcome screen"
+  },
+
+  "classJoinTitle": "Join your class",
+  "@classJoinTitle": {
+    "description": "Heading on the school class join screen"
+  },
+
+  "classJoinRoleStudent": "Student",
+  "@classJoinRoleStudent": {
+    "description": "Student role option on the class join screen"
+  },
+
+  "classJoinRoleTeacher": "Teacher",
+  "@classJoinRoleTeacher": {
+    "description": "Teacher role option on the class join screen"
+  },
+
+  "classJoinCodeLabel": "Class code",
+  "@classJoinCodeLabel": {
+    "description": "Label for the class code text field"
+  },
+
+  "classJoinCodeHint": "e.g. SEC-2024",
+  "@classJoinCodeHint": {
+    "description": "Hint text for the class code field"
+  },
+
+  "classJoinButton": "Join class",
+  "@classJoinButton": {
+    "description": "Submit button on the class join screen"
+  },
+
+  "classJoinValidationRequired": "Class code is required",
+  "@classJoinValidationRequired": {
+    "description": "Validation error when class code is empty"
+  },
+
+  "classJoinValidationLength": "Code must be 3\u201320 characters",
+  "@classJoinValidationLength": {
+    "description": "Validation error when class code length is invalid"
+  },
+
+  "topicPacksTitle": "Security Topics",
+  "@topicPacksTitle": {
+    "description": "Section heading on the topic packs screen"
+  },
+
+  "topicPacksDemoBanner": "Exploring as guest \u2014 sign in to track your progress.",
+  "@topicPacksDemoBanner": {
+    "description": "Demo banner on the topic packs screen"
+  },
+
+  "topicPacksChallengeCount": "8 challenges",
+  "@topicPacksChallengeCount": {
+    "description": "Challenge count shown on each topic card (demo)"
+  },
+
+  "topicPacksStartToast": "Loading a {category} challenge\u2026",
+  "@topicPacksStartToast": {
+    "description": "SnackBar message when user taps a topic pack",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+
+  "leaderboardTitle": "This Week\u2019s Leaders",
+  "@leaderboardTitle": {
+    "description": "Title on the class leaderboard screen"
+  },
+
+  "leaderboardSubtitle": "Your class",
+  "@leaderboardSubtitle": {
+    "description": "Subtitle on the leaderboard screen"
+  },
+
+  "leaderboardDemoBanner": "Showing demo leaderboard data.",
+  "@leaderboardDemoBanner": {
+    "description": "Demo banner on the leaderboard screen"
+  },
+
+  "leaderboardStreakLabel": "streak",
+  "@leaderboardStreakLabel": {
+    "description": "Label next to streak count in the leaderboard"
+  },
+
+  "leaderboardCompletedLabel": "completed",
+  "@leaderboardCompletedLabel": {
+    "description": "Label next to completed count in the leaderboard"
+  },
+
+  "leaderboardYouLabel": "You",
+  "@leaderboardYouLabel": {
+    "description": "Badge shown on the current user's row in the leaderboard"
+  },
+
+  "navLeaderboard": "Leaderboard",
+  "@navLeaderboard": {
+    "description": "Bottom navigation label for the leaderboard tab (school mode)"
+  },
+
+  "navTopics": "Topics",
+  "@navTopics": {
+    "description": "Bottom navigation label for the topic packs tab (personal mode)"
+  },
+
+  "navDashboard": "Dashboard",
+  "@navDashboard": {
+    "description": "Bottom navigation label for the teacher dashboard tab"
+  },
+
+  "teacherDashboardTitle": "Your Classroom",
+  "@teacherDashboardTitle": {
+    "description": "Heading on the teacher dashboard screen"
+  },
+
+  "teacherDashboardDemoBanner": "Showing demo data for class SEC-101.",
+  "@teacherDashboardDemoBanner": {
+    "description": "Demo banner on the teacher dashboard screen"
+  },
+
+  "teacherDashboardActiveStudents": "Active Students",
+  "@teacherDashboardActiveStudents": {
+    "description": "Stat card label for active students on the teacher dashboard"
+  },
+
+  "teacherDashboardAvgCompletion": "Avg Completion",
+  "@teacherDashboardAvgCompletion": {
+    "description": "Stat card label for average completion rate on the teacher dashboard"
+  },
+
+  "teacherDashboardTopStreak": "Top Streak",
+  "@teacherDashboardTopStreak": {
+    "description": "Stat card label for top streak on the teacher dashboard"
+  },
+
+  "teacherDashboardRecentActivity": "Recent Activity",
+  "@teacherDashboardRecentActivity": {
+    "description": "Section heading for recent activity on the teacher dashboard"
+  },
+
+  "teacherDashboardAssignButton": "Assign challenge",
+  "@teacherDashboardAssignButton": {
+    "description": "FAB label on the teacher dashboard"
+  },
+
+  "teacherDashboardAssignComingSoon": "Scenario assignment coming soon.",
+  "@teacherDashboardAssignComingSoon": {
+    "description": "SnackBar message when teacher taps the assign FAB"
+  },
+
+  "teacherDashboardViewLeaderboard": "View leaderboard",
+  "@teacherDashboardViewLeaderboard": {
+    "description": "Link on the teacher dashboard to the leaderboard"
+  }
+}

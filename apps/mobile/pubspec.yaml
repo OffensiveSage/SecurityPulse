@@ -1,0 +1,81 @@
+name: security_pulse
+description: Security Pulse — Corporate cybersecurity awareness platform.
+version: 0.0.1+1
+publish_to: "none"
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Navigation
+  go_router: ^14.2.7
+
+  # HTTP client
+  dio: ^5.7.0
+  retrofit: ^4.4.1
+
+  # Dependency injection
+  get_it: ^7.7.0
+  injectable: ^2.4.4
+
+  # OIDC Authorization Code Flow with PKCE
+  flutter_appauth: ^12.0.0
+
+  # Secure token storage — never use SharedPreferences for tokens
+  flutter_secure_storage: ^9.2.2
+
+  # Non-sensitive preference storage (app mode, class code, guest flag)
+  shared_preferences: ^2.3.2
+
+  # Network connectivity
+  connectivity_plus: ^6.0.3
+
+  # Local notifications (dev mode; production uses FCM/APNs via provider abstraction)
+  flutter_local_notifications: ^18.0.0
+
+  # Timezone support for scheduled notifications
+  timezone: ^0.9.4
+
+  # Serialization
+  json_annotation: ^4.9.0
+
+  # Localization
+  intl: any
+
+  # Logging
+  logging: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Code generation
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.4.3
+  injectable_generator: ^2.4.4
+  json_serializable: ^6.8.0
+  retrofit_generator: ^9.7.0
+
+  # Testing
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/
+    - assets/icons/
+
+  fonts:
+    []
+    # Add approved brand fonts here once branding is confirmed (governance decision)
