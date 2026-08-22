@@ -1,94 +1,113 @@
 # Security Pulse
 
-Corporate cybersecurity awareness platform for iOS, iPadOS, and Android.
+> Daily cybersecurity practice that people can finish—and security teams can govern.
 
-**Document version:** 1.0  
-**Stack:** Flutter · FastAPI · Next.js · PostgreSQL · Redis
+Security Pulse is a mobile-first security-awareness platform for organizations that want to turn one-off training into a lightweight daily habit. Employees receive a short, role-aware scenario, make a decision in under a minute, and immediately learn why it matters. Security and GRC teams can author content, manage campaigns, review privacy-protected analytics, and retain an administrative audit trail.
 
----
+Built for iOS, iPadOS, Android, and the web.
 
-## What this is
+## Why Security Pulse
 
-Security Pulse delivers short, role-based security scenarios that employees complete in under one minute. A home-screen widget shows the daily question. The mobile app handles answers, explanations, streaks, incident reporting, and notifications. An administrative web portal manages content, campaigns, and analytics.
+Most security training is occasional, long, and easy to forget. Security Pulse makes practice timely and repeatable:
 
-This is an awareness and reporting companion—not a replacement for annual compliance training, an enterprise SIEM, or an LMS.
+- **For employees:** a daily challenge, immediate explanation, progress history, notifications, home-screen widgets, and a structured way to report suspicious activity.
+- **For security teams:** governed content workflows, campaigns, aggregate analytics, reward-eligibility calculations, and auditable administrative actions.
+- **For the organization:** a deliberately narrow data model that avoids credential collection, hides answers before submission, and suppresses small analytics groups.
 
----
+Security Pulse is an awareness and reporting companion—not a replacement for an LMS, SIEM, or incident-response platform.
 
-## Repository structure
+## Product at a glance
 
+| Employee experience | Security-team experience |
+| --- | --- |
+| Complete a short daily scenario | Author, review, approve, and publish scenarios |
+| Receive an explanation immediately after answering | Create campaigns and calculate eligibility rules |
+| Use an iOS or Android home-screen widget | Review group-suppressed analytics |
+| Report suspicious activity without sharing credentials | Inspect administrative audit events |
+| Track progress, streaks, and history | Prepare governed exports and downstream routing |
+
+## What is in this repository
+
+```text
+apps/
+  mobile/          Flutter app for iOS, iPadOS, and Android
+  admin-web/       Next.js portal for content, campaigns, and analytics
+services/
+  api/             FastAPI REST API, PostgreSQL models, and Alembic migrations
+  worker/          Background-job foundation for scheduled work and notifications
+packages/
+  api-contract/    OpenAPI 3.1 contract—the API source of truth
+  design-tokens/   Shared visual design tokens
+docs/
+  adr/             Architecture decision records
+infrastructure/    Environment and deployment configuration
 ```
-security-pulse/
-├── apps/
-│   ├── mobile/          # Flutter app (iOS, iPadOS, Android)
-│   └── admin-web/       # Next.js admin portal (TypeScript)
-├── services/
-│   ├── api/             # FastAPI backend (Python)
-│   └── worker/          # Background job worker (Python)
-├── packages/
-│   ├── api-contract/    # OpenAPI 3.1 specification (source of truth)
-│   └── design-tokens/   # Shared design tokens (JSON)
-├── infrastructure/      # IaC and environment configs
-├── docs/
-│   ├── adr/             # Architecture Decision Records
-│   ├── diagrams/        # Architecture diagrams
-│   ├── content-guidelines/
-│   └── operations/
-└── .github/workflows/   # CI/CD pipelines
+
+## Architecture
+
+```text
+Flutter mobile app ──┐
+                     ├── HTTPS + OIDC ──> FastAPI API ──> PostgreSQL
+Next.js admin portal ┘                           │
+                                                 ├── Redis (cache / rate limiting)
+iOS WidgetKit + Android Glance <── non-sensitive │
+widget bridge data from the mobile app            └── Worker (scheduled jobs)
 ```
 
----
+The API contract is versioned in [`packages/api-contract/openapi.yaml`](packages/api-contract/openapi.yaml). Native widgets never make authenticated API calls; they receive a deliberately minimal card model from the parent app.
 
-## Prerequisites
+## Security is a product feature
 
-| Tool | Minimum version | Install |
-|---|---|---|
-| Flutter | 3.24.x (stable) | https://docs.flutter.dev/get-started/install |
-| Dart | 3.5.x (bundled with Flutter) | Bundled |
-| Xcode | 15.x | App Store (macOS only) |
-| Android Studio | 2024.x | https://developer.android.com/studio |
-| Node.js | 20 LTS | https://nodejs.org |
-| Python | 3.12+ | https://python.org |
-| Docker + Compose | Latest stable | https://docs.docker.com/get-docker |
-| Git | 2.40+ | https://git-scm.com |
+The system is designed to make the safe path the default:
 
----
+- OIDC Authorization Code Flow with PKCE and secure mobile token storage.
+- Server-enforced, deny-by-default role-based authorization.
+- Database-enforced idempotency for scenario responses and incident reports.
+- Separate employee and result schemas so answer correctness cannot be returned before submission.
+- No passwords, MFA codes, access tokens, or sensitive incident bodies in logs.
+- Widgets store only a title, display state, route, and expiry—never tokens, PII, answers, or incident data.
+- Analytics are aggregated with small-group suppression.
 
-## Quick start
+Read the complete [security requirements](SECURITY.md) and [threat model](THREAT_MODEL.md) before deploying or integrating the platform.
 
-### 1. Clone and configure environment
+## Local development
+
+### Prerequisites
+
+- Flutter 3.24+ and the platform toolchains needed for the target device
+- Node.js 20+
+- Python 3.11+
+- Docker and Docker Compose
+
+### 1. Configure the workspace
 
 ```bash
 git clone <repo-url> security-pulse
 cd security-pulse
 cp .env.example .env
-# Edit .env — see comments inside for required values
 ```
 
-### 2. Start local backend services
+Do not commit `.env` files or secrets. Local Docker configuration contains development-only credentials and must never be used in staging or production.
+
+### 2. Start PostgreSQL, Redis, and the API
 
 ```bash
 docker compose up -d
+curl http://localhost:8000/health
 ```
 
-This starts PostgreSQL, Redis, and the FastAPI API with a mock identity provider. The mock identity provider is disabled automatically when `APP_ENV=production`.
-
-### 3. Run the backend API
+For a non-container API workflow:
 
 ```bash
 cd services/api
 python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip install -e ".[dev]"
 alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-Health check: http://localhost:8000/health
-
-In development mode (`APP_ENV=development`), 5 published scenarios are automatically seeded on startup. These provide immediate test data for the daily scenario flow without manual setup.
-
-### 4. Run the admin portal
+### 3. Start the admin portal
 
 ```bash
 cd apps/admin-web
@@ -96,9 +115,9 @@ npm install
 npm run dev
 ```
 
-Admin portal: http://localhost:3000
+The portal runs at [http://localhost:3000](http://localhost:3000).
 
-### 5. Run the Flutter mobile app
+### 4. Run the mobile app
 
 ```bash
 cd apps/mobile
@@ -106,93 +125,65 @@ flutter pub get
 flutter run
 ```
 
-### 6. Run all tests
+## Validate changes
+
+Run the checks for the components you change before opening a pull request:
 
 ```bash
-# Backend
-cd services/api && pytest
+# API
+cd services/api
+ruff check .
+mypy app
+pytest
 
 # Admin portal
-cd apps/admin-web && npm test
+cd apps/admin-web
+npm run lint
+npm run type-check
+npm test
 
-# Flutter
-cd apps/mobile && flutter test
+# Mobile app
+cd apps/mobile
+flutter analyze
+flutter test
 ```
 
----
+## Delivery status
 
-## Environment variables
+The repository contains the core experience and platform foundations: authentication and authorization patterns, scenario delivery, native-widget bridging, notification preferences, incident reporting, administrative analytics and campaigns, and audit-event persistence.
 
-See `.env.example` for all variables and documentation. Never commit `.env`.
+Security Pulse is **pre-pilot software**, not a production deployment. Several enterprise decisions remain intentionally open, including the identity provider, hosting region, secrets manager, notification provider, ticketing integration, retention, support model, and business-continuity plan. See [Architecture: governance decisions](ARCHITECTURE.md#governance-decisions) and the [runbook](RUNBOOK.md) for the current operational posture.
 
-Key variables:
+Some development experiences use local or mock service implementations until a production environment and approved integrations are available. Do not enable mock authentication in production.
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `REDIS_URL` | Redis connection string |
-| `OIDC_ISSUER_URL` | Corporate identity provider discovery URL |
-| `OIDC_CLIENT_ID` | OAuth2 client ID |
-| `OIDC_AUDIENCE` | OAuth2 audience (optional, defaults to `OIDC_CLIENT_ID`) |
-| `APP_ENV` | `development` or `production` |
-| `ALLOW_MOCK_AUTH` | `true` only when `APP_ENV=development` |
+## Engineering principles
 
----
+1. **Trust is earned in the details.** Never collect credentials; minimize retained data; make data flows explicit.
+2. **Authorization belongs on the server.** Client state is presentation, not permission.
+3. **A correct answer is protected until it is earned.** Employee scenario responses cannot reveal correctness before submission.
+4. **Operationally boring beats clever.** Versioned APIs, Alembic migrations, idempotent writes, correlation IDs, and explicit rollback procedures.
+5. **Human governance stays in the loop.** AI-generated content is not published automatically, and rewards remain subject to HR, Legal, Tax, and Ethics approval.
 
-## Authentication (Phase 2)
+## Documentation
 
-The app uses OIDC Authorization Code Flow with PKCE for authentication. In development, mock auth is enabled by default (`ALLOW_MOCK_AUTH=true`), which accepts mock tokens without a real identity provider.
+| Document | Start here when you need to… |
+| --- | --- |
+| [Product specification](PRODUCT_SPEC.md) | Understand users, scope, exclusions, and product flows |
+| [Architecture](ARCHITECTURE.md) | Review system design, trust boundaries, and decisions |
+| [API contract](API_CONTRACT.md) | Work with the versioned REST API and OpenAPI workflow |
+| [Security requirements](SECURITY.md) | Review required security controls |
+| [Threat model](THREAT_MODEL.md) | Understand risks and mitigations |
+| [Test strategy](TEST_STRATEGY.md) | Choose coverage and quality gates |
+| [Runbook](RUNBOOK.md) | Operate local environments and database migrations |
+| [Architecture decisions](docs/adr/) | Review accepted and pending technical decisions |
+| [Contributing guide](CONTRIBUTING.md) | Prepare a change for human review |
 
-**Mock auth tokens** (development only):
-- `mock-employee` — signs in as a test employee
-- `mock-content_admin` — signs in as a content admin
-- `mock-security_admin` — signs in as a security admin
+## Contributing
 
-**Production** requires `OIDC_ISSUER_URL` and `OIDC_CLIENT_ID` to be set. Mock auth is blocked when `APP_ENV=production`.
+Changes should be small, reviewed by a human, and accompanied by appropriate tests. For changes to a public API, security boundary, persistence model, or operational behavior, update the relevant contract, threat model, runbook, and/or ADR in the same pull request.
 
-For backend API auth testing:
-```bash
-# With mock auth enabled
-curl -H "Authorization: Bearer mock-employee" http://localhost:8000/api/v1/auth/me
-```
-
----
-
-## Scenario delivery (Phase 3)
-
-The backend serves daily scenarios via the following endpoints (all require authentication):
-
-| Endpoint | Description |
-|---|---|
-| `GET /api/v1/scenarios/today` | Today's assigned scenario (answer correctness hidden) |
-| `GET /api/v1/scenarios/{id}` | Single scenario by ID |
-| `POST /api/v1/scenarios/{id}/responses` | Submit an answer (idempotent via `Idempotency-Key`) |
-| `GET /api/v1/scenarios/{id}/result` | Correctness and explanation (only after submission) |
-| `GET /api/v1/me/history` | Paginated response history for the authenticated user |
-| `GET /api/v1/me/progress` | Streak, total answered, and accuracy stats |
-
-Seed data (5 published scenarios) is loaded automatically when `APP_ENV=development`.
+Never merge directly to the default branch without the required review and checks.
 
 ---
 
-## Governance decisions
-
-Seventeen decisions must be made before production. See `ARCHITECTURE.md § Governance decisions` for the full list. Current status: all unresolved (see each item for owner and deadline).
-
----
-
-## Related documents
-
-| Document | Purpose |
-|---|---|
-| `PRODUCT_SPEC.md` | Full product requirements |
-| `ARCHITECTURE.md` | Architecture, data flows, ADRs |
-| `SECURITY.md` | Security controls and requirements |
-| `THREAT_MODEL.md` | Threats, trust boundaries, mitigations |
-| `API_CONTRACT.md` | API reference (→ `packages/api-contract/openapi.yaml`) |
-| `TEST_STRATEGY.md` | Testing approach by layer |
-| `RUNBOOK.md` | Operational procedures |
-| `CONTRIBUTING.md` | How to contribute |
-| `CHANGELOG.md` | Version history |
-| `CLAUDE.md` | Claude Code agent instructions |
-| `AGENTS.md` | Codex agent instructions |
+**Questions or pilot interest?** Start with the product and governance documentation above; deployment and enterprise integration decisions must be approved before production use.
