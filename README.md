@@ -137,7 +137,7 @@ See [SECURITY.md](SECURITY.md) and [THREAT_MODEL.md](THREAT_MODEL.md) for the fu
 
 ### Prerequisites
 
-- Flutter 3.24+ and the platform toolchains for your target device
+- Flutter 3.27+ and the platform toolchains for your target device
 - Node.js 20+
 - Python 3.11+
 - Docker and Docker Compose
