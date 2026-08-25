@@ -12,10 +12,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.campaign import Campaign, CampaignStatus
 from app.models.response import Response
 from app.schemas.admin import (
+    MIN_ANALYTICS_GROUP_SIZE,
     CampaignCreate,
     CampaignSchema,
     EligibilityResult,
-    MIN_ANALYTICS_GROUP_SIZE,
 )
 from app.schemas.common import PaginatedResponse, PaginationMeta
 

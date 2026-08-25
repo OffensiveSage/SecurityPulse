@@ -9,11 +9,11 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.schemas.admin import CampaignCreate, EligibilityResult, MIN_ANALYTICS_GROUP_SIZE
+from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, CampaignCreate
 
 
 @pytest.mark.asyncio
@@ -59,7 +59,7 @@ class TestCreateCampaign:
 
     async def test_governance_disclaimer_is_always_present(self) -> None:
         """The governance disclaimer must always be included in the schema."""
-        from app.services.campaign_service import create_campaign, GOVERNANCE_DISCLAIMER
+        from app.services.campaign_service import GOVERNANCE_DISCLAIMER, create_campaign
 
         db = AsyncMock()
         db.add = MagicMock()

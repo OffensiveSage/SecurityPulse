@@ -23,7 +23,6 @@ from app.core.database import get_db_session
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.admin import (
     AnalyticsSummary,
-    AuditEventSchema,
     CampaignSchema,
     EligibilityResult,
 )

@@ -7,11 +7,11 @@ Uses mocked AsyncSession to avoid requiring a live database.
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, AnalyticsSummary, CategoryAccuracy
+from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, AnalyticsSummary
 
 
 @pytest.mark.asyncio

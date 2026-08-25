@@ -12,7 +12,7 @@ describe('AnalyticsPage', () => {
   it('shows loading state initially', () => {
     mockFetch.mockReturnValue(new Promise(() => {}));
     render(<AnalyticsPage />);
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByLabelText('Loading category data')).toBeInTheDocument();
   });
 
   it('renders analytics summary after load', async () => {
