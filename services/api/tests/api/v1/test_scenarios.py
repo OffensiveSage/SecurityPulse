@@ -23,7 +23,6 @@ from app.schemas.scenario import (
 )
 
 
-@pytest.mark.asyncio
 class TestScenarioSchemas:
     """Unit tests for Pydantic schemas (no DB required)."""
 
@@ -211,7 +210,6 @@ class TestGetResultEndpoint:
         assert response.status_code == 403
 
 
-@pytest.mark.asyncio
 class TestScenarioSecurityInvariants:
     """Cross-cutting security tests for the scenario API."""
 

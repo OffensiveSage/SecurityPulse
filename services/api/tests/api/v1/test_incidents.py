@@ -36,7 +36,6 @@ def _valid_body() -> dict:
     }
 
 
-@pytest.mark.asyncio
 class TestIncidentSchemas:
     """Unit tests for incident Pydantic schemas (no DB required)."""
 
