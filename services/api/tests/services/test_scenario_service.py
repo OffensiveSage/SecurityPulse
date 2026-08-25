@@ -290,8 +290,8 @@ class TestGetUserProgress:
         mock_campaign = MagicMock()  # Non-None = active campaign found
 
         results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
-        results[0].scalar_one.return_value = 4   # 4 assigned
-        results[1].scalar_one.return_value = 4   # 4 completed (all done)
+        results[0].scalar_one.return_value = 4  # 4 assigned
+        results[1].scalar_one.return_value = 4  # 4 completed (all done)
         results[2].all.return_value = []
         results[3].scalar_one_or_none.return_value = mock_campaign  # Active campaign
         db.execute.side_effect = results
@@ -306,8 +306,8 @@ class TestGetUserProgress:
         mock_campaign = MagicMock()
 
         results = [MagicMock(), MagicMock(), MagicMock(), MagicMock()]
-        results[0].scalar_one.return_value = 5   # 5 assigned
-        results[1].scalar_one.return_value = 3   # only 3 completed
+        results[0].scalar_one.return_value = 5  # 5 assigned
+        results[1].scalar_one.return_value = 3  # only 3 completed
         results[2].all.return_value = []
         results[3].scalar_one_or_none.return_value = mock_campaign
         db.execute.side_effect = results

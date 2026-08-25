@@ -7,6 +7,7 @@ A campaign groups scenario assignments over a time period.
 from __future__ import annotations
 
 import enum
+from datetime import datetime
 
 from sqlalchemy import DateTime, Enum, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -31,11 +32,11 @@ class Campaign(Base, UUIDMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    start_at: Mapped[DateTime | None] = mapped_column(
+    start_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
     )
-    end_at: Mapped[DateTime | None] = mapped_column(
+    end_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
     )

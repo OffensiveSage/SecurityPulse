@@ -48,6 +48,9 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "ANN"]
+# Seed content is user-facing data, where preserving each option as a single
+# literal is more readable than mechanically splitting it to meet line length.
+"app/cli/seed.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"

@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import uuid
-
 from sqlalchemy import Integer, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.response import Response
 from app.models.scenario import Scenario
 from app.models.user import User, UserStatus
-from app.schemas.admin import AnalyticsSummary, CategoryAccuracy, MIN_ANALYTICS_GROUP_SIZE
+from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, AnalyticsSummary, CategoryAccuracy
 
 
 async def get_analytics_summary(db: AsyncSession) -> AnalyticsSummary:

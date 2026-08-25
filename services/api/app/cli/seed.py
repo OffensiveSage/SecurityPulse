@@ -1587,7 +1587,7 @@ async def seed_dev_data(engine: AsyncEngine) -> None:
                 )
                 session.add(option)
                 if opt_data["is_correct"]:
-                    correct_option_id = option.id  # type: ignore[assignment]  # id set by ORM
+                    correct_option_id = option.id
 
             # Stagger assignments: first one is today, rest are past days
             if i == 0:
@@ -1627,7 +1627,6 @@ async def seed_dev_data(engine: AsyncEngine) -> None:
 
 async def main() -> None:
     """Entry point: create engine from settings and run the seed."""
-    import os
 
     from sqlalchemy.ext.asyncio import create_async_engine
 

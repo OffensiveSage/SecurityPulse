@@ -7,11 +7,11 @@ Uses mocked AsyncSession to avoid requiring a live database.
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, AnalyticsSummary, CategoryAccuracy
+from app.schemas.admin import MIN_ANALYTICS_GROUP_SIZE, AnalyticsSummary
 
 
 @pytest.mark.asyncio
@@ -46,11 +46,11 @@ class TestGetAnalyticsSummary:
 
         db.execute = AsyncMock(
             side_effect=[
-                make_scalar_result(50),   # total_employees_active
+                make_scalar_result(50),  # total_employees_active
                 make_scalar_result(small_count),  # total_responses
-                make_scalar_result(2),    # total_correct
-                make_scalar_result(3),    # users_responded
-                cat_result,               # category rows
+                make_scalar_result(2),  # total_correct
+                make_scalar_result(3),  # users_responded
+                cat_result,  # category rows
             ]
         )
 
@@ -89,9 +89,9 @@ class TestGetAnalyticsSummary:
             side_effect=[
                 make_scalar_result(100),  # total_employees_active
                 make_scalar_result(count),  # total_responses
-                make_scalar_result(4),    # total_correct
-                make_scalar_result(5),    # users_responded
-                cat_result,               # category rows
+                make_scalar_result(4),  # total_correct
+                make_scalar_result(5),  # users_responded
+                cat_result,  # category rows
             ]
         )
 
@@ -120,10 +120,10 @@ class TestGetAnalyticsSummary:
         db.execute = AsyncMock(
             side_effect=[
                 make_scalar_result(100),  # total_employees_active
-                make_scalar_result(0),    # total_responses
-                make_scalar_result(0),    # total_correct
-                make_scalar_result(0),    # users_responded
-                cat_result,               # category rows (empty)
+                make_scalar_result(0),  # total_responses
+                make_scalar_result(0),  # total_correct
+                make_scalar_result(0),  # users_responded
+                cat_result,  # category rows (empty)
             ]
         )
 
@@ -186,10 +186,10 @@ class TestGetAnalyticsSummary:
 
         db.execute = AsyncMock(
             side_effect=[
-                make_scalar_result(50),   # total_employees_active
-                make_scalar_result(12),   # total_responses
-                make_scalar_result(8),    # total_correct
-                make_scalar_result(10),   # users_responded
+                make_scalar_result(50),  # total_employees_active
+                make_scalar_result(12),  # total_responses
+                make_scalar_result(8),  # total_correct
+                make_scalar_result(10),  # users_responded
                 cat_result,
             ]
         )

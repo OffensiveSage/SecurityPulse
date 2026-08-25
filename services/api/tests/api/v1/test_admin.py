@@ -23,7 +23,6 @@ from app.core.database import get_db_session
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.admin import (
     AnalyticsSummary,
-    AuditEventSchema,
     CampaignSchema,
     EligibilityResult,
 )
@@ -90,9 +89,11 @@ def mock_db() -> AsyncMock:
 @pytest.fixture
 def app():
     import os
+
     os.environ.setdefault("ALLOW_MOCK_AUTH", "true")
     os.environ.setdefault("APP_ENV", "development")
     from app.main import create_application
+
     return create_application()
 
 
@@ -101,9 +102,7 @@ async def admin_client(app, admin_user, mock_db):
     """Client authenticated as platform_admin."""
     app.dependency_overrides[get_current_user] = lambda: admin_user
     app.dependency_overrides[get_db_session] = lambda: mock_db
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()
 
@@ -113,9 +112,7 @@ async def approver_client(app, approver_user, mock_db):
     """Client authenticated as approver."""
     app.dependency_overrides[get_current_user] = lambda: approver_user
     app.dependency_overrides[get_db_session] = lambda: mock_db
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()
 
@@ -125,14 +122,13 @@ async def employee_client(app, employee_user, mock_db):
     """Client authenticated as employee (non-admin)."""
     app.dependency_overrides[get_current_user] = lambda: employee_user
     app.dependency_overrides[get_db_session] = lambda: mock_db
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
     app.dependency_overrides.clear()
 
 
 # ─── Analytics tests ──────────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 class TestAnalyticsSummaryEndpoint:
@@ -217,12 +213,11 @@ class TestAnalyticsSummaryEndpoint:
 
 # ─── Campaign list tests ───────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 class TestListCampaignsEndpoint:
     @patch("app.api.v1.endpoints.admin.campaign_service.list_campaigns")
-    async def test_returns_200_with_paginated_list(
-        self, mock_list, admin_client
-    ) -> None:
+    async def test_returns_200_with_paginated_list(self, mock_list, admin_client) -> None:
         """GET /admin/campaigns returns 200 with PaginatedResponse shape."""
         campaign_id = uuid.uuid4()
         mock_list.return_value = PaginatedResponse[CampaignSchema](
@@ -260,9 +255,7 @@ class TestListCampaignsEndpoint:
         assert response.status_code == 403
 
     @patch("app.api.v1.endpoints.admin.campaign_service.list_campaigns")
-    async def test_returns_empty_list_when_no_campaigns(
-        self, mock_list, admin_client
-    ) -> None:
+    async def test_returns_empty_list_when_no_campaigns(self, mock_list, admin_client) -> None:
         mock_list.return_value = PaginatedResponse[CampaignSchema](
             data=[],
             meta=PaginationMeta(page=1, page_size=20, total=0, total_pages=1),
@@ -274,6 +267,7 @@ class TestListCampaignsEndpoint:
 
 
 # ─── Campaign create tests ─────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 class TestCreateCampaignEndpoint:
@@ -327,7 +321,7 @@ class TestCreateCampaignEndpoint:
             status="draft",
             start_at=datetime(2026, 11, 1, tzinfo=UTC),
             end_at=datetime(2026, 11, 30, tzinfo=UTC),
-            eligibility_rule='{}',
+            eligibility_rule="{}",
             reward_description=None,
             governance_disclaimer="disclaimer",
         )
@@ -349,7 +343,7 @@ class TestCreateCampaignEndpoint:
             "name": "Blocked",
             "start_at": "2026-10-01T00:00:00Z",
             "end_at": "2026-10-31T00:00:00Z",
-            "eligibility_rule": '{}',
+            "eligibility_rule": "{}",
         }
         response = await employee_client.post("/api/v1/admin/campaigns", json=payload)
         assert response.status_code == 403
@@ -359,13 +353,14 @@ class TestCreateCampaignEndpoint:
             "name": "",
             "start_at": "2026-10-01T00:00:00Z",
             "end_at": "2026-10-31T00:00:00Z",
-            "eligibility_rule": '{}',
+            "eligibility_rule": "{}",
         }
         response = await admin_client.post("/api/v1/admin/campaigns", json=payload)
         assert response.status_code == 422
 
 
 # ─── Campaign eligibility tests ────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 class TestCalculateEligibilityEndpoint:
@@ -440,6 +435,7 @@ class TestCalculateEligibilityEndpoint:
 
 # ─── Audit events tests ────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 class TestListAuditEventsEndpoint:
     @patch("app.api.v1.endpoints.admin.persist_audit_event")
@@ -494,9 +490,7 @@ class TestListAuditEventsEndpoint:
         assert response.status_code == 403
 
     @patch("app.api.v1.endpoints.admin.persist_audit_event")
-    async def test_audit_access_itself_is_logged(
-        self, mock_audit, admin_client, mock_db
-    ) -> None:
+    async def test_audit_access_itself_is_logged(self, mock_audit, admin_client, mock_db) -> None:
         """Accessing audit events must itself create an audit log entry."""
         mock_audit.return_value = None
 
@@ -523,7 +517,5 @@ class TestListAuditEventsEndpoint:
         assert call_kwargs["action"] == "audit_events.accessed"
 
     async def test_validates_page_must_be_positive(self, admin_client) -> None:
-        response = await admin_client.get(
-            "/api/v1/admin/audit-events", params={"page": 0}
-        )
+        response = await admin_client.get("/api/v1/admin/audit-events", params={"page": 0})
         assert response.status_code == 422
