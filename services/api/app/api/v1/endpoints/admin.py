@@ -32,9 +32,7 @@ router = APIRouter(prefix="/admin")
     "/analytics/summary",
     response_model=AnalyticsSummary,
     dependencies=[
-        Depends(
-            require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin)
-        )
+        Depends(require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin))
     ],
 )
 async def analytics_summary(
@@ -57,9 +55,7 @@ async def analytics_summary(
     "/campaigns",
     response_model=PaginatedResponse[CampaignSchema],
     dependencies=[
-        Depends(
-            require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin)
-        )
+        Depends(require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin))
     ],
 )
 async def list_campaigns(
@@ -101,9 +97,7 @@ async def create_campaign(
     "/campaigns/{campaign_id}/calculate-eligibility",
     response_model=EligibilityResult,
     dependencies=[
-        Depends(
-            require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin)
-        )
+        Depends(require_role(UserRole.approver, UserRole.platform_admin, UserRole.security_admin))
     ],
 )
 async def calculate_eligibility(
@@ -116,9 +110,7 @@ async def calculate_eligibility(
     try:
         result = await campaign_service.calculate_eligibility(campaign_id, db)
     except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
-        ) from exc
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
     await persist_audit_event(
         action="campaign.eligibility_calculated",

@@ -363,9 +363,7 @@ async def _get_campaign_eligible(
         return None
 
     # Simplified eligibility: completed all assigned and has at least one assigned
-    return bool(
-        scenarios_assigned > 0 and scenarios_completed >= scenarios_assigned
-    )
+    return bool(scenarios_assigned > 0 and scenarios_completed >= scenarios_assigned)
 
 
 async def _calculate_streak(

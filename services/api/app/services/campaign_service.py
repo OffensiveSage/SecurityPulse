@@ -35,9 +35,7 @@ async def list_campaigns(
     total = (await db.execute(count_stmt)).scalar_one()
 
     offset = (page - 1) * page_size
-    stmt = (
-        select(Campaign).order_by(Campaign.created_at.desc()).offset(offset).limit(page_size)
-    )
+    stmt = select(Campaign).order_by(Campaign.created_at.desc()).offset(offset).limit(page_size)
     rows = (await db.execute(stmt)).scalars().all()
 
     data = [
@@ -91,9 +89,7 @@ async def create_campaign(payload: CampaignCreate, db: AsyncSession) -> Campaign
     )
 
 
-async def calculate_eligibility(
-    campaign_id: uuid.UUID, db: AsyncSession
-) -> EligibilityResult:
+async def calculate_eligibility(campaign_id: uuid.UUID, db: AsyncSession) -> EligibilityResult:
     """Count users who submitted at least one response during the campaign window.
 
     Suppresses count if below MIN_ANALYTICS_GROUP_SIZE to prevent
