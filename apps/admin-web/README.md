@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Security Pulse admin portal
 
-## Getting Started
+The Next.js administration portal for Security Pulse. Security-awareness and GRC teams use it to manage scenarios and campaigns, review aggregate analytics, prepare reports, and inspect administrative audit events.
 
-First, run the development server:
+The portal is pre-pilot software. It is not a production deployment and must not be used to make unsupported governance or personnel decisions.
+
+## Requirements
+
+- Node.js **20+**
+- npm (the committed `package-lock.json` is the supported dependency lockfile)
+- A local Security Pulse API when exercising live data
+
+## Run locally
+
+From this directory:
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). To run the backend locally, start the repository's Docker Compose stack from the repository root:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Confirm the API is available at `http://localhost:8000/health`.
 
-## Learn More
+## Development configuration
 
-To learn more about Next.js, take a look at the following resources:
+The portal uses these optional public environment variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Default | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8000/api/v1` | Base URL for the Security Pulse API |
+| `NEXT_PUBLIC_DEFAULT_ACCESS_TOKEN` | `mock-security_admin` | Local-development token sent when no per-request token is supplied |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The default token works only with a local API configured for mock authentication. It is not an identity solution and must never be set in a production deployment. Production access must use approved OIDC tokens and server-side authorization.
 
-## Deploy on Vercel
+## Available workflows
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Dashboard with aggregate participation and accuracy summaries
+- Scenario authoring and lifecycle management
+- Campaign creation and eligibility calculation
+- Suppression-aware analytics
+- Reports and administrative audit-event views
+- Employee management views
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All API authorization is enforced by the backend. The UI must not be treated as a permission boundary, and aggregate views must preserve minimum-group-size suppression.
+
+## Quality checks
+
+```bash
+npm run type-check
+npm run lint
+npm test
+npm run build
+```
+
+## Related documentation
+
+- [Repository overview](../../README.md)
+- [Architecture](../../ARCHITECTURE.md)
+- [API contract](../../API_CONTRACT.md)
+- [Security controls](../../SECURITY.md)
+- [Threat model](../../THREAT_MODEL.md)
+- [Contributing guide](../../CONTRIBUTING.md)
+
+## Security notes
+
+Do not commit access tokens, secrets, or production URLs. The client adds a correlation ID to API requests and passes tokens per request; it does not persist them in the API module. Administrative actions and analytics access must remain audit logged by the API.

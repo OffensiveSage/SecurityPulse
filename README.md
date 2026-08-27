@@ -142,15 +142,14 @@ See [SECURITY.md](SECURITY.md) and [THREAT_MODEL.md](THREAT_MODEL.md) for the fu
 - Python 3.11+
 - Docker and Docker Compose
 
-### 1. Configure the workspace
+### 1. Clone the workspace
 
 ```bash
 git clone <repo-url> security-pulse
 cd security-pulse
-cp .env.example .env
 ```
 
-> Do not commit `.env` files or secrets. Local Docker credentials are development-only and must never reach staging or production.
+> The repository does not provide a root `.env.example`. The Docker Compose configuration supplies development-only service settings. Do not reuse its credentials outside local development, and never commit `.env` files or secrets.
 
 ### 2. Start the API and backing services
 
@@ -186,6 +185,8 @@ flutter run
 ```
 
 The app launches to the **mode selector** on first run. Choose Work, Personal, or School — each follows its own onboarding path.
+
+For component-specific setup, configuration, test commands, and current development limitations, see the [mobile README](apps/mobile/README.md) and [admin portal README](apps/admin-web/README.md).
 
 ---
 
@@ -224,6 +225,12 @@ The repository contains the full core experience: authentication and authorizati
 Several enterprise decisions remain intentionally open: identity provider, hosting region, secrets manager, notification provider, ticketing integration, data retention, and support model. See [ARCHITECTURE.md](ARCHITECTURE.md) and [RUNBOOK.md](RUNBOOK.md) for the current operational posture.
 
 Some experiences use local or mock implementations until a production environment is available. **Do not enable mock authentication in production.**
+
+### Current development defaults
+
+- The mobile app uses local mock authentication and scenario data by default; real OIDC and API repositories are present but must be explicitly wired to an approved production configuration.
+- The admin portal reads `NEXT_PUBLIC_API_BASE_URL` when supplied and otherwise calls `http://localhost:8000/api/v1`. Its development token is only for a local API with mock authentication enabled.
+- Docker Compose is for local API, PostgreSQL, and Redis development only. Production deployment, identity, secrets management, notification delivery, and operational ownership remain governance decisions.
 
 ---
 
