@@ -126,7 +126,7 @@ class _StreakBanner extends StatelessWidget {
                 ],
               ),
               Text(
-                'day streak',
+                AppLocalizations.of(context).profileStreakLabel,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -151,7 +151,7 @@ class _StreakBanner extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'completed',
+                  AppLocalizations.of(context).leaderboardCompletedLabel,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -286,7 +286,7 @@ class _ChallengeCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '4 options',
+                  l10n.scenarioOptionsCount(scenario.options.length),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

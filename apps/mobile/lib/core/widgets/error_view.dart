@@ -8,6 +8,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../error/failures.dart';
+import '../l10n/app_localizations.dart';
 
 class ErrorView extends StatelessWidget {
   const ErrorView({
@@ -21,8 +22,9 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String title = _titleFor(context, failure);
-    final String message = _messageFor(failure);
+    final l10n = AppLocalizations.of(context);
+    final String title = _titleFor(l10n, failure);
+    final String message = _messageFor(l10n, failure);
 
     return Semantics(
       liveRegion: true,
@@ -56,7 +58,7 @@ class ErrorView extends StatelessWidget {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: onRetry,
-                  child: const Text('Try again'),
+                  child: Text(l10n.buttonRetry),
                 ),
               ],
             ],
@@ -66,17 +68,25 @@ class ErrorView extends StatelessWidget {
     );
   }
 
-  static String _titleFor(BuildContext context, Failure failure) {
+  static String _titleFor(AppLocalizations l10n, Failure failure) {
     return switch (failure) {
-      NetworkFailure() => 'No connection',
-      UnauthenticatedFailure() => 'Sign in required',
-      UnauthorizedFailure() => 'Access denied',
-      NotFoundFailure() => 'Not found',
-      _ => 'Something went wrong',
+      NetworkFailure() => l10n.errorNetworkTitle,
+      UnauthenticatedFailure() => l10n.errorUnauthenticatedTitle,
+      UnauthorizedFailure() => l10n.errorUnauthorizedTitle,
+      NotFoundFailure() => l10n.errorNotFoundTitle,
+      _ => l10n.errorGenericTitle,
     };
   }
 
-  static String _messageFor(Failure failure) => failure.message;
+  static String _messageFor(AppLocalizations l10n, Failure failure) {
+    return switch (failure) {
+      NetworkFailure() => l10n.errorNetworkMessage,
+      UnauthenticatedFailure() => l10n.errorUnauthenticatedMessage,
+      UnauthorizedFailure() => l10n.errorUnauthorizedMessage,
+      NotFoundFailure() => l10n.errorNotFoundMessage,
+      _ => failure.message,
+    };
+  }
 
   static IconData _iconFor(Failure failure) {
     return switch (failure) {

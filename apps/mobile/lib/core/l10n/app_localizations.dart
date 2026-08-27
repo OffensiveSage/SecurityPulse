@@ -142,6 +142,30 @@ abstract class AppLocalizations {
   /// **'You do not have permission to view this content.'**
   String get errorUnauthorizedMessage;
 
+  /// Error title shown when the user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in required'**
+  String get errorUnauthenticatedTitle;
+
+  /// Error message shown when the user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to continue.'**
+  String get errorUnauthenticatedMessage;
+
+  /// Error title shown when a resource is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get errorNotFoundTitle;
+
+  /// Error message shown when a resource is not found
+  ///
+  /// In en, this message translates to:
+  /// **'The requested resource could not be found.'**
+  String get errorNotFoundMessage;
+
   /// Label for retry buttons
   ///
   /// In en, this message translates to:
@@ -651,6 +675,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'~2 min'**
   String get scenarioEstimatedTime;
+
+  /// Number of answer options shown on the challenge intro card
+  ///
+  /// In en, this message translates to:
+  /// **'{count} options'**
+  String scenarioOptionsCount(int count);
 
   /// Banner shown on result screen when the user keeps their streak
   ///

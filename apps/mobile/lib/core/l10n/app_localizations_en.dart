@@ -36,6 +36,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'You do not have permission to view this content.';
 
   @override
+  String get errorUnauthenticatedTitle => 'Sign in required';
+
+  @override
+  String get errorUnauthenticatedMessage => 'Please sign in to continue.';
+
+  @override
+  String get errorNotFoundTitle => 'Not found';
+
+  @override
+  String get errorNotFoundMessage =>
+      'The requested resource could not be found.';
+
+  @override
   String get buttonRetry => 'Try again';
 
   @override
@@ -318,6 +331,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scenarioEstimatedTime => '~2 min';
+
+  @override
+  String scenarioOptionsCount(int count) => '$count options';
 
   @override
   String get scenarioStreakKept => 'Streak maintained!';

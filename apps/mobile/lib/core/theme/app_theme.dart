@@ -89,6 +89,7 @@ abstract final class AppTheme {
           surfaceContainerHighest: AppColors.darkSurfaceVariant,
           onSurfaceVariant: AppColors.darkOnSurfaceVariant,
           outline: AppColors.darkOutline,
+          outlineVariant: AppColors.darkSurfaceVariant,
         ),
         scaffoldBackgroundColor: AppColors.darkBackground,
         textTheme: _buildTextTheme(Brightness.dark),
@@ -98,6 +99,45 @@ abstract final class AppTheme {
           elevation: 0,
           scrolledUnderElevation: 1,
           centerTitle: false,
+        ),
+        cardTheme: CardThemeData(
+          color: AppColors.darkSurface,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: const BorderSide(color: AppColors.darkOutline),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryLight,
+            foregroundColor: AppColors.onPrimary,
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.darkOutline),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.darkOutline),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide:
+                const BorderSide(color: AppColors.primaryLight, width: 2),
+          ),
+          filled: true,
+          fillColor: AppColors.darkSurface,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
         ),
       );
 
