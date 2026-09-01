@@ -42,6 +42,26 @@
     "description": "Error message shown when user lacks permission. Does not reveal why access was denied."
   },
 
+  "errorUnauthenticatedTitle": "Sign in required",
+  "@errorUnauthenticatedTitle": {
+    "description": "Error title shown when the user is not authenticated"
+  },
+
+  "errorUnauthenticatedMessage": "Please sign in to continue.",
+  "@errorUnauthenticatedMessage": {
+    "description": "Error message shown when the user is not authenticated"
+  },
+
+  "errorNotFoundTitle": "Not found",
+  "@errorNotFoundTitle": {
+    "description": "Error title shown when a resource is not found"
+  },
+
+  "errorNotFoundMessage": "The requested resource could not be found.",
+  "@errorNotFoundMessage": {
+    "description": "Error message shown when a resource is not found"
+  },
+
   "buttonRetry": "Try again",
   "@buttonRetry": {
     "description": "Label for retry buttons"
@@ -490,6 +510,16 @@
   "scenarioEstimatedTime": "~2 min",
   "@scenarioEstimatedTime": {
     "description": "Estimated time shown on the challenge intro card"
+  },
+
+  "scenarioOptionsCount": "{count} options",
+  "@scenarioOptionsCount": {
+    "description": "Number of answer options shown on the challenge intro card",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
 
   "scenarioStreakKept": "Streak maintained!",
