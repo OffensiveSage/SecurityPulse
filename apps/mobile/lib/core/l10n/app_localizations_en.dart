@@ -333,7 +333,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scenarioEstimatedTime => '~2 min';
 
   @override
-  String scenarioOptionsCount(int count) => '$count options';
+  String scenarioOptionsCount(int count) {
+    return '$count options';
+  }
 
   @override
   String get scenarioStreakKept => 'Streak maintained!';
