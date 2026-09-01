@@ -1,11 +1,11 @@
-/// Sign-in screen.
+/// Sign-in screen — premium "Midnight Pulse" hero.
 ///
-/// Displays the corporate sign-in button and app identity.
-/// On tap, initiates the OIDC sign-in flow via the auth provider.
+/// Full-bleed indigo → violet gradient with floating orb decorations.
+/// Initiates OIDC sign-in via the auth provider on button tap.
 ///
 /// Accessibility:
-/// - The sign-in button has a clear label describing the action.
-/// - The screen is announced by screen readers on navigation.
+/// - Sign-in button has a clear semantic label.
+/// - Live region on error state announced by screen readers.
 library;
 
 import 'package:flutter/material.dart';
@@ -52,109 +52,167 @@ class _SignInBody extends StatelessWidget {
 
     return Stack(
       children: [
-        // Gradient hero — top 45 % of the screen.
+        // ── Full-bleed gradient background ────────────────────────────────
         Container(
-          height: size.height * 0.45,
+          height: size.height * 0.52,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.primaryDark],
+              colors: AppColors.heroGradient,
             ),
           ),
         ),
 
-        // Subtle decorative circles for depth.
+        // ── Decorative orbs ───────────────────────────────────────────────
+        // Large orb — top-right
         Positioned(
-          top: -60,
-          right: -60,
+          top: -80,
+          right: -80,
           child: Container(
-            width: 220,
-            height: 220,
+            width: 280,
+            height: 280,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.07),
+              gradient: RadialGradient(
+                colors: [
+                  AppColors.primaryLight.withValues(alpha: 0.18),
+                  Colors.transparent,
+                ],
+              ),
             ),
           ),
         ),
+        // Medium orb — top-left
         Positioned(
-          top: 40,
-          right: -20,
+          top: 60,
+          left: -50,
           child: Container(
-            width: 120,
-            height: 120,
+            width: 180,
+            height: 180,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.07),
+              color: AppColors.secondary.withValues(alpha: 0.12),
+            ),
+          ),
+        ),
+        // Small orb — mid-right
+        Positioned(
+          top: 160,
+          right: 30,
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.accentLight.withValues(alpha: 0.15),
+            ),
+          ),
+        ),
+        // Tiny accent — bottom of gradient area
+        Positioned(
+          top: size.height * 0.36,
+          left: 40,
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primaryLight.withValues(alpha: 0.20),
             ),
           ),
         ),
 
-        // Main content column.
+        // ── Main content ─────────────────────────────────────────────────
         SafeArea(
           child: Column(
             children: [
-              // ── Hero section ──────────────────────────────────────────
+              // ── Hero section ────────────────────────────────────────────
               Expanded(
-                flex: 45,
+                flex: 52,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Shield icon inside a frosted circle.
+                      // Shield icon with gradient ring
                       Container(
-                        width: 88,
-                        height: 88,
+                        width: 100,
+                        height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.18),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0x40FFFFFF),
+                              Color(0x15FFFFFF),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.30),
+                            width: 1.5,
+                          ),
                         ),
                         child: const Icon(
                           Icons.shield_rounded,
-                          size: 48,
+                          size: 52,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       Text(
                         l10n.appName,
                         style: theme.textTheme.displaySmall?.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.signInSubtitle,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.80),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 5,
                         ),
-                        textAlign: TextAlign.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.20),
+                          ),
+                        ),
+                        child: Text(
+                          l10n.signInSubtitle,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.90),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              // ── Bottom card ───────────────────────────────────────────
+              // ── Bottom card ─────────────────────────────────────────────
               Expanded(
-                flex: 55,
+                flex: 48,
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
+                      topLeft: Radius.circular(36),
+                      topRight: Radius.circular(36),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 24,
-                        offset: const Offset(0, -4),
+                        color: AppColors.primaryDeep.withValues(alpha: 0.30),
+                        blurRadius: 48,
+                        offset: const Offset(0, -8),
                       ),
                     ],
                   ),
@@ -165,7 +223,8 @@ class _SignInBody extends StatelessWidget {
                       Text(
                         l10n.signInWelcomeTitle,
                         style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -178,16 +237,58 @@ class _SignInBody extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 36),
+
+                      // Gradient sign-in button
                       Semantics(
                         button: true,
                         label: l10n.signInButtonLabel,
-                        child: FilledButton.icon(
-                          onPressed: () =>
-                              ref.read(authProvider.notifier).signIn(),
-                          icon: const Icon(Icons.business_rounded),
-                          label: Text(l10n.signInButtonLabel),
+                        child: Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: AppColors.brandGradient,
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    AppColors.primary.withValues(alpha: 0.40),
+                                blurRadius: 20,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () =>
+                                  ref.read(authProvider.notifier).signIn(),
+                              borderRadius: BorderRadius.circular(14),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.business_rounded,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    l10n.signInButtonLabel,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
+
                       const SizedBox(height: 20),
                       Text(
                         l10n.signInPrivacyNote,
